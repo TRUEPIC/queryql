@@ -12,7 +12,7 @@ to filter, sort, and paginate the records.
 Let's consider an example to illustrate:
 
 ```
-?filter[id][in][]=2&filter[id][in][]=3&filter[status]=open&sort==name&page[size]=10
+?filter[id][in][]=2&filter[id][in][]=3&filter[status]=open&sort=name&page[size]=10
 ```
 
 ```js
