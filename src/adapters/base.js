@@ -1,5 +1,7 @@
 const is = require('is')
 
+const NotImplementedError = require('../errors/not_implemented')
+
 class BaseAdapter {
   static get FILTER_OPERATORS() {
     return ['=']
@@ -9,11 +11,17 @@ class BaseAdapter {
     return '='
   }
 
-  'filter:*'(builder, { field, operator, value }) {}
+  'filter:*'(builder, { field, operator, value }) {
+    throw new NotImplementedError()
+  }
 
-  sort(builder, { field, order }) {}
+  sort(builder, { field, order }) {
+    throw new NotImplementedError()
+  }
 
-  page(builder, { size, number, offset }) {}
+  page(builder, { size, number, offset }) {
+    throw new NotImplementedError()
+  }
 
   filter(builder, filter) {
     const { operator } = filter

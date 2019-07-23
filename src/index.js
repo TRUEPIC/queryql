@@ -2,6 +2,7 @@ const is = require('is')
 
 const Config = require('./config')
 const Filterer = require('./filterer')
+const NotImplementedError = require('./errors/not_implemented')
 const Pager = require('./pager')
 const Schema = require('./schema')
 const Sorter = require('./sorter')
@@ -25,21 +26,37 @@ class QueryQL {
     this.validator = new (this.config.get('validator'))(this)
   }
 
-  defineSchema(schema) {}
+  defineSchema(schema) {
+    throw new NotImplementedError()
+  }
 
-  defineValidation(...args) {}
+  defineValidation(...args) {
+    return undefined
+  }
 
-  get defaultFilter() {}
+  get defaultFilter() {
+    return undefined
+  }
 
-  get defaultSort() {}
+  get defaultSort() {
+    return undefined
+  }
 
-  get defaultPage() {}
+  get defaultPage() {
+    return undefined
+  }
 
-  get filterDefaults() {}
+  get filterDefaults() {
+    return undefined
+  }
 
-  get sortDefaults() {}
+  get sortDefaults() {
+    return undefined
+  }
 
-  get pageDefaults() {}
+  get pageDefaults() {
+    return undefined
+  }
 
   apply(type, data, method = null) {
     if (method && is.fn(this[method])) {

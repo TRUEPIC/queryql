@@ -1,5 +1,6 @@
 const Joi = require('@hapi/joi')
 
+const NotImplementedError = require('../errors/not_implemented')
 const ValidationError = require('../errors/validation')
 
 class BaseParser {
@@ -9,11 +10,17 @@ class BaseParser {
     this.defaults = defaults
   }
 
-  static get QUERY_KEY() {}
+  static get QUERY_KEY() {
+    throw new NotImplementedError()
+  }
 
-  buildValidationSchema(schema) {}
+  buildValidationSchema(schema) {
+    throw new NotImplementedError()
+  }
 
-  parse() {}
+  parse() {
+    throw new NotImplementedError()
+  }
 
   static get DEFAULTS() {
     return {}
