@@ -11,15 +11,15 @@ class BaseAdapter {
     return '='
   }
 
-  'filter:*'(builder, { field, operator, value }) {
+  'filter:*'(/* builder, { field, operator, value } */) {
     throw new NotImplementedError()
   }
 
-  sort(builder, { field, order }) {
+  sort(/* builder, { field, order } */) {
     throw new NotImplementedError()
   }
 
-  page(builder, { size, number, offset }) {
+  page(/* builder, { size, number, offset } */) {
     throw new NotImplementedError()
   }
 

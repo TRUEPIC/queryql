@@ -26,11 +26,11 @@ class QueryQL {
     this.validator = new (this.config.get('validator'))(this)
   }
 
-  defineSchema(schema) {
+  defineSchema(/* schema */) {
     throw new NotImplementedError()
   }
 
-  defineValidation(...args) {
+  defineValidation(/* ...args */) {
     return undefined
   }
 

@@ -11,7 +11,7 @@ class BaseParser {
     this.defaults = defaults
   }
 
-  buildValidationSchema(schema) {
+  buildValidationSchema(/* schema */) {
     throw new NotImplementedError()
   }
 
