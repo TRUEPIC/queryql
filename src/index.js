@@ -7,7 +7,7 @@ const Schema = require('./schema')
 const Sorter = require('./sorter')
 
 class QueryQL {
-  constructor (query, builder, config = {}) {
+  constructor(query, builder, config = {}) {
     this.query = query
     this.builder = builder
 
@@ -25,23 +25,23 @@ class QueryQL {
     this.validator = new (this.config.get('validator'))(this)
   }
 
-  defineSchema (schema) {}
+  defineSchema(schema) {}
 
-  defineValidation (...args) {}
+  defineValidation(...args) {}
 
-  get defaultFilter () {}
+  get defaultFilter() {}
 
-  get defaultSort () {}
+  get defaultSort() {}
 
-  get defaultPage () {}
+  get defaultPage() {}
 
-  get filterDefaults () {}
+  get filterDefaults() {}
 
-  get sortDefaults () {}
+  get sortDefaults() {}
 
-  get pageDefaults () {}
+  get pageDefaults() {}
 
-  apply (type, data, method = null) {
+  apply(type, data, method = null) {
     if (method && is.fn(this[method])) {
       this.builder = this[method](this.builder, data)
     } else {
@@ -51,7 +51,7 @@ class QueryQL {
     return this.builder
   }
 
-  parse () {
+  parse() {
     this.filterer.parse()
     this.sorter.parse()
     this.pager.parse()
@@ -59,7 +59,7 @@ class QueryQL {
     return this
   }
 
-  build () {
+  build() {
     this.parse()
 
     this.validator.validate()

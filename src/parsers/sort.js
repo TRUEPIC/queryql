@@ -3,55 +3,63 @@ const is = require('is')
 const BaseParser = require('./base')
 
 class SortParser extends BaseParser {
-  static get QUERY_KEY () { return 'sort' }
+  static get QUERY_KEY() {
+    return 'sort'
+  }
 
-  static get DEFAULTS () {
+  static get DEFAULTS() {
     return {
       field: null,
-      order: 'asc'
+      order: 'asc',
     }
   }
 
-  static buildKey (sort) {
+  static buildKey(sort) {
     return sort.field
   }
 
-  buildValidationSchema (schema) {
+  buildValidationSchema(schema) {
     const keys = Array.from(this.schema.sorts.keys())
 
     return schema.alternatives().try([
       schema.string().valid(keys),
-      schema.array().items(schema.string().valid(keys)).unique(),
+      schema
+        .array()
+        .items(schema.string().valid(keys))
+        .unique(),
       schema.object().pattern(
         schema.string().valid(keys),
-        schema.string().valid('asc', 'desc').insensitive()
-      )
+        schema
+          .string()
+          .valid('asc', 'desc')
+          .insensitive()
+      ),
     ])
   }
 
-  parseString (field) {
+  parseString(field) {
     return {
       ...this.defaults,
-      field
+      field,
     }
   }
 
-  parseArray (fields) {
+  parseArray(fields) {
     return fields.map(field => ({
       ...this.defaults,
-      field
+      field,
     }))
   }
 
-  parseObject (query) {
+  parseObject(query) {
     return Object.entries(query).map(([field, order]) => ({
       ...this.defaults,
       field,
-      order
+      order,
     }))
   }
 
-  parse () {
+  parse() {
     if (!this.query) {
       return new Map()
     }
@@ -68,10 +76,7 @@ class SortParser extends BaseParser {
       sorts.push(...this.parseObject(this.query))
     }
 
-    return new Map(sorts.map(sort => [
-      this.constructor.buildKey(sort),
-      sort
-    ]))
+    return new Map(sorts.map(sort => [this.constructor.buildKey(sort), sort]))
   }
 }
 

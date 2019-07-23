@@ -2,40 +2,40 @@ const JoiValidator = require('./validators/joi')
 const KnexAdapter = require('./adapters/knex')
 
 class Config {
-  constructor (config) {
+  constructor(config) {
     this.constructor.defaults = this.constructor.DEFAULTS
 
     this.set(config)
   }
 
-  static get DEFAULTS () {
+  static get DEFAULTS() {
     return {
       adapter: KnexAdapter,
-      validator: JoiValidator
+      validator: JoiValidator,
     }
   }
 
-  static set defaults (defaults) {
+  static set defaults(defaults) {
     this._defaults = {
       ...this.DEFAULTS,
       ...this._defaults,
-      ...defaults
+      ...defaults,
     }
   }
 
-  static get defaults () {
+  static get defaults() {
     return this._defaults
   }
 
-  set (config) {
+  set(config) {
     this._config = {
       ...this.constructor.defaults,
       ...this._config,
-      ...config
+      ...config,
     }
   }
 
-  get (key = null) {
+  get(key = null) {
     if (key) {
       return this._config[key]
     } else {

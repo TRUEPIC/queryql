@@ -19,14 +19,14 @@ Let's consider an example to illustrate:
 {
   filter: {
     id: {
-      in: [2, 3]
+      in: [2, 3],
     },
-    status: 'open'
+    status: 'open',
   },
   sort: 'name',
   page: {
-    size: 10
-  }
+    size: 10,
+  },
 }
 ```
 
@@ -38,7 +38,8 @@ builder
   .where('id', 'in', [2, 3])
   .where('status', '=', 'open')
   .orderBy('name', 'asc')
-  .limit(10).offset(0)
+  .limit(10)
+  .offset(0)
 ```
 
 To accomplish this, QueryQL only requires you to define (whitelist) what's
@@ -47,7 +48,7 @@ illustration:
 
 ```js
 class ImageQuerier extends QueryQL {
-  defineSchema (schema) {
+  defineSchema(schema) {
     schema.filter('id', 'in')
     schema.filter('status', '=')
     schema.sort('name')
@@ -73,11 +74,11 @@ queries, and more.
 
 ## Queriers
 
-What we call _queriers_ are at the heart of QueryQL. They map roughly 1-to-1
-to models / tables / resources, but they don't have to. For example, say you
-have a user resource – you could have a `UserQuerier` for your public API at
-`/users`, and a more permissive `AdminUserQuerier` for your private API at
-`/admin/users`. It's up to you.
+What we call _queriers_ are at the heart of QueryQL. They map roughly 1-to-1 to
+models / tables / resources, but they don't have to. For example, say you have a
+user resource – you could have a `UserQuerier` for your public API at `/users`,
+and a more permissive `AdminUserQuerier` for your private API at `/admin/users`.
+It's up to you.
 
 The code behind queriers that maps calls to a query builder / ORM is called an
 _adapter_. At this point, the only officially supported adapter is for
@@ -91,13 +92,13 @@ To define a querier, simply extend `QueryQL`:
 
 ```js
 class UserQuerier extends QueryQL {
-  defineSchema (schema) {
+  defineSchema(schema) {
     // ...
   }
 }
 ```
 
-The only required function is `defineSchema (schema)`, which whitelists what's
+The only required function is `defineSchema(schema)`, which whitelists what's
 allowed. However...
 
 #### BaseQuerier
@@ -108,9 +109,9 @@ encapsulate any other helper functions you need in one place. For example:
 
 ```js
 class BaseQuerier extends QueryQL {
-  get pageDefaults () {
+  get pageDefaults() {
     return {
-      size: 10
+      size: 10,
     }
   }
 }
@@ -118,7 +119,7 @@ class BaseQuerier extends QueryQL {
 
 ```js
 class UserQuerier extends BaseQuerier {
-  defineSchema (schema) {
+  defineSchema(schema) {
     // ...
   }
 }
@@ -144,11 +145,11 @@ object, however, the `operator` must be specified to avoid ambiguity.
 
 #### Defining the Schema
 
-In the querier's `defineSchema (schema)` function, a filter can be
+In the querier's `defineSchema(schema)` function, a filter can be
 added/whitelisted by calling:
 
 ```js
-schema.filter(field, operator, options = {})
+schema.filter(field, operator, (options = {}))
 ```
 
 For example:
@@ -169,7 +170,7 @@ This can easily be done by defining a function in your querier class to handle
 the `field[operator]` combination. For example:
 
 ```js
-'filter:id[in]' (builder, { field, operator, value }) {
+'filter:id[in]'(builder, { field, operator, value }) {
   return builder.where(field, operator, value)
 }
 ```
@@ -183,7 +184,7 @@ a field that doesn't map directly to a field in your database, like a search
 query:
 
 ```js
-'filter:q[=]' (builder, { value }) {
+'filter:q[=]'(builder, { value }) {
   return builder
     .where('first_name', 'like', `%${value}%`)
     .orWhere('last_name', 'like', `%${value}%`)
@@ -193,12 +194,12 @@ query:
 #### Setting a Default
 
 When the `filter` key isn't set in the query, you can set a default filter by
-defining a `get defaultFilter ()` function in your querier. For example:
+defining a `get defaultFilter()` function in your querier. For example:
 
 ```js
-get defaultFilter () {
+get defaultFilter() {
   return {
-    status: 2
+    status: 2,
   }
 }
 ```
@@ -209,15 +210,15 @@ Any of the supported formats can be returned.
 
 Not to be confused with the previous section – which allows you to set a default
 filter when none is specified – the defaults that are applied to _every_ filter
-can be changed by defining a `get filterDefaults ()` function in
-your querier. For example, here are the existing defaults:
+can be changed by defining a `get filterDefaults()` function in your querier.
+For example, here are the existing defaults:
 
 ```js
-get filterDefaults () {
+get filterDefaults() {
   return {
     field: null,
     operator: null,
-    value: null
+    value: null,
   }
 }
 ```
@@ -244,11 +245,11 @@ formats can't be mixed.
 
 #### Defining the Schema
 
-In the querier's `defineSchema (schema)` function, a sort can be
+In the querier's `defineSchema(schema)` function, a sort can be
 added/whitelisted by calling:
 
 ```js
-schema.sort(field, options = {})
+schema.sort(field, (options = {}))
 ```
 
 For example:
@@ -268,7 +269,7 @@ This can easily be done by defining a function in your querier class to handle
 the `field`. For example:
 
 ```js
-'sort:name' (builder, { field, order }) {
+'sort:name'(builder, { field, order }) {
   return builder.orderBy(field, order)
 }
 ```
@@ -281,7 +282,7 @@ appropriately by the adapter. It becomes more useful, for example, when you have
 a field that doesn't map directly to a field in your database:
 
 ```js
-'sort:name' (builder, { order }) {
+'sort:name'(builder, { order }) {
   return builder
     .orderBy('last_name', order)
     .orderBy('first_name', order)
@@ -291,10 +292,10 @@ a field that doesn't map directly to a field in your database:
 #### Setting a Default
 
 When the `sort` key isn't set in the query, you can set a default sort by
-defining a `get defaultSort ()` function in your querier. For example:
+defining a `get defaultSort()` function in your querier. For example:
 
 ```js
-get defaultSort () {
+get defaultSort() {
   return 'name'
 }
 ```
@@ -305,11 +306,11 @@ Any of the supported formats can be returned.
 
 Not to be confused with the previous section – which allows you to set a default
 sort when none is specified – the defaults that are applied to _every_ sort can
-be changed by defining a `get sortDefaults ()` function in your querier. For
+be changed by defining a `get sortDefaults()` function in your querier. For
 example, here are the existing defaults:
 
 ```js
-get sortDefaults () {
+get sortDefaults() {
   return {
     field: null,
     order: 'asc'
@@ -337,11 +338,11 @@ formats are supported:
 
 #### Defining the Schema
 
-In the querier's `defineSchema (schema)` function, pagination can be enabled
-by calling:
+In the querier's `defineSchema(schema)` function, pagination can be enabled by
+calling:
 
 ```js
-schema.page(isEnabledOrOptions = true)
+schema.page((isEnabledOrOptions = true))
 ```
 
 For example:
@@ -353,10 +354,10 @@ schema.page()
 #### Setting a Default
 
 When the `page` key isn't set in the query, you can set a default page by
-defining a `get defaultPage ()` function in your querier. For example:
+defining a `get defaultPage()` function in your querier. For example:
 
 ```js
-get defaultPage () {
+get defaultPage() {
   return 2
 }
 ```
@@ -367,14 +368,14 @@ Any of the supported formats can be returned.
 
 Not to be confused with the previous section – which allows you to set a default
 page when none is specified – the defaults that are applied to _every_ page can
-be changed by defining a `get pageDefaults ()` function in your querier. For
+be changed by defining a `get pageDefaults()` function in your querier. For
 example, here are the existing defaults:
 
 ```js
-get pageDefaults () {
+get pageDefaults() {
   return {
     size: 20,
-    number: 1
+    number: 1,
   }
 }
 ```
@@ -388,12 +389,11 @@ example, ensuring that a `status` filter is only `open` or `closed`, or that
 `page[size]` isn't more than `100`.
 
 QueryQL provides validation out-of-the-box with
-[Joi](https://github.com/hapijs/joi). Simply define a
-`defineValidation (schema)` function in your querier that returns the validation
-schema:
+[Joi](https://github.com/hapijs/joi). Simply define a `defineValidation(schema)`
+function in your querier that returns the validation schema:
 
 ```js
-defineValidation (schema) {
+defineValidation(schema) {
   return schema.object().keys({
     'filter:status[=]': schema.string().valid('open', 'closed'),
     'page:size': schema.number().max(100)

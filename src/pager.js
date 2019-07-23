@@ -1,29 +1,29 @@
 const PageParser = require('./parsers/page')
 
 class Pager {
-  constructor (querier) {
+  constructor(querier) {
     this.querier = querier
 
     this._page = null
   }
 
-  get queryKey () {
+  get queryKey() {
     return PageParser.QUERY_KEY
   }
 
-  get query () {
+  get query() {
     return this.querier.query[this.queryKey]
   }
 
-  get schema () {
+  get schema() {
     return this.querier.schema.pageOptions
   }
 
-  get isEnabled () {
+  get isEnabled() {
     return this.schema.isEnabled
   }
 
-  get page () {
+  get page() {
     if (this._page === null) {
       this.parse()
     }
@@ -31,18 +31,21 @@ class Pager {
     return this._page
   }
 
-  pageFlat () {
+  pageFlat() {
     if (!this.page) {
       return {}
     }
 
-    return Object.entries(this.page).reduce((accumulator, [field, value]) => ({
-      ...accumulator,
-      [`${this.queryKey}:${field}`]: value
-    }), {})
+    return Object.entries(this.page).reduce(
+      (accumulator, [field, value]) => ({
+        ...accumulator,
+        [`${this.queryKey}:${field}`]: value,
+      }),
+      {}
+    )
   }
 
-  parse () {
+  parse() {
     if (!this.isEnabled) {
       this._page = false
     } else if (this._page === null) {
@@ -58,7 +61,7 @@ class Pager {
     return this._page
   }
 
-  build () {
+  build() {
     this.parse()
 
     if (this.page) {

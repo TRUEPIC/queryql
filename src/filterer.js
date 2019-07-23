@@ -1,25 +1,25 @@
 const FilterParser = require('./parsers/filter')
 
 class Filterer {
-  constructor (querier) {
+  constructor(querier) {
     this.querier = querier
 
     this._filters = null
   }
 
-  get queryKey () {
+  get queryKey() {
     return FilterParser.QUERY_KEY
   }
 
-  get query () {
+  get query() {
     return this.querier.query[this.queryKey]
   }
 
-  get schema () {
+  get schema() {
     return this.querier.schema.filters
   }
 
-  get filters () {
+  get filters() {
     if (!this._filters) {
       this.parse()
     }
@@ -27,23 +27,26 @@ class Filterer {
     return this._filters
   }
 
-  filtersFlat () {
+  filtersFlat() {
     const filters = Array.from(this.filters.entries())
 
-    return filters.reduce((accumulator, [key, filter]) => ({
-      ...accumulator,
-      [`${this.queryKey}:${key}`]: filter.value
-    }), {})
+    return filters.reduce(
+      (accumulator, [key, filter]) => ({
+        ...accumulator,
+        [`${this.queryKey}:${key}`]: filter.value,
+      }),
+      {}
+    )
   }
 
-  parse () {
+  parse() {
     if (!this._filters) {
       const parser = new FilterParser(
         this.query || this.querier.defaultFilter,
         this.querier.schema,
         {
           operator: this.querier.adapter.constructor.DEFAULT_FILTER_OPERATOR,
-          ...this.querier.filterDefaults
+          ...this.querier.filterDefaults,
         }
       )
 
@@ -53,7 +56,7 @@ class Filterer {
     return this._filters
   }
 
-  build () {
+  build() {
     this.parse()
 
     const keys = this.schema.keys()

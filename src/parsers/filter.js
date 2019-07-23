@@ -3,21 +3,23 @@ const is = require('is')
 const BaseParser = require('./base')
 
 class FilterParser extends BaseParser {
-  static get QUERY_KEY () { return 'filter' }
+  static get QUERY_KEY() {
+    return 'filter'
+  }
 
-  static get DEFAULTS () {
+  static get DEFAULTS() {
     return {
       field: null,
       operator: null,
-      value: null
+      value: null,
     }
   }
 
-  static buildKey (filter) {
+  static buildKey(filter) {
     return `${filter.field}[${filter.operator}]`
   }
 
-  buildValidationSchema (schema) {
+  buildValidationSchema(schema) {
     const defaultOperator = this.defaults.operator
     const mapFieldsToOperators = Object.entries(
       this.schema.mapFilterFieldsToOperators()
@@ -27,44 +29,43 @@ class FilterParser extends BaseParser {
       schema.array(),
       schema.boolean(),
       schema.number(),
-      schema.string()
+      schema.string(),
     ]
 
     return schema.object().keys(
       mapFieldsToOperators.reduce((accumulator, [field, operators]) => {
-        const operatorObject = schema.object().pattern(
-          schema.string().valid(operators),
-          values
-        )
+        const operatorObject = schema
+          .object()
+          .pattern(schema.string().valid(operators), values)
 
         return {
           ...accumulator,
           [field]: operators.includes(defaultOperator)
             ? [...values, operatorObject]
-            : operatorObject
+            : operatorObject,
         }
       }, {})
     )
   }
 
-  parseObject (field, value) {
+  parseObject(field, value) {
     return Object.keys(value).map(operator => ({
       ...this.defaults,
       field,
       operator,
-      value: value[operator]
+      value: value[operator],
     }))
   }
 
-  parseNonObject (field, value) {
+  parseNonObject(field, value) {
     return {
       ...this.defaults,
       field,
-      value
+      value,
     }
   }
 
-  parse () {
+  parse() {
     if (!this.query) {
       return new Map()
     }
@@ -82,10 +83,9 @@ class FilterParser extends BaseParser {
       }
     }
 
-    return new Map(filters.map(filter => [
-      this.constructor.buildKey(filter),
-      filter
-    ]))
+    return new Map(
+      filters.map(filter => [this.constructor.buildKey(filter), filter])
+    )
   }
 }
 

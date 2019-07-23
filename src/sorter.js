@@ -1,25 +1,25 @@
 const SortParser = require('./parsers/sort')
 
 class Sorter {
-  constructor (querier) {
+  constructor(querier) {
     this.querier = querier
 
     this._sorts = null
   }
 
-  get queryKey () {
+  get queryKey() {
     return SortParser.QUERY_KEY
   }
 
-  get query () {
+  get query() {
     return this.querier.query[this.queryKey]
   }
 
-  get schema () {
+  get schema() {
     return this.querier.schema.sorts
   }
 
-  get sorts () {
+  get sorts() {
     if (!this._sorts) {
       this.parse()
     }
@@ -27,16 +27,19 @@ class Sorter {
     return this._sorts
   }
 
-  sortsFlat () {
+  sortsFlat() {
     const sorts = Array.from(this.sorts.entries())
 
-    return sorts.reduce((accumulator, [key, sort]) => ({
-      ...accumulator,
-      [`${this.queryKey}:${key}`]: sort.value
-    }), {})
+    return sorts.reduce(
+      (accumulator, [key, sort]) => ({
+        ...accumulator,
+        [`${this.queryKey}:${key}`]: sort.value,
+      }),
+      {}
+    )
   }
 
-  parse () {
+  parse() {
     if (!this._sorts) {
       const parser = new SortParser(
         this.query || this.querier.defaultSort,
@@ -50,7 +53,7 @@ class Sorter {
     return this._sorts
   }
 
-  build () {
+  build() {
     this.parse()
 
     const keys = this.schema.keys()

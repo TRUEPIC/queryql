@@ -3,40 +3,51 @@ const is = require('is')
 const BaseParser = require('./base')
 
 class PageParser extends BaseParser {
-  static get QUERY_KEY () { return 'page' }
+  static get QUERY_KEY() {
+    return 'page'
+  }
 
-  static get DEFAULTS () {
+  static get DEFAULTS() {
     return {
       size: 20,
-      number: 1
+      number: 1,
     }
   }
 
-  buildValidationSchema (schema) {
+  buildValidationSchema(schema) {
     return schema.alternatives().try([
-      schema.number().integer().positive(),
+      schema
+        .number()
+        .integer()
+        .positive(),
       schema.object().keys({
-        size: schema.number().integer().positive(),
-        number: schema.number().integer().positive()
-      })
+        size: schema
+          .number()
+          .integer()
+          .positive(),
+        number: schema
+          .number()
+          .integer()
+          .positive(),
+      }),
     ])
   }
 
-  parseNumber () {
+  parseNumber() {
     return {
       ...this.defaults,
-      number: this.query
+      number: this.query,
     }
   }
 
-  parseObject () {
+  parseObject() {
     return {
       ...this.defaults,
-      ...this.query
+      ...this.query,
     }
   }
 
-  parse () {
+  parse() {
     this.validate()
 
     let page

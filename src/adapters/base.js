@@ -1,21 +1,21 @@
 const is = require('is')
 
 class BaseAdapter {
-  static get FILTER_OPERATORS () {
+  static get FILTER_OPERATORS() {
     return ['=']
   }
 
-  static get DEFAULT_FILTER_OPERATOR () {
+  static get DEFAULT_FILTER_OPERATOR() {
     return '='
   }
 
-  'filter:*' (builder, { field, operator, value }) {}
+  'filter:*'(builder, { field, operator, value }) {}
 
-  sort (builder, { field, order }) {}
+  sort(builder, { field, order }) {}
 
-  page (builder, { size, number, offset }) {}
+  page(builder, { size, number, offset }) {}
 
-  filter (builder, filter) {
+  filter(builder, filter) {
     const { operator } = filter
     const operatorMethod = `filter:${operator}`
 

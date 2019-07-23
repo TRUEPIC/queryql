@@ -1,25 +1,25 @@
 const ValidationError = require('../errors/validation')
 
 class BaseValidator {
-  constructor (querier) {
+  constructor(querier) {
     this.querier = querier
 
     this.schema = querier.defineValidation(...this.defineValidationArgs)
   }
 
-  get defineValidationArgs () {}
+  get defineValidationArgs() {}
 
-  validate () {}
+  validate() {}
 
-  get values () {
+  get values() {
     return {
       ...this.querier.filterer.filtersFlat(),
       ...this.querier.sorter.sortsFlat(),
-      ...this.querier.pager.pageFlat()
+      ...this.querier.pager.pageFlat(),
     }
   }
 
-  buildError (message) {
+  buildError(message) {
     return new ValidationError(message)
   }
 }

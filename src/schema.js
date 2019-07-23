@@ -1,53 +1,54 @@
 const is = require('is')
 
 class Schema {
-  constructor () {
+  constructor() {
     this.filters = new Map()
     this.sorts = new Map()
     this.pageOptions = {
-      isEnabled: false
+      isEnabled: false,
     }
   }
 
-  filter (field, operator, options = {}) {
+  filter(field, operator, options = {}) {
     this.filters.set(`${field}[${operator}]`, {
       field,
       operator,
-      options
+      options,
     })
 
     return this
   }
 
-  sort (field, options = {}) {
+  sort(field, options = {}) {
     this.sorts.set(field, {
       field,
-      options
+      options,
     })
 
     return this
   }
 
-  page (isEnabledOrOptions = true) {
+  page(isEnabledOrOptions = true) {
     if (is.bool(isEnabledOrOptions)) {
       this.pageOptions = {
         ...this.pageOptions,
-        isEnabled: isEnabledOrOptions
+        isEnabled: isEnabledOrOptions,
       }
     } else {
       this.pageOptions = {
         ...this.pageOptions,
         ...isEnabledOrOptions,
-        isEnabled: isEnabledOrOptions.isEnabled !== undefined
-          ? isEnabledOrOptions.isEnabled
-          : true
+        isEnabled:
+          isEnabledOrOptions.isEnabled !== undefined
+            ? isEnabledOrOptions.isEnabled
+            : true,
       }
     }
 
     return this
   }
 
-  mapFilterFieldsToOperators () {
+  mapFilterFieldsToOperators() {
     const filters = Array.from(this.filters.values())
 
     return filters.reduce((accumulator, filter) => {
