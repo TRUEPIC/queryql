@@ -4,14 +4,11 @@ const NotImplementedError = require('../errors/not_implemented')
 const ValidationError = require('../errors/validation')
 
 class BaseParser {
-  constructor(query, schema, defaults = {}) {
+  constructor(queryKey, query, schema, defaults = {}) {
+    this.queryKey = queryKey
     this.query = query
     this.schema = schema
     this.defaults = defaults
-  }
-
-  static get QUERY_KEY() {
-    throw new NotImplementedError()
   }
 
   buildValidationSchema(schema) {
@@ -49,7 +46,7 @@ class BaseParser {
     const path = detail.path.reduce(
       (accumulator, value, index) =>
         index === 0 ? `${accumulator}:${value}` : `${accumulator}[${value}]`,
-      this.constructor.QUERY_KEY
+      this.queryKey
     )
 
     const message = detail.message.replace(/^".*?" /, '')

@@ -8,7 +8,7 @@ class Sorter {
   }
 
   get queryKey() {
-    return SortParser.QUERY_KEY
+    return 'sort'
   }
 
   get query() {
@@ -42,6 +42,7 @@ class Sorter {
   parse() {
     if (!this._sorts) {
       const parser = new SortParser(
+        this.queryKey,
         this.query || this.querier.defaultSort,
         this.querier.schema,
         this.querier.sortDefaults

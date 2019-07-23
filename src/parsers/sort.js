@@ -3,10 +3,6 @@ const is = require('is')
 const BaseParser = require('./base')
 
 class SortParser extends BaseParser {
-  static get QUERY_KEY() {
-    return 'sort'
-  }
-
   static get DEFAULTS() {
     return {
       field: null,

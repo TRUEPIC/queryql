@@ -3,10 +3,6 @@ const is = require('is')
 const BaseParser = require('./base')
 
 class FilterParser extends BaseParser {
-  static get QUERY_KEY() {
-    return 'filter'
-  }
-
   static get DEFAULTS() {
     return {
       field: null,

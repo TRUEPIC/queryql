@@ -3,10 +3,6 @@ const is = require('is')
 const BaseParser = require('./base')
 
 class PageParser extends BaseParser {
-  static get QUERY_KEY() {
-    return 'page'
-  }
-
   static get DEFAULTS() {
     return {
       size: 20,

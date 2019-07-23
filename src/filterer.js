@@ -8,7 +8,7 @@ class Filterer {
   }
 
   get queryKey() {
-    return FilterParser.QUERY_KEY
+    return 'filter'
   }
 
   get query() {
@@ -42,6 +42,7 @@ class Filterer {
   parse() {
     if (!this._filters) {
       const parser = new FilterParser(
+        this.queryKey,
         this.query || this.querier.defaultFilter,
         this.querier.schema,
         {

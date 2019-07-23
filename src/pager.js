@@ -8,7 +8,7 @@ class Pager {
   }
 
   get queryKey() {
-    return PageParser.QUERY_KEY
+    return 'page'
   }
 
   get query() {
@@ -50,6 +50,7 @@ class Pager {
       this._page = false
     } else if (this._page === null) {
       const parser = new PageParser(
+        this.queryKey,
         this.query || this.querier.defaultPage,
         this.querier.schema,
         this.querier.pageDefaults
