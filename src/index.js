@@ -1,11 +1,14 @@
 const is = require('is')
 
+const adapters = require('./adapters')
 const Config = require('./config')
+const errors = require('./errors')
 const Filterer = require('./filterer')
 const NotImplementedError = require('./errors/not_implemented')
 const Pager = require('./pager')
 const Schema = require('./schema')
 const Sorter = require('./sorter')
+const validators = require('./validators')
 
 class QueryQL {
   constructor(query, builder, config = {}) {
@@ -90,3 +93,6 @@ class QueryQL {
 }
 
 module.exports = QueryQL
+module.exports.adapters = adapters
+module.exports.errors = errors
+module.exports.validators = validators
