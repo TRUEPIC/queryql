@@ -35,7 +35,7 @@ class BaseAdapter {
       return this['filter:*'](builder, filter)
     }
 
-    throw new Error('Unsupported filter operator')
+    throw new NotImplementedError()
   }
 }
 
