@@ -2,9 +2,16 @@
   "root": true,
   "env": {
     "node": true,
-    "es6": true
+    "es6": true,
+    "jest/globals": true
   },
-  "extends": ["eslint:recommended", "prettier"],
+  "plugins": ["jest"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "plugin:jest/style",
+    "prettier"
+  ],
   "parserOptions": {
     "ecmaVersion": 2018
   }
