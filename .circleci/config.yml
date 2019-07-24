@@ -1,5 +1,24 @@
 version: 2
 jobs:
+  lint:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Run lint
+          command: npm run lint
   test:
     docker:
       - image: circleci/node:10
@@ -18,9 +37,14 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run:
           name: Run tests
-          command: npm test
+          command: npm test -- --ci --coverage --runInBand
+      - store_test_results:
+          path: test/reports
+      - store_artifacts:
+          path: test/coverage
 workflows:
   version: 2
-  test:
+  lint_and_test:
     jobs:
+      - lint
       - test
