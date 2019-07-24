@@ -3,8 +3,6 @@ const KnexAdapter = require('./adapters/knex')
 
 class Config {
   constructor(config) {
-    this.constructor.defaults = this.constructor.DEFAULTS
-
     this.set(config)
   }
 
@@ -17,7 +15,6 @@ class Config {
 
   static set defaults(defaults) {
     this._defaults = {
-      ...this.DEFAULTS,
       ...this._defaults,
       ...defaults,
     }
@@ -43,5 +40,7 @@ class Config {
     }
   }
 }
+
+Config.defaults = Config.DEFAULTS
 
 module.exports = Config
