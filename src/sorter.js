@@ -33,7 +33,7 @@ class Sorter {
     return sorts.reduce(
       (accumulator, [key, sort]) => ({
         ...accumulator,
-        [`${this.queryKey}:${key}`]: sort.value,
+        [`${this.queryKey}:${key}`]: sort.order,
       }),
       {}
     )
