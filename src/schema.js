@@ -4,9 +4,7 @@ class Schema {
   constructor() {
     this.filters = new Map()
     this.sorts = new Map()
-    this.pageOptions = {
-      isEnabled: false,
-    }
+    this.page(false)
   }
 
   filter(field, operator, options = {}) {
@@ -30,13 +28,9 @@ class Schema {
 
   page(isEnabledOrOptions = true) {
     if (is.bool(isEnabledOrOptions)) {
-      this.pageOptions = {
-        ...this.pageOptions,
-        isEnabled: isEnabledOrOptions,
-      }
+      this.pageOptions = { isEnabled: isEnabledOrOptions }
     } else {
       this.pageOptions = {
-        ...this.pageOptions,
         ...isEnabledOrOptions,
         isEnabled:
           isEnabledOrOptions.isEnabled !== undefined
