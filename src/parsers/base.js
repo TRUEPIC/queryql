@@ -35,13 +35,9 @@ class BaseParser {
   }
 
   buildValidationError(error) {
-    const detail = error.details.reduce((mostSpecific, detail) => {
-      if (mostSpecific && mostSpecific.path.length >= detail.path.length) {
-        return mostSpecific
-      }
-
-      return detail
-    })
+    const detail = error.details.reduce((mostSpecific, detail) =>
+      mostSpecific.path.length >= detail.path.length ? mostSpecific : detail
+    )
 
     const path = detail.path.reduce(
       (accumulator, value, index) =>
