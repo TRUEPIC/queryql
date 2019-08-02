@@ -57,15 +57,8 @@ class Sorter {
   build() {
     this.parse()
 
-    const keys = this.schema.keys()
-    let sort
-
-    for (const key of keys) {
-      sort = this.sorts.get(key)
-
-      if (sort) {
-        this.querier.apply(this.queryKey, sort, `${this.queryKey}:${key}`)
-      }
+    for (const [key, sort] of this.sorts) {
+      this.querier.apply(this.queryKey, sort, `${this.queryKey}:${key}`)
     }
 
     return this.querier
