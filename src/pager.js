@@ -62,7 +62,7 @@ class Pager {
     return this._page
   }
 
-  build() {
+  run() {
     this.parse()
 
     if (this.page) {

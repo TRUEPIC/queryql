@@ -127,7 +127,7 @@ describe('parse', () => {
   })
 })
 
-describe('build', () => {
+describe('run', () => {
   test('calls `querier.apply` if pagination is enabled', () => {
     const querier = new TestQuerier(
       {
@@ -139,7 +139,7 @@ describe('build', () => {
 
     querier.apply = jest.fn()
 
-    pager.build()
+    pager.run()
 
     expect(querier.apply).toHaveBeenCalledWith(pager.queryKey, {
       size: 20,
@@ -156,7 +156,7 @@ describe('build', () => {
 
     querier.apply = jest.fn()
 
-    pager.build()
+    pager.run()
 
     expect(querier.apply).not.toHaveBeenCalled()
   })
@@ -167,6 +167,6 @@ describe('build', () => {
 
     querier.apply = jest.fn()
 
-    expect(pager.build()).toBe(querier)
+    expect(pager.run()).toBe(querier)
   })
 })

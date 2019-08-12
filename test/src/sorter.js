@@ -99,7 +99,7 @@ describe('parse', () => {
   })
 })
 
-describe('build', () => {
+describe('run', () => {
   test('calls `querier.apply` for each sort in order of query', () => {
     const querier = new TestQuerier(
       {
@@ -111,7 +111,7 @@ describe('build', () => {
 
     querier.apply = jest.fn()
 
-    sorter.build()
+    sorter.run()
 
     expect(querier.apply).toHaveBeenNthCalledWith(
       1,
@@ -138,6 +138,6 @@ describe('build', () => {
     const querier = new TestQuerier({}, knex('test'))
     const sorter = new Sorter(querier)
 
-    expect(sorter.build()).toBe(querier)
+    expect(sorter.run()).toBe(querier)
   })
 })

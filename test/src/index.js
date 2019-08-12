@@ -178,7 +178,7 @@ describe('parse', () => {
   })
 })
 
-describe('build', () => {
+describe('run', () => {
   test('returns the builder with filters, sorts, pagination applied', () => {
     const querier = new TestQuerier(
       {
@@ -189,7 +189,7 @@ describe('build', () => {
       knex('test')
     )
 
-    expect(querier.build().toString()).toBe(
+    expect(querier.run().toString()).toBe(
       'select * ' +
         'from "test" ' +
         'where "test" = 123 ' +
@@ -201,7 +201,7 @@ describe('build', () => {
   test('throws `ValidationError` if query schema invalid', () => {
     const querier = new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
 
-    expect(() => querier.build()).toThrow(
+    expect(() => querier.run()).toThrow(
       new ValidationError('filter:invalid is not allowed')
     )
   })
@@ -217,7 +217,7 @@ describe('build', () => {
 
     const querier = new TestQuerier({ filter: { test: 123 } }, knex('test'))
 
-    expect(() => querier.build()).toThrow(
+    expect(() => querier.run()).toThrow(
       new ValidationError('filter:test[=] must be a string')
     )
 

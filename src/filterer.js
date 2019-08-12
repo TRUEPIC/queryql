@@ -57,7 +57,7 @@ class Filterer {
     return this._filters
   }
 
-  build() {
+  run() {
     this.parse()
 
     const keys = this.schema.keys()

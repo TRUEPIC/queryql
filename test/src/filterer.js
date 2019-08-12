@@ -99,7 +99,7 @@ describe('parse', () => {
   })
 })
 
-describe('build', () => {
+describe('run', () => {
   test('calls `querier.apply` for each filter in order of schema', () => {
     const querier = new TestQuerier(
       {
@@ -114,7 +114,7 @@ describe('build', () => {
 
     querier.apply = jest.fn()
 
-    filterer.build()
+    filterer.run()
 
     expect(querier.apply).toHaveBeenNthCalledWith(
       1,
@@ -143,6 +143,6 @@ describe('build', () => {
     const querier = new TestQuerier({}, knex('test'))
     const filterer = new Filterer(querier)
 
-    expect(filterer.build()).toBe(querier)
+    expect(filterer.run()).toBe(querier)
   })
 })

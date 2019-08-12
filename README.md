@@ -62,7 +62,7 @@ The last piece is calling this querier in your router / controller:
 ```js
 const querier = new ImageQuerier(req.query, knex('images'))
 
-const images = await querier.build()
+const images = await querier.run()
 
 // res.send({ images })
 ```
@@ -401,8 +401,8 @@ defineValidation(schema) {
 }
 ```
 
-Validation is run when `build()` is called on the querier. A `ValidationError`
-is thrown if/when it fails.
+Validation is run when `run()` is called on the querier. A `ValidationError` is
+thrown if/when it fails.
 
 #### Building a Custom Validator
 

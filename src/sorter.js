@@ -54,7 +54,7 @@ class Sorter {
     return this._sorts
   }
 
-  build() {
+  run() {
     this.parse()
 
     for (const [key, sort] of this.sorts) {
