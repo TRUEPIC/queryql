@@ -94,5 +94,6 @@ class QueryQL {
 
 module.exports = QueryQL
 module.exports.adapters = adapters
+module.exports.Config = Config
 module.exports.errors = errors
 module.exports.validators = validators

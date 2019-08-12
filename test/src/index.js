@@ -1,5 +1,6 @@
 const knex = require('knex')({ client: 'pg' })
 
+const Config = require('../../src/config')
 const EmptyQuerier = require('../queriers/empty')
 const NotImplementedError = require('../../src/errors/not_implemented')
 const QueryQL = require('../../src')
@@ -231,6 +232,10 @@ describe('exports', () => {
 
   test('an object of adapter classes', () => {
     expect(QueryQL.adapters).toHaveProperty('BaseAdapter')
+  })
+
+  test('the Config class', () => {
+    expect(QueryQL.Config).toBe(Config)
   })
 
   test('an object of error classes', () => {
