@@ -1,7 +1,7 @@
 const Joi = require('@hapi/joi')
 
+const joiValidationErrorConverter = require('../services/joi_validation_error_converter')
 const NotImplementedError = require('../errors/not_implemented')
-const ValidationError = require('../errors/validation')
 
 class BaseParser {
   constructor(queryKey, query, schema, defaults = {}) {
@@ -35,19 +35,7 @@ class BaseParser {
   }
 
   buildValidationError(error) {
-    const detail = error.details.reduce((mostSpecific, detail) =>
-      mostSpecific.path.length >= detail.path.length ? mostSpecific : detail
-    )
-
-    const path = detail.path.reduce(
-      (accumulator, value, index) =>
-        index === 0 ? `${accumulator}:${value}` : `${accumulator}[${value}]`,
-      this.queryKey
-    )
-
-    const message = detail.message.replace(/^".*?" /, '')
-
-    return new ValidationError(`${path} ${message}`)
+    return joiValidationErrorConverter(error, this.queryKey)
   }
 
   validate() {

@@ -1,6 +1,7 @@
 const Joi = require('@hapi/joi')
 
 const BaseValidator = require('./base')
+const joiValidationErrorConverter = require('../services/joi_validation_error_converter')
 
 class JoiValidator extends BaseValidator {
   get defineValidationArgs() {
@@ -8,19 +9,7 @@ class JoiValidator extends BaseValidator {
   }
 
   buildError(error) {
-    const detail = error.details.reduce((mostSpecific, detail) =>
-      mostSpecific.path.length >= detail.path.length ? mostSpecific : detail
-    )
-
-    const path = detail.path.reduce(
-      (accumulator, value, index) =>
-        index === 0 ? value : `${accumulator}[${value}]`,
-      ''
-    )
-
-    const message = detail.message.replace(/^".*?" /, '')
-
-    return super.buildError(`${path} ${message}`)
+    return joiValidationErrorConverter(error)
   }
 
   validate() {

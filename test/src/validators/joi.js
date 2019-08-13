@@ -26,38 +26,7 @@ describe('defineValidationArgs', () => {
 })
 
 describe('buildError', () => {
-  test('uses the most specific error detail (by path length)', () => {
-    const validator = new JoiValidator(new TestQuerier({}, knex('test')))
-    const { error } = Joi.alternatives()
-      .try([
-        Joi.number(),
-        Joi.object().keys({
-          invalid: Joi.number(),
-        }),
-      ])
-      .validate({ invalid: 'invalid' })
-
-    expect(validator.buildError(error)).toEqual(
-      new ValidationError('invalid must be a number')
-    )
-  })
-
-  test('delineates path segments with [] in the message', () => {
-    const validator = new JoiValidator(new TestQuerier({}, knex('test')))
-    const { error } = Joi.object()
-      .keys({
-        invalid: Joi.object().keys({
-          not_valid: Joi.number(),
-        }),
-      })
-      .validate({ invalid: { not_valid: 'invalid' } })
-
-    expect(validator.buildError(error)).toEqual(
-      new ValidationError('invalid[not_valid] must be a number')
-    )
-  })
-
-  test('unquotes the path in the message', () => {
+  test('returns a `ValidationError`', () => {
     const validator = new JoiValidator(new TestQuerier({}, knex('test')))
     const { error } = Joi.object()
       .keys({

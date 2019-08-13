@@ -1,3 +1,5 @@
+const Joi = require('@hapi/joi')
+
 const BaseParser = require('../../../src/parsers/base')
 const NotImplementedError = require('../../../src/errors/not_implemented')
 const Schema = require('../../../src/schema')
@@ -76,6 +78,21 @@ describe('defaults', () => {
 
       expect(parser.defaults).toMatchObject(defaults)
     })
+  })
+})
+
+describe('buildValidationError', () => {
+  test('returns a `ValidationError`', () => {
+    const parser = new BaseParser('test', {}, new Schema())
+    const { error } = Joi.object()
+      .keys({
+        invalid: Joi.number(),
+      })
+      .validate({ invalid: 'invalid' })
+
+    expect(parser.buildValidationError(error)).toEqual(
+      new ValidationError('test:invalid must be a number')
+    )
   })
 })
 
