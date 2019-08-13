@@ -1,4 +1,5 @@
 const SortParser = require('./parsers/sort')
+const ValidationError = require('./errors/validation')
 
 class Sorter {
   constructor(querier) {
@@ -19,6 +20,10 @@ class Sorter {
     return this.querier.schema.sorts
   }
 
+  get isEnabled() {
+    return this.schema.size >= 1
+  }
+
   get sorts() {
     if (!this._sorts) {
       this.parse()
@@ -28,6 +33,10 @@ class Sorter {
   }
 
   sortsFlat() {
+    if (!this.isEnabled) {
+      return {}
+    }
+
     const sorts = Array.from(this.sorts.entries())
 
     return sorts.reduce(
@@ -40,6 +49,14 @@ class Sorter {
   }
 
   parse() {
+    if (!this.isEnabled) {
+      if (this.query) {
+        throw new ValidationError(`${this.queryKey} is disabled`)
+      }
+
+      return this._sorts
+    }
+
     if (!this._sorts) {
       const parser = new SortParser(
         this.queryKey,
@@ -55,9 +72,13 @@ class Sorter {
   }
 
   run() {
-    this.parse()
+    const sorts = this.parse()
 
-    for (const [key, sort] of this.sorts) {
+    if (!sorts) {
+      return this.querier
+    }
+
+    for (const [key, sort] of sorts) {
       this.querier.apply(this.queryKey, sort, `${this.queryKey}:${key}`)
     }
 

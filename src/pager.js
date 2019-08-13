@@ -1,4 +1,5 @@
 const PageParser = require('./parsers/page')
+const ValidationError = require('./errors/validation')
 
 class Pager {
   constructor(querier) {
@@ -24,7 +25,7 @@ class Pager {
   }
 
   get page() {
-    if (this._page === null) {
+    if (!this._page) {
       this.parse()
     }
 
@@ -32,7 +33,7 @@ class Pager {
   }
 
   pageFlat() {
-    if (!this.page) {
+    if (!this.isEnabled) {
       return {}
     }
 
@@ -47,8 +48,14 @@ class Pager {
 
   parse() {
     if (!this.isEnabled) {
-      this._page = false
-    } else if (this._page === null) {
+      if (this.query) {
+        throw new ValidationError(`${this.queryKey} is disabled`)
+      }
+
+      return this._page
+    }
+
+    if (!this._page) {
       const parser = new PageParser(
         this.queryKey,
         this.query || this.querier.defaultPage,
@@ -63,10 +70,10 @@ class Pager {
   }
 
   run() {
-    this.parse()
+    const page = this.parse()
 
-    if (this.page) {
-      this.querier.apply(this.queryKey, this.page)
+    if (page) {
+      this.querier.apply(this.queryKey, page)
     }
 
     return this.querier
