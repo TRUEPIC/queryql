@@ -2,6 +2,7 @@ const knex = require('knex')({ client: 'pg' })
 
 const Pager = require('../../src/pager')
 const TestQuerier = require('../queriers/test')
+const ValidationError = require('../../src/errors/validation')
 
 describe('constructor', () => {
   test('accepts a querier to set', () => {
@@ -79,8 +80,7 @@ describe('pageFlat', () => {
   })
 
   test('returns empty object if pagination is disabled', () => {
-    const querier = new TestQuerier({}, knex('true'))
-    const pager = new Pager(querier)
+    const pager = new Pager(new TestQuerier({}, knex('true')))
 
     jest.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false)
 
@@ -117,13 +117,20 @@ describe('parse', () => {
     expect(parsed.number).toBe(2)
   })
 
-  test('returns `false` if pagination is disabled', () => {
-    const querier = new TestQuerier({}, knex('test'))
-    const pager = new Pager(querier)
+  test('returns `null` if pagination is disabled, no query', () => {
+    const pager = new Pager(new TestQuerier({}, knex('test')))
 
     jest.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false)
 
-    expect(pager.parse()).toBe(false)
+    expect(pager.parse()).toBeNull()
+  })
+
+  test('throws `ValidationError` if pagination is disabled, with query', () => {
+    const pager = new Pager(new TestQuerier({ page: 2 }, knex('test')))
+
+    jest.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false)
+
+    expect(() => pager.parse()).toThrow(new ValidationError('page is disabled'))
   })
 })
 

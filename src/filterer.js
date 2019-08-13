@@ -1,4 +1,5 @@
 const FilterParser = require('./parsers/filter')
+const ValidationError = require('./errors/validation')
 
 class Filterer {
   constructor(querier) {
@@ -19,6 +20,10 @@ class Filterer {
     return this.querier.schema.filters
   }
 
+  get isEnabled() {
+    return this.schema.size >= 1
+  }
+
   get filters() {
     if (!this._filters) {
       this.parse()
@@ -28,6 +33,10 @@ class Filterer {
   }
 
   filtersFlat() {
+    if (!this.isEnabled) {
+      return {}
+    }
+
     const filters = Array.from(this.filters.entries())
 
     return filters.reduce(
@@ -40,6 +49,14 @@ class Filterer {
   }
 
   parse() {
+    if (!this.isEnabled) {
+      if (this.query) {
+        throw new ValidationError(`${this.queryKey} is disabled`)
+      }
+
+      return this._filters
+    }
+
     if (!this._filters) {
       const parser = new FilterParser(
         this.queryKey,
@@ -58,13 +75,17 @@ class Filterer {
   }
 
   run() {
-    this.parse()
+    const filters = this.parse()
+
+    if (!filters) {
+      return this.querier
+    }
 
     const keys = this.schema.keys()
     let filter
 
     for (const key of keys) {
-      filter = this.filters.get(key)
+      filter = filters.get(key)
 
       if (filter) {
         this.querier.apply(this.queryKey, filter, `${this.queryKey}:${key}`)

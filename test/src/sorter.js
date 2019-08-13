@@ -2,6 +2,7 @@ const knex = require('knex')({ client: 'pg' })
 
 const Sorter = require('../../src/sorter')
 const TestQuerier = require('../queriers/test')
+const ValidationError = require('../../src/errors/validation')
 
 describe('constructor', () => {
   test('accepts a querier to set', () => {
@@ -37,6 +38,14 @@ describe('schema', () => {
   })
 })
 
+describe('isEnabled', () => {
+  test('returns whether sorting is enabled (in the schema)', () => {
+    const sorter = new Sorter(new TestQuerier({}, knex('test')))
+
+    expect(sorter.isEnabled).toBe(true)
+  })
+})
+
 describe('sorts', () => {
   test('returns the parsed sorts', () => {
     const sorter = new Sorter(
@@ -67,6 +76,14 @@ describe('sortsFlat', () => {
       'sort:test': 'asc',
     })
   })
+
+  test('returns empty object if sorting is disabled', () => {
+    const sorter = new Sorter(new TestQuerier({}, knex('true')))
+
+    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
+
+    expect(sorter.sortsFlat()).toEqual({})
+  })
 })
 
 describe('parse', () => {
@@ -96,6 +113,31 @@ describe('parse', () => {
     expect(sorter.query).toBeFalsy()
     expect(defaultSort).toHaveBeenCalled()
     expect(parsed.has('test')).toBe(true)
+  })
+
+  test('returns `null` if sorting is disabled, no query', () => {
+    const sorter = new Sorter(new TestQuerier({}, knex('test')))
+
+    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
+
+    expect(sorter.parse()).toBeNull()
+  })
+
+  test('throws `ValidationError` if sorting is disabled, with query', () => {
+    const sorter = new Sorter(
+      new TestQuerier(
+        {
+          sort: 'test',
+        },
+        knex('test')
+      )
+    )
+
+    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
+
+    expect(() => sorter.parse()).toThrow(
+      new ValidationError('sort is disabled')
+    )
   })
 })
 
@@ -132,6 +174,19 @@ describe('run', () => {
       },
       `${sorter.queryKey}:test`
     )
+  })
+
+  test('does not call `querier.apply` if sorting is disabled', () => {
+    const querier = new TestQuerier({}, knex('test'))
+    const sorter = new Sorter(querier)
+
+    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
+
+    querier.apply = jest.fn()
+
+    sorter.run()
+
+    expect(querier.apply).not.toHaveBeenCalled()
   })
 
   test('returns the querier', () => {
