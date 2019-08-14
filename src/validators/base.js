@@ -18,9 +18,9 @@ class BaseValidator {
 
   get values() {
     return {
-      ...this.querier.filterer.filtersFlat(),
-      ...this.querier.sorter.sortsFlat(),
-      ...this.querier.pager.pageFlat(),
+      ...this.querier.filterer.parseFlat(),
+      ...this.querier.sorter.parseFlat(),
+      ...this.querier.pager.parseFlat(),
     }
   }
 
