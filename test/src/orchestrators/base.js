@@ -85,6 +85,20 @@ describe('parse', () => {
     expect(orchestrator.parse()).toBe(123)
   })
 
+  test('returns the cached parsed query on subsequent calls', () => {
+    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+
+    jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
+
+    const parse = jest.fn(() => 123)
+
+    orchestrator.buildParser = () => ({ parse })
+
+    expect(orchestrator.parse()).toBe(123)
+    expect(orchestrator.parse()).toBe(123)
+    expect(parse).toHaveBeenCalledTimes(1)
+  })
+
   test('returns `null` if disabled, no query', () => {
     const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
 

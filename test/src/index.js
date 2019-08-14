@@ -162,36 +162,6 @@ describe('apply', () => {
   })
 })
 
-describe('parse', () => {
-  test('parses the filters, sorts, and pagination from the query', () => {
-    const querier = new TestQuerier({}, knex('test'))
-
-    jest.spyOn(querier.filterer, 'parse')
-    jest.spyOn(querier.sorter, 'parse')
-    jest.spyOn(querier.pager, 'parse')
-
-    querier.parse()
-
-    expect(querier.filterer.parse).toHaveBeenCalled()
-    expect(querier.sorter.parse).toHaveBeenCalled()
-    expect(querier.pager.parse).toHaveBeenCalled()
-  })
-
-  test('returns itself for chaining', () => {
-    const querier = new TestQuerier({}, knex('test'))
-
-    expect(querier.parse()).toBe(querier)
-  })
-
-  test('throws `ValidationError` if query schema invalid', () => {
-    const querier = new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
-
-    expect(() => querier.parse()).toThrow(
-      new ValidationError('filter:invalid is not allowed')
-    )
-  })
-})
-
 describe('run', () => {
   test('returns the builder with filters, sorts, pagination applied', () => {
     const querier = new TestQuerier(
@@ -220,7 +190,7 @@ describe('run', () => {
     )
   })
 
-  test('throws `ValidationError` if querier defined schema invalid', () => {
+  test('throws `ValidationError` if querier-defined schema invalid', () => {
     const defineValidation = jest
       .spyOn(TestQuerier.prototype, 'defineValidation')
       .mockImplementation(schema =>

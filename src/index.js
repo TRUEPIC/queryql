@@ -71,17 +71,7 @@ class QueryQL {
     return this.builder
   }
 
-  parse() {
-    this.filterer.parse()
-    this.sorter.parse()
-    this.pager.parse()
-
-    return this
-  }
-
   run() {
-    this.parse()
-
     this.validator.validate()
 
     this.filterer.run()
