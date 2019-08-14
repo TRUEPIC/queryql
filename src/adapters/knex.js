@@ -2,7 +2,25 @@ const BaseAdapter = require('./base')
 
 class KnexAdapter extends BaseAdapter {
   static get FILTER_OPERATORS() {
-    return ['=', '!=', 'in', 'not in']
+    return [
+      '=',
+      '!=',
+      '<>',
+      '>',
+      '>=',
+      '<',
+      '<=',
+      'is',
+      'is not',
+      'in',
+      'not in',
+      'like',
+      'not like',
+      'ilike',
+      'not ilike',
+      'between',
+      'not between',
+    ]
   }
 
   'filter:*'(builder, { field, operator, value }) {
