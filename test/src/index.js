@@ -146,6 +146,20 @@ describe('apply', () => {
     expect(querier.apply('sort', data, 'sort:test')).toBe(querier.builder)
     expect(querier.adapter.sort).toHaveBeenCalledWith(querier.builder, data)
   })
+
+  test('calls/returns method on adapter if no querier method specified', () => {
+    const querier = new TestQuerier({ page: 2 }, knex('test'))
+    const data = {
+      size: 20,
+      number: 2,
+      offset: 20,
+    }
+
+    jest.spyOn(querier.adapter, 'page')
+
+    expect(querier.apply('page', data)).toBe(querier.builder)
+    expect(querier.adapter.page).toHaveBeenCalledWith(querier.builder, data)
+  })
 })
 
 describe('parse', () => {

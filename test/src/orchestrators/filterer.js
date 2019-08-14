@@ -1,32 +1,14 @@
 const knex = require('knex')({ client: 'pg' })
 
-const Filterer = require('../../src/filterer')
-const TestQuerier = require('../queriers/test')
-const ValidationError = require('../../src/errors/validation')
-
-describe('constructor', () => {
-  test('accepts a querier to set', () => {
-    const querier = new TestQuerier({}, knex('test'))
-    const filterer = new Filterer(querier)
-
-    expect(filterer.querier).toBe(querier)
-  })
-})
+const EmptyQuerier = require('../../queriers/empty')
+const Filterer = require('../../../src/orchestrators/filterer')
+const TestQuerier = require('../../queriers/test')
 
 describe('queryKey', () => {
   test('returns the key for filters in the query', () => {
     const filterer = new Filterer(new TestQuerier({}, knex('test')))
 
     expect(filterer.queryKey).toBe('filter')
-  })
-})
-
-describe('query', () => {
-  test('returns the filters from the query', () => {
-    const filter = { test: 123 }
-    const filterer = new Filterer(new TestQuerier({ filter }, knex('test')))
-
-    expect(filterer.query).toEqual(filter)
   })
 })
 
@@ -39,29 +21,20 @@ describe('schema', () => {
 })
 
 describe('isEnabled', () => {
-  test('returns whether filtering is enabled (in the schema)', () => {
+  test('returns `true` if >= 1 filter is whitelisted in the schema', () => {
     const filterer = new Filterer(new TestQuerier({}, knex('test')))
 
     expect(filterer.isEnabled).toBe(true)
   })
-})
 
-describe('filters', () => {
-  test('returns the parsed filters', () => {
-    const filterer = new Filterer(
-      new TestQuerier(
-        {
-          filter: { test: 123 },
-        },
-        knex('test')
-      )
-    )
+  test('returns `false` if no filter is whitelisted in the schema', () => {
+    const filterer = new Filterer(new EmptyQuerier({}, knex('test')))
 
-    expect(filterer.filters.has('test[=]')).toBe(true)
+    expect(filterer.isEnabled).toBe(false)
   })
 })
 
-describe('filtersFlat', () => {
+describe('parseFlat', () => {
   test('returns object with filter keys => values', () => {
     const filterer = new Filterer(
       new TestQuerier(
@@ -72,7 +45,7 @@ describe('filtersFlat', () => {
       )
     )
 
-    expect(filterer.filtersFlat()).toEqual({
+    expect(filterer.parseFlat()).toEqual({
       'filter:test[=]': 123,
     })
   })
@@ -82,7 +55,7 @@ describe('filtersFlat', () => {
 
     jest.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
 
-    expect(filterer.filtersFlat()).toEqual({})
+    expect(filterer.parseFlat()).toEqual({})
   })
 })
 
@@ -114,84 +87,56 @@ describe('parse', () => {
     expect(defaultFilter).toHaveBeenCalled()
     expect(parsed.has('test[=]')).toBe(true)
   })
+})
 
-  test('returns `null` if filtering is disabled, no query', () => {
-    const filterer = new Filterer(new TestQuerier({}, knex('test')))
-
-    jest.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
-
-    expect(filterer.parse()).toBeNull()
-  })
-
-  test('throws `ValidationError` if filtering is disabled, with query', () => {
+describe('run', () => {
+  test('applies each filter in order of schema', () => {
     const filterer = new Filterer(
       new TestQuerier(
         {
-          filter: { test: 123 },
+          filter: {
+            testing: { '!=': 456 },
+            test: 123,
+          },
         },
         knex('test')
       )
     )
 
-    jest.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
-
-    expect(() => filterer.parse()).toThrow(
-      new ValidationError('filter is disabled')
-    )
-  })
-})
-
-describe('run', () => {
-  test('calls `querier.apply` for each filter in order of schema', () => {
-    const querier = new TestQuerier(
-      {
-        filter: {
-          testing: { '!=': 456 },
-          test: 123,
-        },
-      },
-      knex('test')
-    )
-    const filterer = new Filterer(querier)
-
-    querier.apply = jest.fn()
+    filterer.apply = jest.fn()
 
     filterer.run()
 
-    expect(querier.apply).toHaveBeenNthCalledWith(
+    expect(filterer.apply).toHaveBeenNthCalledWith(
       1,
-      filterer.queryKey,
       {
         field: 'test',
         operator: '=',
         value: 123,
       },
-      `${filterer.queryKey}:test[=]`
+      'test[=]'
     )
 
-    expect(querier.apply).toHaveBeenNthCalledWith(
+    expect(filterer.apply).toHaveBeenNthCalledWith(
       2,
-      filterer.queryKey,
       {
         field: 'testing',
         operator: '!=',
         value: 456,
       },
-      `${filterer.queryKey}:testing[!=]`
+      'testing[!=]'
     )
   })
 
-  test('does not call `querier.apply` if filtering is disabled', () => {
-    const querier = new TestQuerier({}, knex('test'))
-    const filterer = new Filterer(querier)
+  test('does not apply filtering if disabled', () => {
+    const filterer = new Filterer(new TestQuerier({}, knex('test')))
 
     jest.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
-
-    querier.apply = jest.fn()
+    filterer.apply = jest.fn()
 
     filterer.run()
 
-    expect(querier.apply).not.toHaveBeenCalled()
+    expect(filterer.apply).not.toHaveBeenCalled()
   })
 
   test('returns the querier', () => {

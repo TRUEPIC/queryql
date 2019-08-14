@@ -1,32 +1,14 @@
 const knex = require('knex')({ client: 'pg' })
 
-const Sorter = require('../../src/sorter')
-const TestQuerier = require('../queriers/test')
-const ValidationError = require('../../src/errors/validation')
-
-describe('constructor', () => {
-  test('accepts a querier to set', () => {
-    const querier = new TestQuerier({}, knex('test'))
-    const sorter = new Sorter(querier)
-
-    expect(sorter.querier).toBe(querier)
-  })
-})
+const EmptyQuerier = require('../../queriers/empty')
+const Sorter = require('../../../src/orchestrators/sorter')
+const TestQuerier = require('../../queriers/test')
 
 describe('queryKey', () => {
   test('returns the key for filters in the query', () => {
     const sorter = new Sorter(new TestQuerier({}, knex('test')))
 
     expect(sorter.queryKey).toBe('sort')
-  })
-})
-
-describe('query', () => {
-  test('returns the sorts from the query', () => {
-    const sort = 'test'
-    const sorter = new Sorter(new TestQuerier({ sort }, knex('test')))
-
-    expect(sorter.query).toBe(sort)
   })
 })
 
@@ -39,29 +21,20 @@ describe('schema', () => {
 })
 
 describe('isEnabled', () => {
-  test('returns whether sorting is enabled (in the schema)', () => {
+  test('returns `true` if >= 1 sort is whitelisted in the schema', () => {
     const sorter = new Sorter(new TestQuerier({}, knex('test')))
 
     expect(sorter.isEnabled).toBe(true)
   })
-})
 
-describe('sorts', () => {
-  test('returns the parsed sorts', () => {
-    const sorter = new Sorter(
-      new TestQuerier(
-        {
-          sort: 'test',
-        },
-        knex('test')
-      )
-    )
+  test('returns `false` if no sort is whitelisted in the schema', () => {
+    const sorter = new Sorter(new EmptyQuerier({}, knex('test')))
 
-    expect(sorter.sorts.has('test')).toBe(true)
+    expect(sorter.isEnabled).toBe(false)
   })
 })
 
-describe('sortsFlat', () => {
+describe('parseFlat', () => {
   test('returns object with sort keys => orders', () => {
     const sorter = new Sorter(
       new TestQuerier(
@@ -72,7 +45,7 @@ describe('sortsFlat', () => {
       )
     )
 
-    expect(sorter.sortsFlat()).toEqual({
+    expect(sorter.parseFlat()).toEqual({
       'sort:test': 'asc',
     })
   })
@@ -82,7 +55,7 @@ describe('sortsFlat', () => {
 
     jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
 
-    expect(sorter.sortsFlat()).toEqual({})
+    expect(sorter.parseFlat()).toEqual({})
   })
 })
 
@@ -114,79 +87,51 @@ describe('parse', () => {
     expect(defaultSort).toHaveBeenCalled()
     expect(parsed.has('test')).toBe(true)
   })
+})
 
-  test('returns `null` if sorting is disabled, no query', () => {
-    const sorter = new Sorter(new TestQuerier({}, knex('test')))
-
-    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
-
-    expect(sorter.parse()).toBeNull()
-  })
-
-  test('throws `ValidationError` if sorting is disabled, with query', () => {
+describe('run', () => {
+  test('applies each sort in order of query', () => {
     const sorter = new Sorter(
       new TestQuerier(
         {
-          sort: 'test',
+          sort: ['testing', 'test'],
         },
         knex('test')
       )
     )
 
-    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
-
-    expect(() => sorter.parse()).toThrow(
-      new ValidationError('sort is disabled')
-    )
-  })
-})
-
-describe('run', () => {
-  test('calls `querier.apply` for each sort in order of query', () => {
-    const querier = new TestQuerier(
-      {
-        sort: ['testing', 'test'],
-      },
-      knex('test')
-    )
-    const sorter = new Sorter(querier)
-
-    querier.apply = jest.fn()
+    sorter.apply = jest.fn()
 
     sorter.run()
 
-    expect(querier.apply).toHaveBeenNthCalledWith(
+    expect(sorter.apply).toHaveBeenNthCalledWith(
       1,
-      sorter.queryKey,
       {
         field: 'testing',
         order: 'asc',
       },
-      `${sorter.queryKey}:testing`
+      'testing'
     )
 
-    expect(querier.apply).toHaveBeenNthCalledWith(
+    expect(sorter.apply).toHaveBeenNthCalledWith(
       2,
-      sorter.queryKey,
       {
         field: 'test',
         order: 'asc',
       },
-      `${sorter.queryKey}:test`
+      'test'
     )
   })
 
-  test('does not call `querier.apply` if sorting is disabled', () => {
-    const querier = new TestQuerier({}, knex('test'))
-    const sorter = new Sorter(querier)
+  test('does not apply sorting if disabled', () => {
+    const sorter = new Sorter(new TestQuerier({}, knex('test')))
 
     jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
-
-    querier.apply = jest.fn()
+    sorter.apply = jest.fn()
 
     sorter.run()
 
-    expect(querier.apply).not.toHaveBeenCalled()
+    expect(sorter.apply).not.toHaveBeenCalled()
   })
 
   test('returns the querier', () => {
