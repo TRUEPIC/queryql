@@ -1,3 +1,5 @@
+const is = require('is')
+
 const NotImplementedError = require('../errors/not_implemented')
 const ValidationError = require('../errors/validation')
 
@@ -52,12 +54,16 @@ class BaseOrchestrator {
     return this._parse
   }
 
-  apply(data, method = null) {
-    return this.querier.apply(
-      this.queryKey,
-      data,
-      method && `${this.queryKey}:${method}`
-    )
+  apply(data, key = null) {
+    const querierMethod = key && `${this.queryKey}:${key}`
+    const args = [this.querier.builder, data]
+
+    this.querier.builder =
+      querierMethod && is.fn(this.querier[querierMethod])
+        ? this.querier[querierMethod](...args)
+        : this.querier.adapter[this.queryKey](...args)
+
+    return this.querier.builder
   }
 }
 

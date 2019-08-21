@@ -1,5 +1,3 @@
-const is = require('is')
-
 const adapters = require('./adapters')
 const Config = require('./config')
 const errors = require('./errors')
@@ -59,16 +57,6 @@ class QueryQL {
 
   get pageDefaults() {
     return undefined
-  }
-
-  apply(type, data, method = null) {
-    if (method && is.fn(this[method])) {
-      this.builder = this[method](this.builder, data)
-    } else {
-      this.builder = this.adapter[type](this.builder, data)
-    }
-
-    return this.builder
   }
 
   run() {

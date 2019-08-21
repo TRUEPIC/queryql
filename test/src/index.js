@@ -118,50 +118,6 @@ describe('pageDefaults', () => {
   })
 })
 
-describe('apply', () => {
-  test('calls/returns method on querier if method defined', () => {
-    const querier = new TestQuerier({ sort: 'test' }, knex('test'))
-    const data = {
-      field: 'test',
-      order: 'asc',
-    }
-
-    querier['sort:test'] = jest.fn((builder, { field, order }) =>
-      builder.orderBy(field, order)
-    )
-
-    expect(querier.apply('sort', data, 'sort:test')).toBe(querier.builder)
-    expect(querier['sort:test']).toHaveBeenCalledWith(querier.builder, data)
-  })
-
-  test('calls/returns method on adapter if querier method not defined', () => {
-    const querier = new TestQuerier({ sort: 'test' }, knex('test'))
-    const data = {
-      field: 'test',
-      order: 'asc',
-    }
-
-    jest.spyOn(querier.adapter, 'sort')
-
-    expect(querier.apply('sort', data, 'sort:test')).toBe(querier.builder)
-    expect(querier.adapter.sort).toHaveBeenCalledWith(querier.builder, data)
-  })
-
-  test('calls/returns method on adapter if no querier method specified', () => {
-    const querier = new TestQuerier({ page: 2 }, knex('test'))
-    const data = {
-      size: 20,
-      number: 2,
-      offset: 20,
-    }
-
-    jest.spyOn(querier.adapter, 'page')
-
-    expect(querier.apply('page', data)).toBe(querier.builder)
-    expect(querier.adapter.page).toHaveBeenCalledWith(querier.builder, data)
-  })
-})
-
 describe('run', () => {
   test('returns the builder with filters, sorts, pagination applied', () => {
     const querier = new TestQuerier(

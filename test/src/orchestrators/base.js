@@ -123,40 +123,49 @@ describe('parse', () => {
 })
 
 describe('apply', () => {
-  test('calls `querier.apply` with a method if specified', () => {
+  test('calls/returns method on querier if method defined', () => {
     const querier = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
-    const data = 123
-    const method = 'test'
+    const data = {
+      field: 'test',
+      order: 'asc',
+    }
 
-    querier.apply = jest.fn()
+    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort')
+    querier['sort:test'] = jest.fn(builder => builder)
 
-    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
-
-    orchestrator.apply(data, method)
-
-    expect(querier.apply).toHaveBeenCalledWith(
-      orchestrator.queryKey,
-      data,
-      `${orchestrator.queryKey}:${method}`
-    )
+    expect(orchestrator.apply(data, 'test')).toBe(querier.builder)
+    expect(querier['sort:test']).toHaveBeenCalledWith(querier.builder, data)
   })
 
-  test('calls `querier.apply` without a method if not specified', () => {
+  test('calls/returns method on adapter if querier method not defined', () => {
     const querier = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
-    const data = 123
+    const data = {
+      field: 'test',
+      order: 'asc',
+    }
 
-    querier.apply = jest.fn()
+    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort')
+    jest.spyOn(querier.adapter, 'sort')
 
-    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
+    expect(orchestrator.apply(data, 'test')).toBe(querier.builder)
+    expect(querier.adapter.sort).toHaveBeenCalledWith(querier.builder, data)
+  })
 
-    orchestrator.apply(data)
+  test('calls/returns method on adapter if no querier method specified', () => {
+    const querier = new TestQuerier({}, knex('test'))
+    const orchestrator = new BaseOrchestrator(querier)
+    const data = {
+      size: 20,
+      number: 2,
+      offset: 20,
+    }
 
-    expect(querier.apply).toHaveBeenCalledWith(
-      orchestrator.queryKey,
-      data,
-      null
-    )
+    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('page')
+    jest.spyOn(querier.adapter, 'page')
+
+    expect(orchestrator.apply(data)).toBe(querier.builder)
+    expect(querier.adapter.page).toHaveBeenCalledWith(querier.builder, data)
   })
 })
