@@ -15,7 +15,7 @@ class FilterParser extends BaseParser {
     return `${filter.field}[${filter.operator}]`
   }
 
-  buildValidationSchema(schema) {
+  defineValidation(schema) {
     const defaultOperator = this.defaults.operator
     const mapFieldsToOperators = Object.entries(
       this.schema.mapFilterFieldsToOperators()

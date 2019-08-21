@@ -10,7 +10,7 @@ class PageParser extends BaseParser {
     }
   }
 
-  buildValidationSchema(schema) {
+  defineValidation(schema) {
     return schema.alternatives().try([
       schema
         .number()

@@ -14,7 +14,7 @@ class SortParser extends BaseParser {
     return sort.field
   }
 
-  buildValidationSchema(schema) {
+  defineValidation(schema) {
     const keys = Array.from(this.schema.sorts.keys())
 
     return schema.alternatives().try([

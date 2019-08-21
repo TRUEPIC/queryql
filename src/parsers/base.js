@@ -1,7 +1,5 @@
-const Joi = require('@hapi/joi')
-
-const joiValidationErrorConverter = require('../services/joi_validation_error_converter')
 const NotImplementedError = require('../errors/not_implemented')
+const ParserValidator = require('../validators/parser')
 
 class BaseParser {
   constructor(queryKey, query, schema, defaults = {}) {
@@ -9,14 +7,20 @@ class BaseParser {
     this.query = query
     this.schema = schema
     this.defaults = defaults
-  }
 
-  buildValidationSchema(/* schema */) {
-    throw new NotImplementedError()
+    this.validator = new ParserValidator(
+      this.defineValidation.bind(this),
+      queryKey,
+      query
+    )
   }
 
   parse() {
     throw new NotImplementedError()
+  }
+
+  defineValidation(/* schema */) {
+    return undefined
   }
 
   static get DEFAULTS() {
@@ -34,20 +38,8 @@ class BaseParser {
     return this._defaults
   }
 
-  buildValidationError(error) {
-    return joiValidationErrorConverter(error, this.queryKey)
-  }
-
   validate() {
-    const schema = this.buildValidationSchema(Joi)
-
-    const { error, value } = schema.validate(this.query)
-
-    if (error) {
-      throw this.buildValidationError(error)
-    }
-
-    return value
+    return this.validator.validate()
   }
 }
 

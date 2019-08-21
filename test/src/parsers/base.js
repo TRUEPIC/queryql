@@ -1,5 +1,3 @@
-const Joi = require('@hapi/joi')
-
 const BaseParser = require('../../../src/parsers/base')
 const NotImplementedError = require('../../../src/errors/not_implemented')
 const Schema = require('../../../src/schema')
@@ -35,19 +33,19 @@ describe('constructor', () => {
   })
 })
 
-describe('buildValidationSchema', () => {
-  test('throws `NotImplementedError` when not extended', () => {
-    const parser = new BaseParser('test', {}, new Schema())
-
-    expect(() => parser.buildValidationSchema()).toThrow(NotImplementedError)
-  })
-})
-
 describe('parse', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const parser = new BaseParser('test', {}, new Schema())
 
     expect(() => parser.parse()).toThrow(NotImplementedError)
+  })
+})
+
+describe('defineValidation', () => {
+  test('is not defined by default', () => {
+    const parser = new BaseParser('test', {}, new Schema())
+
+    expect(parser.defineValidation()).toBeUndefined()
   })
 })
 
@@ -81,41 +79,38 @@ describe('defaults', () => {
   })
 })
 
-describe('buildValidationError', () => {
-  test('returns a `ValidationError`', () => {
-    const parser = new BaseParser('test', {}, new Schema())
-    const { error } = Joi.object()
-      .keys({
-        invalid: Joi.number(),
-      })
-      .validate({ invalid: 'invalid' })
-
-    expect(parser.buildValidationError(error)).toEqual(
-      new ValidationError('test:invalid must be a number')
-    )
-  })
-})
-
 describe('validate', () => {
-  test('returns the validated query if valid', () => {
-    const query = { test: 123 }
-    const parser = new BaseParser('test', query, new Schema())
+  test('returns `true` if valid', () => {
+    const defineValidation = jest
+      .spyOn(BaseParser.prototype, 'defineValidation')
+      .mockImplementation(schema =>
+        schema.object().keys({
+          test: schema.number(),
+        })
+      )
 
-    parser.buildValidationSchema = schema =>
-      schema.object().keys({
-        test: schema.number(),
-      })
+    const parser = new BaseParser('test', { test: 123 }, new Schema())
 
-    expect(parser.validate()).toEqual(query)
+    expect(parser.validate()).toBe(true)
+
+    defineValidation.mockRestore()
   })
 
   test('throws `ValidationError` if invalid', () => {
-    const parser = new BaseParser('test', { test: 123 }, new Schema())
+    const defineValidation = jest
+      .spyOn(BaseParser.prototype, 'defineValidation')
+      .mockImplementation(schema =>
+        schema.object().keys({
+          invalid: schema.number(),
+        })
+      )
 
-    parser.buildValidationSchema = schema => schema.number()
+    const parser = new BaseParser('test', { invalid: 'invalid' }, new Schema())
 
     expect(() => parser.validate()).toThrow(
-      new ValidationError('test must be a number')
+      new ValidationError('test:invalid must be a number')
     )
+
+    defineValidation.mockRestore()
   })
 })
