@@ -46,6 +46,8 @@ class Sorter extends BaseOrchestrator {
       return this.querier
     }
 
+    this.querier.adapter.validator.validateSorts(sorts, this.queryKey)
+
     for (const [key, sort] of sorts) {
       this.apply(sort, key)
     }

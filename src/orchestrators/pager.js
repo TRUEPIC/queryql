@@ -41,6 +41,8 @@ class Pager extends BaseOrchestrator {
     const page = this.parse()
 
     if (page) {
+      this.querier.adapter.validator.validatePage(page, this.queryKey)
+
       this.apply(page)
     }
 

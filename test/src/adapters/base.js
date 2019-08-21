@@ -1,6 +1,22 @@
 const BaseAdapter = require('../../../src/adapters/base')
 const NotImplementedError = require('../../../src/errors/not_implemented')
 
+describe('constructor', () => {
+  test('creates an instance of the validator, calls `defineValidation`', () => {
+    const defineValidation = jest.spyOn(
+      BaseAdapter.prototype,
+      'defineValidation'
+    )
+
+    expect(new BaseAdapter().validator.constructor.name).toBe(
+      'AdapterValidator'
+    )
+    expect(defineValidation).toHaveBeenCalled()
+
+    defineValidation.mockRestore()
+  })
+})
+
 describe('FILTER_OPERATORS', () => {
   test('defaults to requiring `=` operator support', () => {
     expect(BaseAdapter.FILTER_OPERATORS).toEqual(['='])
@@ -28,6 +44,12 @@ describe('sort', () => {
 describe('page', () => {
   test('throws `NotImplementedError` when not extended', () => {
     expect(() => new BaseAdapter().page()).toThrow(NotImplementedError)
+  })
+})
+
+describe('defineValidation', () => {
+  test('is not defined by default', () => {
+    expect(new BaseAdapter().defineValidation()).toBeUndefined()
   })
 })
 

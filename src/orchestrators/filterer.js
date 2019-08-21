@@ -49,6 +49,8 @@ class Filterer extends BaseOrchestrator {
       return this.querier
     }
 
+    this.querier.adapter.validator.validateFilters(filters, this.queryKey)
+
     const keys = this.schema.keys()
     let filter
 

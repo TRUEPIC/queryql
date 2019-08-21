@@ -207,6 +207,21 @@ describe('run', () => {
 
     defineValidation.mockRestore()
   })
+
+  test('throws `ValidationError` if adapter-defined schema invalid', () => {
+    const querier = new TestQuerier(
+      {
+        filter: {
+          test: { '=': null },
+        },
+      },
+      knex('test')
+    )
+
+    expect(() => querier.run()).toThrow(
+      new ValidationError('filter:test[=] must be an array')
+    )
+  })
 })
 
 describe('exports', () => {

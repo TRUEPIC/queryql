@@ -1,8 +1,13 @@
 const is = require('is')
 
+const AdapterValidator = require('../validators/adapter')
 const NotImplementedError = require('../errors/not_implemented')
 
 class BaseAdapter {
+  constructor() {
+    this.validator = new AdapterValidator(this.defineValidation.bind(this))
+  }
+
   static get FILTER_OPERATORS() {
     return ['=']
   }
@@ -21,6 +26,10 @@ class BaseAdapter {
 
   page(/* builder, { size, number, offset } */) {
     throw new NotImplementedError()
+  }
+
+  defineValidation(/* schema */) {
+    return undefined
   }
 
   filter(builder, filter) {

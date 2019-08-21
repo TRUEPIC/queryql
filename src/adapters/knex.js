@@ -23,6 +23,40 @@ class KnexAdapter extends BaseAdapter {
     ]
   }
 
+  defineValidation(schema) {
+    return {
+      'filter:=': schema
+        .alternatives()
+        .try([schema.boolean(), schema.number(), schema.string()]),
+      'filter:!=': schema
+        .alternatives()
+        .try([schema.boolean(), schema.number(), schema.string()]),
+      'filter:<>': schema
+        .alternatives()
+        .try([schema.boolean(), schema.number(), schema.string()]),
+      'filter:>': schema.number(),
+      'filter:>=': schema.number(),
+      'filter:<': schema.number(),
+      'filter:<=': schema.number(),
+      'filter:is': schema.any().valid(null),
+      'filter:is not': schema.any().valid(null),
+      'filter:in': schema.array().items(schema.number(), schema.string()),
+      'filter:not in': schema.array().items(schema.number(), schema.string()),
+      'filter:like': schema.string(),
+      'filter:not like': schema.string(),
+      'filter:ilike': schema.string(),
+      'filter:not ilike': schema.string(),
+      'filter:between': schema
+        .array()
+        .length(2)
+        .items(schema.number()),
+      'filter:not between': schema
+        .array()
+        .length(2)
+        .items(schema.number()),
+    }
+  }
+
   'filter:*'(builder, { field, operator, value }) {
     return builder.where(field, operator, value)
   }

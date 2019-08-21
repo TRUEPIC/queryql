@@ -1,6 +1,7 @@
 const knex = require('knex')({ client: 'pg' })
 
 const KnexAdapter = require('../../../src/adapters/knex')
+const ValidationError = require('../../../src/errors/validation')
 
 describe('filter', () => {
   test('supports the `=` operator', () => {
@@ -187,5 +188,329 @@ describe('page', () => {
       .toString()
 
     expect(query).toBe('select * from "test" limit 10 offset 20')
+  })
+})
+
+describe('validation', () => {
+  describe('`filter:=`', () => {
+    test('permits a boolean value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:=', 'test', true)).toBe(true)
+    })
+
+    test('permits a number value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:=', 'test', 123)).toBe(true)
+    })
+
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:=', 'test', 'valid')).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() => validator.validateValue('filter:=', 'test', null)).toThrow(
+        new ValidationError('test must be a boolean')
+      )
+    })
+  })
+
+  describe('`filter:!=`', () => {
+    test('permits a boolean value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:!=', 'test', true)).toBe(true)
+    })
+
+    test('permits a number value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:!=', 'test', 123)).toBe(true)
+    })
+
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:!=', 'test', 'valid')).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() => validator.validateValue('filter:!=', 'test', null)).toThrow(
+        new ValidationError('test must be a boolean')
+      )
+    })
+  })
+
+  describe('`filter:<>`', () => {
+    test('permits a boolean value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:<>', 'test', true)).toBe(true)
+    })
+
+    test('permits a number value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:<>', 'test', 123)).toBe(true)
+    })
+
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:<>', 'test', 'valid')).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() => validator.validateValue('filter:<>', 'test', null)).toThrow(
+        new ValidationError('test must be a boolean')
+      )
+    })
+  })
+
+  describe('`filter:>`', () => {
+    test('permits a number value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:>', 'test', 123)).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:>', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be a number'))
+    })
+  })
+
+  describe('`filter:>=`', () => {
+    test('permits a number value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:>=', 'test', 123)).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:>=', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be a number'))
+    })
+  })
+
+  describe('`filter:<`', () => {
+    test('permits a number value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:<', 'test', 123)).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:<', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be a number'))
+    })
+  })
+
+  describe('`filter:<=`', () => {
+    test('permits a number value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:<=', 'test', 123)).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:<=', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be a number'))
+    })
+  })
+
+  describe('`filter:is`', () => {
+    test('permits a `null` value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:is', 'test', null)).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:is', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be one of [null]'))
+    })
+  })
+
+  describe('`filter:is not`', () => {
+    test('permits a `null` value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:is not', 'test', null)).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:is not', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be one of [null]'))
+    })
+  })
+
+  describe('`filter:in`', () => {
+    test('permits an array of number / string values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:in', 'test', [123, 'test'])).toBe(
+        true
+      )
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:in', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be an array'))
+    })
+  })
+
+  describe('`filter:not in`', () => {
+    test('permits an array of number / string values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(
+        validator.validateValue('filter:not in', 'test', [123, 'test'])
+      ).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:not in', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be an array'))
+    })
+  })
+
+  describe('`filter:like`', () => {
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:like', 'test', 'valid')).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() => validator.validateValue('filter:like', 'test', 123)).toThrow(
+        new ValidationError('test must be a string')
+      )
+    })
+  })
+
+  describe('`filter:not like`', () => {
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:not like', 'test', 'valid')).toBe(
+        true
+      )
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:not like', 'test', 123)
+      ).toThrow(new ValidationError('test must be a string'))
+    })
+  })
+
+  describe('`filter:ilike`', () => {
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:ilike', 'test', 'valid')).toBe(
+        true
+      )
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:ilike', 'test', 123)
+      ).toThrow(new ValidationError('test must be a string'))
+    })
+  })
+
+  describe('`filter:not ilike`', () => {
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:not ilike', 'test', 'valid')).toBe(
+        true
+      )
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:not ilike', 'test', 123)
+      ).toThrow(new ValidationError('test must be a string'))
+    })
+  })
+
+  describe('`filter:between`', () => {
+    test('permits an array of two number values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(
+        validator.validateValue('filter:between', 'test', [123, 456])
+      ).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:between', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be an array'))
+    })
+  })
+
+  describe('`filter:not between`', () => {
+    test('permits an array of two number values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(
+        validator.validateValue('filter:not between', 'test', [123, 456])
+      ).toBe(true)
+    })
+
+    test('throws for a non-permitted value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:not between', 'test', 'invalid')
+      ).toThrow(new ValidationError('test must be an array'))
+    })
   })
 })
