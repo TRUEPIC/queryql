@@ -149,11 +149,9 @@ describe('run', () => {
   test('throws `ValidationError` if querier-defined schema invalid', () => {
     const defineValidation = jest
       .spyOn(TestQuerier.prototype, 'defineValidation')
-      .mockImplementation(schema =>
-        schema.object().keys({
-          'filter:test[=]': schema.string(),
-        })
-      )
+      .mockImplementation(schema => ({
+        'filter:test[=]': schema.string(),
+      }))
 
     const querier = new TestQuerier({ filter: { test: 123 } }, knex('test'))
 

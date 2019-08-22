@@ -394,10 +394,10 @@ function in your querier that returns the validation schema:
 
 ```js
 defineValidation(schema) {
-  return schema.object().keys({
+  return {
     'filter:status[=]': schema.string().valid('open', 'closed'),
     'page:size': schema.number().max(100)
-  })
+  }
 }
 ```
 

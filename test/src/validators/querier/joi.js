@@ -49,10 +49,9 @@ describe('validate', () => {
       knex('test')
     )
 
-    querier.defineValidation = schema =>
-      schema.object().keys({
-        'filter:test[=]': schema.number(),
-      })
+    querier.defineValidation = schema => ({
+      'filter:test[=]': schema.number(),
+    })
 
     expect(new JoiValidator(querier).validate()).toBe(true)
   })
@@ -79,10 +78,9 @@ describe('validate', () => {
       knex('test')
     )
 
-    querier.defineValidation = schema =>
-      schema.object().keys({
-        'filter:test[=]': schema.number(),
-      })
+    querier.defineValidation = schema => ({
+      'filter:test[=]': schema.number(),
+    })
 
     expect(() => new JoiValidator(querier).validate()).toThrow(
       new ValidationError('filter:test[=] must be a number')

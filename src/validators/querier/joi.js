@@ -17,7 +17,9 @@ class JoiValidator extends BaseValidator {
       return true
     }
 
-    const { error } = this.schema.validate(this.values, { allowUnknown: true })
+    const { error } = Joi.object()
+      .keys(this.schema)
+      .validate(this.values, { allowUnknown: true })
 
     if (error) {
       throw this.buildError(error)
