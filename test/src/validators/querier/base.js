@@ -1,9 +1,9 @@
 const knex = require('knex')({ client: 'pg' })
 
-const BaseValidator = require('../../../src/validators/base')
-const NotImplementedError = require('../../../src/errors/not_implemented')
-const TestQuerier = require('../../queriers/test')
-const ValidationError = require('../../../src/errors/validation')
+const BaseValidator = require('../../../../src/validators/querier/base')
+const NotImplementedError = require('../../../../src/errors/not_implemented')
+const TestQuerier = require('../../../queriers/test')
+const ValidationError = require('../../../../src/errors/validation')
 
 describe('constructor', () => {
   test('accepts a querier to set', () => {

@@ -6,7 +6,7 @@ const NotImplementedError = require('./errors/not_implemented')
 const Pager = require('./orchestrators/pager')
 const Schema = require('./schema')
 const Sorter = require('./orchestrators/sorter')
-const validators = require('./validators')
+const validators = require('./validators/querier')
 
 class QueryQL {
   constructor(query, builder, config = {}) {

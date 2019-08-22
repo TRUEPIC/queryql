@@ -1,7 +1,7 @@
 const Joi = require('@hapi/joi')
 
 const BaseValidator = require('./base')
-const joiValidationErrorConverter = require('../services/joi_validation_error_converter')
+const joiValidationErrorConverter = require('../../services/joi_validation_error_converter')
 
 class JoiValidator extends BaseValidator {
   get defineValidationArgs() {

@@ -1,9 +1,9 @@
 const Joi = require('@hapi/joi')
 const knex = require('knex')({ client: 'pg' })
 
-const JoiValidator = require('../../../src/validators/joi')
-const TestQuerier = require('../../queriers/test')
-const ValidationError = require('../../../src/errors/validation')
+const JoiValidator = require('../../../../src/validators/querier/joi')
+const TestQuerier = require('../../../queriers/test')
+const ValidationError = require('../../../../src/errors/validation')
 
 describe('constructor', () => {
   test('calls `querier.defineValidation` with `Joi`', () => {

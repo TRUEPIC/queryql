@@ -1,4 +1,4 @@
-const JoiValidator = require('./validators/joi')
+const JoiValidator = require('./validators/querier/joi')
 const KnexAdapter = require('./adapters/knex')
 
 class Config {

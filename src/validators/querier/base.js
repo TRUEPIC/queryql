@@ -1,5 +1,5 @@
-const NotImplementedError = require('../errors/not_implemented')
-const ValidationError = require('../errors/validation')
+const NotImplementedError = require('../../errors/not_implemented')
+const ValidationError = require('../../errors/validation')
 
 class BaseValidator {
   constructor(querier) {
