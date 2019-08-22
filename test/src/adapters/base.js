@@ -18,14 +18,16 @@ describe('constructor', () => {
 })
 
 describe('FILTER_OPERATORS', () => {
-  test('defaults to requiring `=` operator support', () => {
-    expect(BaseAdapter.FILTER_OPERATORS).toEqual(['='])
+  test('throws `NotImplementedError` when not extended', () => {
+    expect(() => BaseAdapter.FILTER_OPERATORS).toThrow(NotImplementedError)
   })
 })
 
 describe('DEFAULT_FILTER_OPERATOR', () => {
-  test('defaults to `=` when no operator is specified', () => {
-    expect(BaseAdapter.DEFAULT_FILTER_OPERATOR).toBe('=')
+  test('throws `NotImplementedError` when not extended', () => {
+    expect(() => BaseAdapter.DEFAULT_FILTER_OPERATOR).toThrow(
+      NotImplementedError
+    )
   })
 })
 
@@ -59,12 +61,18 @@ describe('filter', () => {
     const builder = 'builder'
     const filter = { operator: '=' }
 
+    const FILTER_OPERATORS = jest
+      .spyOn(BaseAdapter, 'FILTER_OPERATORS', 'get')
+      .mockReturnValue(['='])
+
     adapter['filter:='] = jest.fn(() => 'test')
 
     adapter.filter(builder, filter)
 
     expect(adapter['filter:=']).toHaveBeenCalledWith(builder, filter)
     expect(adapter['filter:=']).toHaveReturnedWith('test')
+
+    FILTER_OPERATORS.mockRestore()
   })
 
   test('calls/returns `filter:*` if operator method is not defined', () => {
@@ -72,17 +80,29 @@ describe('filter', () => {
     const builder = 'builder'
     const filter = { operator: '=' }
 
+    const FILTER_OPERATORS = jest
+      .spyOn(BaseAdapter, 'FILTER_OPERATORS', 'get')
+      .mockReturnValue(['='])
+
     adapter['filter:*'] = jest.fn(() => 'test')
 
     adapter.filter(builder, filter)
 
     expect(adapter['filter:*']).toHaveBeenCalledWith(builder, filter)
     expect(adapter['filter:*']).toHaveReturnedWith('test')
+
+    FILTER_OPERATORS.mockRestore()
   })
 
   test('throws `NotImplementedError` if operator is not supported', () => {
+    const FILTER_OPERATORS = jest
+      .spyOn(BaseAdapter, 'FILTER_OPERATORS', 'get')
+      .mockReturnValue(['='])
+
     expect(() =>
-      new BaseAdapter().filter('builder', { operator: 'test' })
+      new BaseAdapter().filter('builder', { operator: 'invalid' })
     ).toThrow(NotImplementedError)
+
+    FILTER_OPERATORS.mockRestore()
   })
 })

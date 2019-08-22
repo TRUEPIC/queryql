@@ -23,6 +23,10 @@ class KnexAdapter extends BaseAdapter {
     ]
   }
 
+  static get DEFAULT_FILTER_OPERATOR() {
+    return '='
+  }
+
   defineValidation(schema) {
     return {
       'filter:=': schema

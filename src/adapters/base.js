@@ -9,11 +9,11 @@ class BaseAdapter {
   }
 
   static get FILTER_OPERATORS() {
-    return ['=']
+    throw new NotImplementedError()
   }
 
   static get DEFAULT_FILTER_OPERATOR() {
-    return '='
+    throw new NotImplementedError()
   }
 
   'filter:*'(/* builder, { field, operator, value } */) {
@@ -34,17 +34,18 @@ class BaseAdapter {
 
   filter(builder, filter) {
     const { operator } = filter
+
+    if (!this.constructor.FILTER_OPERATORS.includes(operator)) {
+      throw new NotImplementedError()
+    }
+
     const operatorMethod = `filter:${operator}`
 
     if (is.fn(this[operatorMethod])) {
       return this[operatorMethod](builder, filter)
     }
 
-    if (this.constructor.FILTER_OPERATORS.includes(operator)) {
-      return this['filter:*'](builder, filter)
-    }
-
-    throw new NotImplementedError()
+    return this['filter:*'](builder, filter)
   }
 }
 
