@@ -13,6 +13,7 @@ class BaseParser {
       queryKey,
       query
     )
+    this._validate = null
   }
 
   parse() {
@@ -39,7 +40,11 @@ class BaseParser {
   }
 
   validate() {
-    return this.validator.validate()
+    if (!this._validate) {
+      this._validate = this.validator.validate()
+    }
+
+    return this._validate
   }
 }
 

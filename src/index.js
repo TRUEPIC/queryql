@@ -24,7 +24,9 @@ class QueryQL {
     this.sorter = new Sorter(this)
     this.pager = new Pager(this)
 
-    this.validator = new (this.config.get('validator'))(this)
+    this.validator = new (this.config.get('validator'))(
+      this.defineValidation.bind(this)
+    )
   }
 
   defineSchema(/* schema */) {
@@ -59,8 +61,16 @@ class QueryQL {
     return undefined
   }
 
+  validate() {
+    return (
+      this.filterer.validate() &&
+      this.sorter.validate() &&
+      this.pager.validate()
+    )
+  }
+
   run() {
-    this.validator.validate()
+    this.validate()
 
     this.filterer.run()
     this.sorter.run()

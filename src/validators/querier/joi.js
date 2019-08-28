@@ -4,7 +4,15 @@ const BaseValidator = require('./base')
 const joiValidationErrorConverter = require('../../services/joi_validation_error_converter')
 
 class JoiValidator extends BaseValidator {
-  get defineValidationArgs() {
+  constructor(defineSchema) {
+    super(defineSchema)
+
+    if (this.schema) {
+      this.schema = Joi.object().keys(this.schema)
+    }
+  }
+
+  get defineSchemaArgs() {
     return [Joi]
   }
 
@@ -12,14 +20,12 @@ class JoiValidator extends BaseValidator {
     return joiValidationErrorConverter(error)
   }
 
-  validate() {
+  validate(values) {
     if (!this.schema) {
       return true
     }
 
-    const { error } = Joi.object()
-      .keys(this.schema)
-      .validate(this.values, { allowUnknown: true })
+    const { error } = this.schema.validate(values, { allowUnknown: true })
 
     if (error) {
       throw this.buildError(error)

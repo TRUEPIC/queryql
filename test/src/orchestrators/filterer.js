@@ -3,6 +3,7 @@ const knex = require('knex')({ client: 'pg' })
 const EmptyQuerier = require('../../queriers/empty')
 const Filterer = require('../../../src/orchestrators/filterer')
 const TestQuerier = require('../../queriers/test')
+const ValidationError = require('../../../src/errors/validation')
 
 describe('queryKey', () => {
   test('returns the key for filters in the query', () => {
@@ -75,17 +76,57 @@ describe('parse', () => {
 
   test('calls/uses `querier.defaultFilter` if no query', () => {
     const querier = new TestQuerier({}, knex('test'))
-    const filterer = new Filterer(querier)
 
     const defaultFilter = jest
       .spyOn(querier, 'defaultFilter', 'get')
       .mockReturnValue({ test: 123 })
 
+    const filterer = new Filterer(querier)
     const parsed = filterer.parse()
 
     expect(filterer.query).toBeFalsy()
     expect(defaultFilter).toHaveBeenCalled()
     expect(parsed.has('test[=]')).toBe(true)
+
+    defaultFilter.mockRestore()
+  })
+})
+
+describe('validate', () => {
+  test('returns `true` if valid', () => {
+    const filterer = new Filterer(
+      new TestQuerier({ filter: { test: 123 } }, knex('test'))
+    )
+
+    expect(filterer.validate()).toBe(true)
+  })
+
+  test('returns the cached `true` on subsequent calls', () => {
+    const filterer = new Filterer(
+      new TestQuerier({ filter: { test: 123 } }, knex('test'))
+    )
+
+    expect(filterer.validate()).toBe(true)
+    expect(filterer._validate).toBe(true)
+    expect(filterer.validate()).toBe(true)
+  })
+
+  test('returns `true` if disabled', () => {
+    const filterer = new Filterer(new TestQuerier({}, knex('test')))
+
+    jest.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
+
+    expect(filterer.validate()).toBe(true)
+  })
+
+  test('throws `ValidationError` if invalid', () => {
+    const filterer = new Filterer(
+      new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
+    )
+
+    expect(() => filterer.validate()).toThrow(
+      new ValidationError('filter:invalid is not allowed')
+    )
   })
 })
 
@@ -144,5 +185,15 @@ describe('run', () => {
     const filterer = new Filterer(querier)
 
     expect(filterer.run()).toBe(querier)
+  })
+
+  test('throws `ValidationError` if invalid', () => {
+    const filterer = new Filterer(
+      new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
+    )
+
+    expect(() => filterer.run()).toThrow(
+      new ValidationError('filter:invalid is not allowed')
+    )
   })
 })

@@ -3,6 +3,7 @@ const knex = require('knex')({ client: 'pg' })
 const EmptyQuerier = require('../../queriers/empty')
 const Sorter = require('../../../src/orchestrators/sorter')
 const TestQuerier = require('../../queriers/test')
+const ValidationError = require('../../../src/errors/validation')
 
 describe('queryKey', () => {
   test('returns the key for filters in the query', () => {
@@ -75,17 +76,53 @@ describe('parse', () => {
 
   test('calls/uses `querier.defaultSort` if no query', () => {
     const querier = new TestQuerier({}, knex('test'))
-    const sorter = new Sorter(querier)
 
     const defaultSort = jest
       .spyOn(querier, 'defaultSort', 'get')
       .mockReturnValue('test')
 
+    const sorter = new Sorter(querier)
     const parsed = sorter.parse()
 
     expect(sorter.query).toBeFalsy()
     expect(defaultSort).toHaveBeenCalled()
     expect(parsed.has('test')).toBe(true)
+
+    defaultSort.mockRestore()
+  })
+})
+
+describe('validate', () => {
+  test('returns `true` if valid', () => {
+    const sorter = new Sorter(new TestQuerier({ sort: 'test' }, knex('test')))
+
+    expect(sorter.validate()).toBe(true)
+  })
+
+  test('returns the cached `true` on subsequent calls', () => {
+    const sorter = new Sorter(new TestQuerier({ sort: 'test' }, knex('test')))
+
+    expect(sorter.validate()).toBe(true)
+    expect(sorter._validate).toBe(true)
+    expect(sorter.validate()).toBe(true)
+  })
+
+  test('returns `true` if disabled', () => {
+    const sorter = new Sorter(new TestQuerier({}, knex('test')))
+
+    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
+
+    expect(sorter.validate()).toBe(true)
+  })
+
+  test('throws `ValidationError` if invalid', () => {
+    const sorter = new Sorter(
+      new TestQuerier({ sort: { test: 'invalid' } }, knex('test'))
+    )
+
+    expect(() => sorter.validate()).toThrow(
+      new ValidationError('sort:test must be one of [asc, desc]')
+    )
   })
 })
 
@@ -139,5 +176,15 @@ describe('run', () => {
     const sorter = new Sorter(querier)
 
     expect(sorter.run()).toBe(querier)
+  })
+
+  test('throws `ValidationError` if invalid', () => {
+    const sorter = new Sorter(
+      new TestQuerier({ sort: { test: 'invalid' } }, knex('test'))
+    )
+
+    expect(() => sorter.run()).toThrow(
+      new ValidationError('sort:test must be one of [asc, desc]')
+    )
   })
 })

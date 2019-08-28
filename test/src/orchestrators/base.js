@@ -4,6 +4,17 @@ const BaseOrchestrator = require('../../../src/orchestrators/base')
 const NotImplementedError = require('../../../src/errors/not_implemented')
 const TestQuerier = require('../../queriers/test')
 const ValidationError = require('../../../src/errors/validation')
+let buildParser
+
+beforeEach(() => {
+  buildParser = jest
+    .spyOn(BaseOrchestrator.prototype, 'buildParser')
+    .mockReturnValue({ parse: () => {} })
+})
+
+afterEach(() => {
+  buildParser.mockRestore()
+})
 
 describe('constructor', () => {
   test('accepts a querier to set', () => {
@@ -11,6 +22,13 @@ describe('constructor', () => {
     const filterer = new BaseOrchestrator(querier)
 
     expect(filterer.querier).toBe(querier)
+  })
+
+  test('calls `buildParser` and sets the returned value', () => {
+    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+
+    expect(buildParser).toHaveBeenCalled()
+    expect(orchestrator.parser).toBeDefined()
   })
 })
 
@@ -42,6 +60,8 @@ describe('buildParser', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
 
+    buildParser.mockRestore()
+
     expect(() => orchestrator.buildParser()).toThrow(NotImplementedError)
   })
 })
@@ -51,6 +71,14 @@ describe('parseFlat', () => {
     const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
 
     expect(() => orchestrator.parseFlat()).toThrow(NotImplementedError)
+  })
+})
+
+describe('validate', () => {
+  test('throws `NotImplementedError` when not extended', () => {
+    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+
+    expect(() => orchestrator.validate()).toThrow(NotImplementedError)
   })
 })
 
@@ -80,7 +108,7 @@ describe('parse', () => {
 
     jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
 
-    orchestrator.buildParser = () => ({ parse: () => 123 })
+    orchestrator.parser = { parse: () => 123 }
 
     expect(orchestrator.parse()).toBe(123)
   })
@@ -92,7 +120,7 @@ describe('parse', () => {
 
     const parse = jest.fn(() => 123)
 
-    orchestrator.buildParser = () => ({ parse })
+    orchestrator.parser = { parse }
 
     expect(orchestrator.parse()).toBe(123)
     expect(orchestrator.parse()).toBe(123)

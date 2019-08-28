@@ -118,6 +118,45 @@ describe('pageDefaults', () => {
   })
 })
 
+describe('validate', () => {
+  test('returns `true` if valid', () => {
+    const querier = new TestQuerier(
+      {
+        filter: { test: 123 },
+        sort: 'test',
+        page: 2,
+      },
+      knex('test')
+    )
+
+    expect(querier.validate()).toBe(true)
+  })
+
+  test('throws `ValidationError` if a filter is invalid', () => {
+    const querier = new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
+
+    expect(() => querier.validate()).toThrow(
+      new ValidationError('filter:invalid is not allowed')
+    )
+  })
+
+  test('throws `ValidationError` if a sort is invalid', () => {
+    const querier = new TestQuerier({ sort: { test: 'invalid' } }, knex('test'))
+
+    expect(() => querier.validate()).toThrow(
+      new ValidationError('sort:test must be one of [asc, desc]')
+    )
+  })
+
+  test('throws `ValidationError` if pagination is invalid', () => {
+    const querier = new TestQuerier({ page: 'invalid' }, knex('test'))
+
+    expect(() => querier.validate()).toThrow(
+      new ValidationError('page must be a number')
+    )
+  })
+})
+
 describe('run', () => {
   test('returns the builder with filters, sorts, pagination applied', () => {
     const querier = new TestQuerier(
@@ -138,42 +177,11 @@ describe('run', () => {
     )
   })
 
-  test('throws `ValidationError` if query schema invalid', () => {
+  test('throws `ValidationError` if invalid', () => {
     const querier = new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
 
     expect(() => querier.run()).toThrow(
       new ValidationError('filter:invalid is not allowed')
-    )
-  })
-
-  test('throws `ValidationError` if querier-defined schema invalid', () => {
-    const defineValidation = jest
-      .spyOn(TestQuerier.prototype, 'defineValidation')
-      .mockImplementation(schema => ({
-        'filter:test[=]': schema.string(),
-      }))
-
-    const querier = new TestQuerier({ filter: { test: 123 } }, knex('test'))
-
-    expect(() => querier.run()).toThrow(
-      new ValidationError('filter:test[=] must be a string')
-    )
-
-    defineValidation.mockRestore()
-  })
-
-  test('throws `ValidationError` if adapter-defined schema invalid', () => {
-    const querier = new TestQuerier(
-      {
-        filter: {
-          test: { '=': null },
-        },
-      },
-      knex('test')
-    )
-
-    expect(() => querier.run()).toThrow(
-      new ValidationError('filter:test[=] must be an array')
     )
   })
 })

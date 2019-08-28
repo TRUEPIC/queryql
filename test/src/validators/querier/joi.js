@@ -1,33 +1,31 @@
 const Joi = require('@hapi/joi')
-const knex = require('knex')({ client: 'pg' })
 
 const JoiValidator = require('../../../../src/validators/querier/joi')
-const TestQuerier = require('../../../queriers/test')
 const ValidationError = require('../../../../src/errors/validation')
 
 describe('constructor', () => {
-  test('calls `querier.defineValidation` with `Joi`', () => {
-    const querier = new TestQuerier({}, knex('test'))
-    const schema = Joi.number()
+  test('accepts/calls `defineSchema(Joi)` and sets the returned value', () => {
+    const defineSchema = jest.fn(schema => ({
+      'filter:test[=]': schema.number(),
+    }))
+    const validator = new JoiValidator(defineSchema)
 
-    querier.defineValidation = jest.fn(() => schema)
-
-    expect(new JoiValidator(querier).schema).toBe(schema)
-    expect(querier.defineValidation).toHaveBeenCalledWith(Joi)
+    expect(defineSchema).toHaveBeenCalledWith(Joi)
+    expect(validator.schema.isJoi).toBe(true)
   })
 })
 
-describe('defineValidationArgs', () => {
-  test('returns `Joi` argument to call `querier.defineValidation` with', () => {
-    const validator = new JoiValidator(new TestQuerier({}, knex('test')))
+describe('defineSchemaArgs', () => {
+  test('returns `Joi` argument to call `defineSchema` with', () => {
+    const validator = new JoiValidator(() => {})
 
-    expect(validator.defineValidationArgs).toEqual([Joi])
+    expect(validator.defineSchemaArgs).toEqual([Joi])
   })
 })
 
 describe('buildError', () => {
   test('returns a `ValidationError`', () => {
-    const validator = new JoiValidator(new TestQuerier({}, knex('test')))
+    const validator = new JoiValidator(() => {})
     const { error } = Joi.object()
       .keys({
         invalid: Joi.number(),
@@ -41,48 +39,27 @@ describe('buildError', () => {
 })
 
 describe('validate', () => {
-  test('returns `true` if valid', () => {
-    const querier = new TestQuerier(
-      {
-        filter: { test: 123 },
-      },
-      knex('test')
-    )
-
-    querier.defineValidation = schema => ({
-      'filter:test[=]': schema.number(),
-    })
-
-    expect(new JoiValidator(querier).validate()).toBe(true)
-  })
-
-  test('returns `true` if no validation is defined', () => {
-    const validator = new JoiValidator(
-      new TestQuerier(
-        {
-          filter: { test: 123 },
-        },
-        knex('test')
-      )
-    )
+  test('returns `true` if no schema is defined', () => {
+    const validator = new JoiValidator(() => {})
 
     expect(validator.schema).toBeUndefined()
-    expect(validator.validate()).toBe(true)
+    expect(validator.validate({ 'filter:test[=]': 123 })).toBe(true)
+  })
+
+  test('returns `true` if valid', () => {
+    const validator = new JoiValidator(schema => ({
+      'filter:test[=]': schema.number(),
+    }))
+
+    expect(validator.validate({ 'filter:test[=]': 123 })).toBe(true)
   })
 
   test('throws `ValidationError` if invalid', () => {
-    const querier = new TestQuerier(
-      {
-        filter: { test: 'invalid' },
-      },
-      knex('test')
-    )
-
-    querier.defineValidation = schema => ({
+    const validator = new JoiValidator(schema => ({
       'filter:test[=]': schema.number(),
-    })
+    }))
 
-    expect(() => new JoiValidator(querier).validate()).toThrow(
+    expect(() => validator.validate({ 'filter:test[=]': 'invalid' })).toThrow(
       new ValidationError('filter:test[=] must be a number')
     )
   })

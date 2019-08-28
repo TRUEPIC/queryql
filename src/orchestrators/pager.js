@@ -37,12 +37,30 @@ class Pager extends BaseOrchestrator {
     )
   }
 
+  validate() {
+    if (!this.isEnabled) {
+      return true
+    }
+
+    if (!this._validate) {
+      this._validate =
+        this.parser.validate() &&
+        this.querier.adapter.validator.validatePage(
+          this.parse(),
+          this.queryKey
+        ) &&
+        this.querier.validator.validate(this.parseFlat())
+    }
+
+    return this._validate
+  }
+
   run() {
+    this.validate()
+
     const page = this.parse()
 
     if (page) {
-      this.querier.adapter.validator.validatePage(page, this.queryKey)
-
       this.apply(page)
     }
 

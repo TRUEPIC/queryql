@@ -2,26 +2,16 @@ const NotImplementedError = require('../../errors/not_implemented')
 const ValidationError = require('../../errors/validation')
 
 class BaseValidator {
-  constructor(querier) {
-    this.querier = querier
-
-    this.schema = querier.defineValidation(...this.defineValidationArgs)
+  constructor(defineSchema) {
+    this.schema = defineSchema(...this.defineSchemaArgs)
   }
 
-  validate() {
+  validate(/* values */) {
     throw new NotImplementedError()
   }
 
-  get defineValidationArgs() {
+  get defineSchemaArgs() {
     return []
-  }
-
-  get values() {
-    return {
-      ...this.querier.filterer.parseFlat(),
-      ...this.querier.sorter.parseFlat(),
-      ...this.querier.pager.parseFlat(),
-    }
   }
 
   buildError(message) {

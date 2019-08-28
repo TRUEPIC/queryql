@@ -7,7 +7,10 @@ class BaseOrchestrator {
   constructor(querier) {
     this.querier = querier
 
+    this.parser = this.buildParser()
     this._parse = null
+
+    this._validate = null
   }
 
   get queryKey() {
@@ -30,6 +33,10 @@ class BaseOrchestrator {
     throw new NotImplementedError()
   }
 
+  validate() {
+    throw new NotImplementedError()
+  }
+
   run() {
     throw new NotImplementedError()
   }
@@ -48,7 +55,7 @@ class BaseOrchestrator {
     }
 
     if (!this._parse) {
-      this._parse = this.buildParser().parse()
+      this._parse = this.parser.parse()
     }
 
     return this._parse

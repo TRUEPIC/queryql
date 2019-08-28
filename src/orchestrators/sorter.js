@@ -39,14 +39,32 @@ class Sorter extends BaseOrchestrator {
     )
   }
 
+  validate() {
+    if (!this.isEnabled) {
+      return true
+    }
+
+    if (!this._validate) {
+      this._validate =
+        this.parser.validate() &&
+        this.querier.adapter.validator.validateSorts(
+          this.parse(),
+          this.queryKey
+        ) &&
+        this.querier.validator.validate(this.parseFlat())
+    }
+
+    return this._validate
+  }
+
   run() {
+    this.validate()
+
     const sorts = this.parse()
 
     if (!sorts) {
       return this.querier
     }
-
-    this.querier.adapter.validator.validateSorts(sorts, this.queryKey)
 
     for (const [key, sort] of sorts) {
       this.apply(sort, key)

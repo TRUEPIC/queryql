@@ -42,14 +42,32 @@ class Filterer extends BaseOrchestrator {
     )
   }
 
+  validate() {
+    if (!this.isEnabled) {
+      return true
+    }
+
+    if (!this._validate) {
+      this._validate =
+        this.parser.validate() &&
+        this.querier.adapter.validator.validateFilters(
+          this.parse(),
+          this.queryKey
+        ) &&
+        this.querier.validator.validate(this.parseFlat())
+    }
+
+    return this._validate
+  }
+
   run() {
+    this.validate()
+
     const filters = this.parse()
 
     if (!filters) {
       return this.querier
     }
-
-    this.querier.adapter.validator.validateFilters(filters, this.queryKey)
 
     const keys = this.schema.keys()
     let filter
