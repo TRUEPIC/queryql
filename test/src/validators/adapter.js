@@ -86,7 +86,7 @@ describe('validateFilters', () => {
     const validator = new AdapterValidator(() => {})
 
     expect(validator.schema).toBeUndefined()
-    expect(validator.validateFilters(parser.parse(), 'filter')).toBe(true)
+    expect(validator.validateFilters(parser.parse())).toBe(true)
   })
 
   test('returns `true` if all filters are valid', () => {
@@ -105,7 +105,7 @@ describe('validateFilters', () => {
       'filter:!=': schema.number(),
     }))
 
-    expect(validator.validateFilters(parser.parse(), 'filter')).toBe(true)
+    expect(validator.validateFilters(parser.parse())).toBe(true)
   })
 
   test('throws `ValidationError` if a filter is invalid', () => {
@@ -118,7 +118,7 @@ describe('validateFilters', () => {
       'filter:=': schema.number(),
     }))
 
-    expect(() => validator.validateFilters(parser.parse(), 'filter')).toThrow(
+    expect(() => validator.validateFilters(parser.parse())).toThrow(
       new ValidationError('filter:test[=] must be a number')
     )
   })
@@ -130,7 +130,7 @@ describe('validateSorts', () => {
     const validator = new AdapterValidator(() => {})
 
     expect(validator.schema).toBeUndefined()
-    expect(validator.validateSorts(parser.parse(), 'sort')).toBe(true)
+    expect(validator.validateSorts(parser.parse())).toBe(true)
   })
 
   test('returns `true` if no schema key is defined', () => {
@@ -140,7 +140,7 @@ describe('validateSorts', () => {
     }))
 
     expect(validator.schema['sort']).toBeUndefined()
-    expect(validator.validateSorts(parser.parse(), 'sort')).toBe(true)
+    expect(validator.validateSorts(parser.parse())).toBe(true)
   })
 
   test('returns `true` if all sorts are valid', () => {
@@ -153,7 +153,7 @@ describe('validateSorts', () => {
       sort: schema.string().valid('asc'),
     }))
 
-    expect(validator.validateSorts(parser.parse(), 'sort')).toBe(true)
+    expect(validator.validateSorts(parser.parse())).toBe(true)
   })
 
   test('throws `ValidationError` if a sort is invalid', () => {
@@ -162,7 +162,7 @@ describe('validateSorts', () => {
       sort: schema.string().invalid('asc'),
     }))
 
-    expect(() => validator.validateSorts(parser.parse(), 'sort')).toThrow(
+    expect(() => validator.validateSorts(parser.parse())).toThrow(
       new ValidationError('sort:test contains an invalid value')
     )
   })
@@ -174,7 +174,7 @@ describe('validatePage', () => {
     const validator = new AdapterValidator(() => {})
 
     expect(validator.schema).toBeUndefined()
-    expect(validator.validatePage(parser.parse(), 'page')).toBe(true)
+    expect(validator.validatePage(parser.parse())).toBe(true)
   })
 
   test('returns `true` if page is valid', () => {
@@ -184,7 +184,7 @@ describe('validatePage', () => {
       'page:number': schema.number().valid(2),
     }))
 
-    expect(validator.validatePage(parser.parse(), 'page')).toBe(true)
+    expect(validator.validatePage(parser.parse())).toBe(true)
   })
 
   test('throws `ValidationError` if page is invalid', () => {
@@ -193,7 +193,7 @@ describe('validatePage', () => {
       'page:number': schema.number().invalid(2),
     }))
 
-    expect(() => validator.validatePage(parser.parse(), 'page')).toThrow(
+    expect(() => validator.validatePage(parser.parse())).toThrow(
       new ValidationError('page:number contains an invalid value')
     )
   })

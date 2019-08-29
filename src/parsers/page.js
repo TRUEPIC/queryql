@@ -10,6 +10,16 @@ class PageParser extends BaseParser {
     }
   }
 
+  buildKey({ field }, includeQueryKey = true) {
+    let key = field
+
+    if (includeQueryKey) {
+      key = `${this.queryKey}:${key}`
+    }
+
+    return key
+  }
+
   defineValidation(schema) {
     return schema.alternatives().try([
       schema
@@ -58,7 +68,12 @@ class PageParser extends BaseParser {
 
     page.offset = (page.number - 1) * page.size
 
-    return page
+    return new Map(
+      Object.entries(page).map(([field, value]) => [
+        this.buildKey({ field }),
+        { field, value },
+      ])
+    )
   }
 }
 

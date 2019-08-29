@@ -71,7 +71,7 @@ describe('parse', () => {
       )
     )
 
-    expect(sorter.parse().has('test')).toBe(true)
+    expect(sorter.parse().has('sort:test')).toBe(true)
   })
 
   test('calls/uses `querier.defaultSort` if no query', () => {
@@ -86,7 +86,7 @@ describe('parse', () => {
 
     expect(sorter.query).toBeFalsy()
     expect(defaultSort).toHaveBeenCalled()
-    expect(parsed.has('test')).toBe(true)
+    expect(parsed.has('sort:test')).toBe(true)
 
     defaultSort.mockRestore()
   })
@@ -147,7 +147,7 @@ describe('run', () => {
         field: 'testing',
         order: 'asc',
       },
-      'testing'
+      'sort:testing'
     )
 
     expect(sorter.apply).toHaveBeenNthCalledWith(
@@ -156,7 +156,7 @@ describe('run', () => {
         field: 'test',
         order: 'asc',
       },
-      'test'
+      'sort:test'
     )
   })
 

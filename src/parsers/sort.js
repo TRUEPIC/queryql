@@ -10,8 +10,8 @@ class SortParser extends BaseParser {
     }
   }
 
-  static buildKey(sort) {
-    return sort.field
+  buildKey({ field }) {
+    return `${this.queryKey}:${field}`
   }
 
   defineValidation(schema) {
@@ -72,7 +72,7 @@ class SortParser extends BaseParser {
       sorts.push(...this.parseObject(this.query))
     }
 
-    return new Map(sorts.map(sort => [this.constructor.buildKey(sort), sort]))
+    return new Map(sorts.map(sort => [this.buildKey(sort), sort]))
   }
 }
 

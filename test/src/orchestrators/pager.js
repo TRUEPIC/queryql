@@ -53,6 +53,23 @@ describe('parseFlat', () => {
     })
   })
 
+  test('returns object keys without the query key, if specified', () => {
+    const pager = new Pager(
+      new TestQuerier(
+        {
+          page: 2,
+        },
+        knex('test')
+      )
+    )
+
+    expect(pager.parseFlat(false)).toEqual({
+      size: 20,
+      number: 2,
+      offset: 20,
+    })
+  })
+
   test('returns empty object if pagination is disabled', () => {
     const pager = new Pager(new TestQuerier({}, knex('true')))
 
@@ -73,7 +90,7 @@ describe('parse', () => {
       )
     )
 
-    expect(pager.parse().number).toBe(2)
+    expect(pager.parse().get('page:number').value).toBe(2)
   })
 
   test('calls/uses `querier.defaultPage` if no query', () => {
@@ -88,7 +105,7 @@ describe('parse', () => {
 
     expect(pager.query).toBeFalsy()
     expect(defaultPage).toHaveBeenCalled()
-    expect(parsed.number).toBe(2)
+    expect(parsed.get('page:number').value).toBe(2)
 
     defaultPage.mockRestore()
   })

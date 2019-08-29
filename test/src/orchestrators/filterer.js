@@ -71,7 +71,7 @@ describe('parse', () => {
       )
     )
 
-    expect(filterer.parse().has('test[=]')).toBe(true)
+    expect(filterer.parse().has('filter:test[=]')).toBe(true)
   })
 
   test('calls/uses `querier.defaultFilter` if no query', () => {
@@ -86,7 +86,7 @@ describe('parse', () => {
 
     expect(filterer.query).toBeFalsy()
     expect(defaultFilter).toHaveBeenCalled()
-    expect(parsed.has('test[=]')).toBe(true)
+    expect(parsed.has('filter:test[=]')).toBe(true)
 
     defaultFilter.mockRestore()
   })
@@ -155,7 +155,7 @@ describe('run', () => {
         operator: '=',
         value: 123,
       },
-      'test[=]'
+      'filter:test[=]'
     )
 
     expect(filterer.apply).toHaveBeenNthCalledWith(
@@ -165,7 +165,7 @@ describe('run', () => {
         operator: '!=',
         value: 456,
       },
-      'testing[!=]'
+      'filter:testing[!=]'
     )
   })
 

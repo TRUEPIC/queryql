@@ -18,13 +18,13 @@ describe('DEFAULTS', () => {
 
 describe('buildKey', () => {
   test('builds/returns a string to use as a key', () => {
-    const key = FilterParser.buildKey({
+    const parser = new FilterParser('filter', {}, new Schema())
+    const key = parser.buildKey({
       field: 'test',
       operator: '=',
-      value: 123,
     })
 
-    expect(key).toBe('test[=]')
+    expect(key).toBe('filter:test[=]')
   })
 })
 
@@ -123,7 +123,7 @@ describe('parse', () => {
       { operator: '=' }
     )
 
-    expect(parser.parse().get('test[=]')).toEqual({
+    expect(parser.parse().get('filter:test[=]')).toEqual({
       field: 'test',
       operator: '=',
       value: 123,
@@ -137,7 +137,7 @@ describe('parse', () => {
       new Schema().filter('test', '!=')
     )
 
-    expect(parser.parse().get('test[!=]')).toEqual({
+    expect(parser.parse().get('filter:test[!=]')).toEqual({
       field: 'test',
       operator: '!=',
       value: 456,
@@ -156,13 +156,13 @@ describe('parse', () => {
       new Schema().filter('test', '=').filter('test', '!=')
     )
 
-    expect(parser.parse().get('test[=]')).toEqual({
+    expect(parser.parse().get('filter:test[=]')).toEqual({
       field: 'test',
       operator: '=',
       value: 123,
     })
 
-    expect(parser.parse().get('test[!=]')).toEqual({
+    expect(parser.parse().get('filter:test[!=]')).toEqual({
       field: 'test',
       operator: '!=',
       value: 456,
@@ -179,13 +179,13 @@ describe('parse', () => {
       new Schema().filter('test1', '=').filter('test2', '!=')
     )
 
-    expect(parser.parse().get('test1[=]')).toEqual({
+    expect(parser.parse().get('filter:test1[=]')).toEqual({
       field: 'test1',
       operator: '=',
       value: 123,
     })
 
-    expect(parser.parse().get('test2[!=]')).toEqual({
+    expect(parser.parse().get('filter:test2[!=]')).toEqual({
       field: 'test2',
       operator: '!=',
       value: 456,

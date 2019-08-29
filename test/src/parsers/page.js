@@ -12,6 +12,29 @@ describe('DEFAULTS', () => {
   })
 })
 
+describe('buildKey', () => {
+  test('builds/returns a string to use as a key', () => {
+    const parser = new PageParser('page', {}, new Schema())
+    const key = parser.buildKey({
+      field: 'size',
+    })
+
+    expect(key).toBe('page:size')
+  })
+
+  test('builds/returns a key without the query key, if specified', () => {
+    const parser = new PageParser('page', {}, new Schema())
+    const key = parser.buildKey(
+      {
+        field: 'size',
+      },
+      false
+    )
+
+    expect(key).toBe('size')
+  })
+})
+
 describe('validation', () => {
   describe('`page=number`', () => {
     test('throws if the number is not an integer', () => {
@@ -71,41 +94,81 @@ describe('validation', () => {
 describe('parse', () => {
   test('`page=number` with a string number', () => {
     const parser = new PageParser('page', '2', new Schema())
+    const parsed = parser.parse()
 
-    expect(parser.parse()).toEqual({
-      size: 20,
-      number: '2',
-      offset: 20,
+    expect(parsed.get('page:size')).toEqual({
+      field: 'size',
+      value: 20,
+    })
+
+    expect(parsed.get('page:number')).toEqual({
+      field: 'number',
+      value: '2',
+    })
+
+    expect(parsed.get('page:offset')).toEqual({
+      field: 'offset',
+      value: 20,
     })
   })
 
   test('`page=number` with a number number', () => {
     const parser = new PageParser('page', 2, new Schema())
+    const parsed = parser.parse()
 
-    expect(parser.parse()).toEqual({
-      size: 20,
-      number: 2,
-      offset: 20,
+    expect(parsed.get('page:size')).toEqual({
+      field: 'size',
+      value: 20,
+    })
+
+    expect(parsed.get('page:number')).toEqual({
+      field: 'number',
+      value: 2,
+    })
+
+    expect(parsed.get('page:offset')).toEqual({
+      field: 'offset',
+      value: 20,
     })
   })
 
   test('`page[number]=value`', () => {
     const parser = new PageParser('page', { number: '2' }, new Schema())
+    const parsed = parser.parse()
 
-    expect(parser.parse()).toEqual({
-      size: 20,
-      number: '2',
-      offset: 20,
+    expect(parsed.get('page:size')).toEqual({
+      field: 'size',
+      value: 20,
+    })
+
+    expect(parsed.get('page:number')).toEqual({
+      field: 'number',
+      value: '2',
+    })
+
+    expect(parsed.get('page:offset')).toEqual({
+      field: 'offset',
+      value: 20,
     })
   })
 
   test('`page[size]=value`', () => {
     const parser = new PageParser('page', { size: '10' }, new Schema())
+    const parsed = parser.parse()
 
-    expect(parser.parse()).toEqual({
-      size: '10',
-      number: 1,
-      offset: 0,
+    expect(parsed.get('page:size')).toEqual({
+      field: 'size',
+      value: '10',
+    })
+
+    expect(parsed.get('page:number')).toEqual({
+      field: 'number',
+      value: 1,
+    })
+
+    expect(parsed.get('page:offset')).toEqual({
+      field: 'offset',
+      value: 0,
     })
   })
 
@@ -115,20 +178,41 @@ describe('parse', () => {
       { number: '2', size: '10' },
       new Schema().page()
     )
+    const parsed = parser.parse()
 
-    expect(parser.parse()).toEqual({
-      size: '10',
-      number: '2',
-      offset: 10,
+    expect(parsed.get('page:size')).toEqual({
+      field: 'size',
+      value: '10',
+    })
+
+    expect(parsed.get('page:number')).toEqual({
+      field: 'number',
+      value: '2',
+    })
+
+    expect(parsed.get('page:offset')).toEqual({
+      field: 'offset',
+      value: 10,
     })
   })
 
   test('uses the defaults if no query', () => {
     const parser = new PageParser('page', undefined, new Schema())
+    const parsed = parser.parse()
 
-    expect(parser.parse()).toEqual({
-      ...PageParser.DEFAULTS,
-      offset: 0,
+    expect(parsed.get('page:size')).toEqual({
+      field: 'size',
+      value: PageParser.DEFAULTS.size,
+    })
+
+    expect(parsed.get('page:number')).toEqual({
+      field: 'number',
+      value: PageParser.DEFAULTS.number,
+    })
+
+    expect(parsed.get('page:offset')).toEqual({
+      field: 'offset',
+      value: 0,
     })
   })
 

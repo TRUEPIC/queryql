@@ -25,23 +25,19 @@ class AdapterValidator {
     return true
   }
 
-  validateFilters(filters, queryKey) {
+  validateFilters(filters) {
     if (!this.schema) {
       return true
     }
 
     for (const [key, filter] of filters) {
-      this.validateValue(
-        `filter:${filter.operator}`,
-        `${queryKey}:${key}`,
-        filter.value
-      )
+      this.validateValue(`filter:${filter.operator}`, key, filter.value)
     }
 
     return true
   }
 
-  validateSorts(sorts, queryKey) {
+  validateSorts(sorts) {
     const schemaKey = 'sort'
 
     if (!this.schema || !this.schema[schemaKey]) {
@@ -49,21 +45,19 @@ class AdapterValidator {
     }
 
     for (const [key, sort] of sorts) {
-      this.validateValue(schemaKey, `${queryKey}:${key}`, sort.order)
+      this.validateValue(schemaKey, key, sort.order)
     }
 
     return true
   }
 
-  validatePage(page, queryKey) {
+  validatePage(page) {
     if (!this.schema) {
       return true
     }
 
-    const entries = Object.entries(page)
-
-    for (const [field, value] of entries) {
-      this.validateValue(`page:${field}`, `${queryKey}:${field}`, value)
+    for (const [key, pageField] of page) {
+      this.validateValue(`page:${pageField.field}`, key, pageField.value)
     }
 
     return true

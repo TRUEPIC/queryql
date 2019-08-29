@@ -162,7 +162,7 @@ describe('apply', () => {
     jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort')
     querier['sort:test'] = jest.fn(builder => builder)
 
-    expect(orchestrator.apply(data, 'test')).toBe(querier.builder)
+    expect(orchestrator.apply(data, 'sort:test')).toBe(querier.builder)
     expect(querier['sort:test']).toHaveBeenCalledWith(querier.builder, data)
   })
 

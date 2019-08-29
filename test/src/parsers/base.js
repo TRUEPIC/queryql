@@ -33,6 +33,14 @@ describe('constructor', () => {
   })
 })
 
+describe('buildKey', () => {
+  test('throws `NotImplementedError` when not extended', () => {
+    const parser = new BaseParser('test', {}, new Schema())
+
+    expect(() => parser.buildKey()).toThrow(NotImplementedError)
+  })
+})
+
 describe('parse', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const parser = new BaseParser('test', {}, new Schema())

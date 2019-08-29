@@ -62,12 +62,11 @@ class BaseOrchestrator {
   }
 
   apply(data, key = null) {
-    const querierMethod = key && `${this.queryKey}:${key}`
     const args = [this.querier.builder, data]
 
     this.querier.builder =
-      querierMethod && is.fn(this.querier[querierMethod])
-        ? this.querier[querierMethod](...args)
+      key && is.fn(this.querier[key])
+        ? this.querier[key](...args)
         : this.querier.adapter[this.queryKey](...args)
 
     return this.querier.builder

@@ -36,7 +36,7 @@ class Filterer extends BaseOrchestrator {
     return filters.reduce(
       (accumulator, [key, filter]) => ({
         ...accumulator,
-        [`${this.queryKey}:${key}`]: filter.value,
+        [key]: filter.value,
       }),
       {}
     )
@@ -50,10 +50,7 @@ class Filterer extends BaseOrchestrator {
     if (!this._validate) {
       this._validate =
         this.parser.validate() &&
-        this.querier.adapter.validator.validateFilters(
-          this.parse(),
-          this.queryKey
-        ) &&
+        this.querier.adapter.validator.validateFilters(this.parse()) &&
         this.querier.validator.validate(this.parseFlat())
     }
 
@@ -69,10 +66,11 @@ class Filterer extends BaseOrchestrator {
       return this.querier
     }
 
-    const keys = this.schema.keys()
+    let key
     let filter
 
-    for (const key of keys) {
+    for (const filterSchema of this.schema.values()) {
+      key = this.parser.buildKey(filterSchema)
       filter = filters.get(key)
 
       if (filter) {

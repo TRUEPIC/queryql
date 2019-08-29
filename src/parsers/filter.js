@@ -11,8 +11,8 @@ class FilterParser extends BaseParser {
     }
   }
 
-  static buildKey(filter) {
-    return `${filter.field}[${filter.operator}]`
+  buildKey({ field, operator }) {
+    return `${this.queryKey}:${field}[${operator}]`
   }
 
   defineValidation(schema) {
@@ -79,9 +79,7 @@ class FilterParser extends BaseParser {
       }
     }
 
-    return new Map(
-      filters.map(filter => [this.constructor.buildKey(filter), filter])
-    )
+    return new Map(filters.map(filter => [this.buildKey(filter), filter]))
   }
 }
 

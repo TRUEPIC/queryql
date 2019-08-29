@@ -16,6 +16,10 @@ class BaseParser {
     this._validate = null
   }
 
+  buildKey(/* parsed */) {
+    throw new NotImplementedError()
+  }
+
   parse() {
     throw new NotImplementedError()
   }

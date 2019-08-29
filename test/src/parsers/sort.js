@@ -14,12 +14,10 @@ describe('DEFAULTS', () => {
 
 describe('buildKey', () => {
   test('builds/returns a string to use as a key', () => {
-    const key = SortParser.buildKey({
-      field: 'test',
-      order: 'asc',
-    })
+    const parser = new SortParser('sort', {}, new Schema())
+    const key = parser.buildKey({ field: 'test' })
 
-    expect(key).toBe('test')
+    expect(key).toBe('sort:test')
   })
 })
 
@@ -93,7 +91,7 @@ describe('parse', () => {
   test('`sort=field`', () => {
     const parser = new SortParser('sort', 'test', new Schema().sort('test'))
 
-    expect(parser.parse().get('test')).toEqual({
+    expect(parser.parse().get('sort:test')).toEqual({
       field: 'test',
       order: 'asc',
     })
@@ -102,7 +100,7 @@ describe('parse', () => {
   test('`sort[]=field` with one field', () => {
     const parser = new SortParser('sort', ['test'], new Schema().sort('test'))
 
-    expect(parser.parse().get('test')).toEqual({
+    expect(parser.parse().get('sort:test')).toEqual({
       field: 'test',
       order: 'asc',
     })
@@ -117,12 +115,12 @@ describe('parse', () => {
 
     const parsed = parser.parse()
 
-    expect(parsed.get('test1')).toEqual({
+    expect(parsed.get('sort:test1')).toEqual({
       field: 'test1',
       order: 'asc',
     })
 
-    expect(parsed.get('test2')).toEqual({
+    expect(parsed.get('sort:test2')).toEqual({
       field: 'test2',
       order: 'asc',
     })
@@ -135,7 +133,7 @@ describe('parse', () => {
       new Schema().sort('test')
     )
 
-    expect(parser.parse().get('test')).toEqual({
+    expect(parser.parse().get('sort:test')).toEqual({
       field: 'test',
       order: 'desc',
     })
@@ -153,12 +151,12 @@ describe('parse', () => {
 
     const parsed = parser.parse()
 
-    expect(parsed.get('test1')).toEqual({
+    expect(parsed.get('sort:test1')).toEqual({
       field: 'test1',
       order: 'desc',
     })
 
-    expect(parsed.get('test2')).toEqual({
+    expect(parsed.get('sort:test2')).toEqual({
       field: 'test2',
       order: 'asc',
     })

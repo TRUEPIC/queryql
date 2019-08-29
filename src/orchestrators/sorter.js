@@ -33,7 +33,7 @@ class Sorter extends BaseOrchestrator {
     return sorts.reduce(
       (accumulator, [key, sort]) => ({
         ...accumulator,
-        [`${this.queryKey}:${key}`]: sort.order,
+        [key]: sort.order,
       }),
       {}
     )
@@ -47,10 +47,7 @@ class Sorter extends BaseOrchestrator {
     if (!this._validate) {
       this._validate =
         this.parser.validate() &&
-        this.querier.adapter.validator.validateSorts(
-          this.parse(),
-          this.queryKey
-        ) &&
+        this.querier.adapter.validator.validateSorts(this.parse()) &&
         this.querier.validator.validate(this.parseFlat())
     }
 
