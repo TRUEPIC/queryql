@@ -35,31 +35,6 @@ describe('isEnabled', () => {
   })
 })
 
-describe('parseFlat', () => {
-  test('returns object with filter keys => values', () => {
-    const filterer = new Filterer(
-      new TestQuerier(
-        {
-          filter: { test: 123 },
-        },
-        knex('test')
-      )
-    )
-
-    expect(filterer.parseFlat()).toEqual({
-      'filter:test[=]': 123,
-    })
-  })
-
-  test('returns empty object if filtering is disabled', () => {
-    const filterer = new Filterer(new TestQuerier({}, knex('true')))
-
-    jest.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
-
-    expect(filterer.parseFlat()).toEqual({})
-  })
-})
-
 describe('parse', () => {
   test('parses/returns the filters from the query', () => {
     const filterer = new Filterer(

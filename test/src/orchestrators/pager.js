@@ -35,50 +35,6 @@ describe('isEnabled', () => {
   })
 })
 
-describe('parseFlat', () => {
-  test('returns object with pagination keys => values', () => {
-    const pager = new Pager(
-      new TestQuerier(
-        {
-          page: 2,
-        },
-        knex('test')
-      )
-    )
-
-    expect(pager.parseFlat()).toEqual({
-      'page:size': 20,
-      'page:number': 2,
-      'page:offset': 20,
-    })
-  })
-
-  test('returns object keys without the query key, if specified', () => {
-    const pager = new Pager(
-      new TestQuerier(
-        {
-          page: 2,
-        },
-        knex('test')
-      )
-    )
-
-    expect(pager.parseFlat(false)).toEqual({
-      size: 20,
-      number: 2,
-      offset: 20,
-    })
-  })
-
-  test('returns empty object if pagination is disabled', () => {
-    const pager = new Pager(new TestQuerier({}, knex('true')))
-
-    jest.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false)
-
-    expect(pager.parseFlat()).toEqual({})
-  })
-})
-
 describe('parse', () => {
   test('parses/returns the pagination from the query', () => {
     const pager = new Pager(

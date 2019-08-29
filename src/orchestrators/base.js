@@ -29,10 +29,6 @@ class BaseOrchestrator {
     throw new NotImplementedError()
   }
 
-  parseFlat() {
-    throw new NotImplementedError()
-  }
-
   validate() {
     throw new NotImplementedError()
   }

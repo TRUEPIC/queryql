@@ -26,22 +26,6 @@ class Filterer extends BaseOrchestrator {
     )
   }
 
-  parseFlat() {
-    if (!this.isEnabled) {
-      return {}
-    }
-
-    const filters = Array.from(this.parse().entries())
-
-    return filters.reduce(
-      (accumulator, [key, filter]) => ({
-        ...accumulator,
-        [key]: filter.value,
-      }),
-      {}
-    )
-  }
-
   validate() {
     if (!this.isEnabled) {
       return true
@@ -51,7 +35,7 @@ class Filterer extends BaseOrchestrator {
       this._validate =
         this.parser.validate() &&
         this.querier.adapter.validator.validateFilters(this.parse()) &&
-        this.querier.validator.validate(this.parseFlat())
+        this.querier.validator.validate(this.parser.flatten(this.parse()))
     }
 
     return this._validate

@@ -20,6 +20,10 @@ class BaseParser {
     throw new NotImplementedError()
   }
 
+  flatten(/* map */) {
+    throw new NotImplementedError()
+  }
+
   parse() {
     throw new NotImplementedError()
   }

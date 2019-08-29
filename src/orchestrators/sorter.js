@@ -23,22 +23,6 @@ class Sorter extends BaseOrchestrator {
     )
   }
 
-  parseFlat() {
-    if (!this.isEnabled) {
-      return {}
-    }
-
-    const sorts = Array.from(this.parse().entries())
-
-    return sorts.reduce(
-      (accumulator, [key, sort]) => ({
-        ...accumulator,
-        [key]: sort.order,
-      }),
-      {}
-    )
-  }
-
   validate() {
     if (!this.isEnabled) {
       return true
@@ -48,7 +32,7 @@ class Sorter extends BaseOrchestrator {
       this._validate =
         this.parser.validate() &&
         this.querier.adapter.validator.validateSorts(this.parse()) &&
-        this.querier.validator.validate(this.parseFlat())
+        this.querier.validator.validate(this.parser.flatten(this.parse()))
     }
 
     return this._validate

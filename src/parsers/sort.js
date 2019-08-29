@@ -1,6 +1,7 @@
 const is = require('is')
 
 const BaseParser = require('./base')
+const flattenMap = require('../services/flatten_map')
 
 class SortParser extends BaseParser {
   static get DEFAULTS() {
@@ -31,6 +32,13 @@ class SortParser extends BaseParser {
           .insensitive()
       ),
     ])
+  }
+
+  flatten(map) {
+    return flattenMap({
+      map,
+      value: value => value.order,
+    })
   }
 
   parseString(field) {

@@ -91,6 +91,28 @@ describe('validation', () => {
   })
 })
 
+describe('flatten', () => {
+  test('flattens/returns parsed map into object with keys => values', () => {
+    const parser = new PageParser('page', 2, new Schema())
+
+    expect(parser.flatten(parser.parse())).toEqual({
+      'page:size': 20,
+      'page:number': 2,
+      'page:offset': 20,
+    })
+  })
+
+  test('optionally excludes the query key from the key', () => {
+    const parser = new PageParser('page', 2, new Schema())
+
+    expect(parser.flatten(parser.parse(), false)).toEqual({
+      size: 20,
+      number: 2,
+      offset: 20,
+    })
+  })
+})
+
 describe('parse', () => {
   test('`page=number` with a string number', () => {
     const parser = new PageParser('page', '2', new Schema())

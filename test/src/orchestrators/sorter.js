@@ -35,31 +35,6 @@ describe('isEnabled', () => {
   })
 })
 
-describe('parseFlat', () => {
-  test('returns object with sort keys => orders', () => {
-    const sorter = new Sorter(
-      new TestQuerier(
-        {
-          sort: 'test',
-        },
-        knex('test')
-      )
-    )
-
-    expect(sorter.parseFlat()).toEqual({
-      'sort:test': 'asc',
-    })
-  })
-
-  test('returns empty object if sorting is disabled', () => {
-    const sorter = new Sorter(new TestQuerier({}, knex('true')))
-
-    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
-
-    expect(sorter.parseFlat()).toEqual({})
-  })
-})
-
 describe('parse', () => {
   test('parses/returns the sorts from the query', () => {
     const sorter = new Sorter(

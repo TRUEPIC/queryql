@@ -66,14 +66,6 @@ describe('buildParser', () => {
   })
 })
 
-describe('parseFlat', () => {
-  test('throws `NotImplementedError` when not extended', () => {
-    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
-
-    expect(() => orchestrator.parseFlat()).toThrow(NotImplementedError)
-  })
-})
-
 describe('validate', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))

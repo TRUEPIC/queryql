@@ -23,22 +23,6 @@ class Pager extends BaseOrchestrator {
     )
   }
 
-  parseFlat(includeQueryKey = true) {
-    if (!this.isEnabled) {
-      return {}
-    }
-
-    const page = Array.from(this.parse().values())
-
-    return page.reduce(
-      (accumulator, pageField) => ({
-        ...accumulator,
-        [this.parser.buildKey(pageField, includeQueryKey)]: pageField.value,
-      }),
-      {}
-    )
-  }
-
   validate() {
     if (!this.isEnabled) {
       return true
@@ -48,7 +32,7 @@ class Pager extends BaseOrchestrator {
       this._validate =
         this.parser.validate() &&
         this.querier.adapter.validator.validatePage(this.parse()) &&
-        this.querier.validator.validate(this.parseFlat())
+        this.querier.validator.validate(this.parser.flatten(this.parse()))
     }
 
     return this._validate
@@ -60,7 +44,7 @@ class Pager extends BaseOrchestrator {
     const page = this.parse()
 
     if (page) {
-      this.apply(this.parseFlat(false))
+      this.apply(this.parser.flatten(this.parse(), false))
     }
 
     return this.querier

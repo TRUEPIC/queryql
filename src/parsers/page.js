@@ -1,6 +1,7 @@
 const is = require('is')
 
 const BaseParser = require('./base')
+const flattenMap = require('../services/flatten_map')
 
 class PageParser extends BaseParser {
   static get DEFAULTS() {
@@ -37,6 +38,14 @@ class PageParser extends BaseParser {
           .positive(),
       }),
     ])
+  }
+
+  flatten(map, includeQueryKey = true) {
+    return flattenMap({
+      map,
+      key: (key, value) => this.buildKey(value, includeQueryKey),
+      value: value => value.value,
+    })
   }
 
   parseNumber() {

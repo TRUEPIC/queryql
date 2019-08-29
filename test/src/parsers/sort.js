@@ -87,6 +87,20 @@ describe('validation', () => {
   })
 })
 
+describe('flatten', () => {
+  test('flattens/returns parsed map into object with keys => values', () => {
+    const parser = new SortParser(
+      'sort',
+      { test: 'asc' },
+      new Schema().sort('test')
+    )
+
+    expect(parser.flatten(parser.parse())).toEqual({
+      'sort:test': 'asc',
+    })
+  })
+})
+
 describe('parse', () => {
   test('`sort=field`', () => {
     const parser = new SortParser('sort', 'test', new Schema().sort('test'))

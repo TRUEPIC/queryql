@@ -1,6 +1,7 @@
 const is = require('is')
 
 const BaseParser = require('./base')
+const flattenMap = require('../services/flatten_map')
 
 class FilterParser extends BaseParser {
   static get DEFAULTS() {
@@ -42,6 +43,13 @@ class FilterParser extends BaseParser {
         }
       }, {})
     )
+  }
+
+  flatten(map) {
+    return flattenMap({
+      map,
+      value: value => value.value,
+    })
   }
 
   parseObject(field, value) {

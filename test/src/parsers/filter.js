@@ -114,6 +114,20 @@ describe('validation', () => {
   })
 })
 
+describe('flatten', () => {
+  test('flattens/returns parsed map into object with keys => values', () => {
+    const parser = new FilterParser(
+      'filter',
+      { test: { '=': 123 } },
+      new Schema().filter('test', '=')
+    )
+
+    expect(parser.flatten(parser.parse())).toEqual({
+      'filter:test[=]': 123,
+    })
+  })
+})
+
 describe('parse', () => {
   test('`filter[field]=value` with a default operator', () => {
     const parser = new FilterParser(
