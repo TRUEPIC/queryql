@@ -1,6 +1,6 @@
 # QueryQL
 
-QueryQL makes it easy to add filtering, sorting, and pagination to your API
+QueryQL makes it easy to add filtering, sorting, and pagination to your REST API
 through your old friend: the query string!
 
 ## How it Works

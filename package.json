@@ -1,9 +1,25 @@
 {
   "name": "queryql",
   "version": "0.1.0",
-  "private": true,
+  "description": "Easily add filtering, sorting, and pagination to your REST API through your old friend: the query string!",
+  "keywords": [
+    "filter",
+    "filtering",
+    "sort",
+    "sorting",
+    "page",
+    "pagination",
+    "rest",
+    "api",
+    "query",
+    "querystring",
+    "qs"
+  ],
+  "homepage": "https://github.com/TRUEPIC/queryql#readme",
+  "bugs": "https://github.com/TRUEPIC/queryql/issues",
   "license": "MIT",
   "main": "src/index.js",
+  "repository": "TRUEPIC/queryql",
   "scripts": {
     "lint": "run-p lint:*",
     "lint:format": "prettier --check '**'",
