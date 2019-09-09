@@ -1,5 +1,8 @@
 # QueryQL
 
+![npm](https://img.shields.io/npm/v/@truepic/queryql?color=0f4484)
+![CircleCI](https://img.shields.io/circleci/build/github/TRUEPIC/queryql)
+
 QueryQL makes it easy to add filtering, sorting, and pagination to your REST API
 through your old friend: the query string!
 
