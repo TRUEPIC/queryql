@@ -17,7 +17,7 @@ Out-of-the-box, QueryQL supports the following:
 ## Installation
 
 ```bash
-$ npm install queryql
+$ npm install @truepic/queryql
 ```
 
 ## Getting Started
