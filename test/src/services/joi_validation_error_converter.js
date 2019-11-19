@@ -25,12 +25,12 @@ test('uses optional path prefix as path if no path exists', () => {
 
 test('uses the most specific error detail (by path length)', () => {
   const { error } = Joi.alternatives()
-    .try([
+    .try(
       Joi.string(),
       Joi.object().keys({
         invalid: Joi.number(),
-      }),
-    ])
+      })
+    )
     .validate({ invalid: 'invalid' })
 
   expect(joiValidationErrorConverter(error)).toEqual(

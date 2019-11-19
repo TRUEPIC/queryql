@@ -242,7 +242,7 @@ describe('parse', () => {
     const parser = new PageParser('page', 'invalid', new Schema())
 
     expect(() => parser.parse()).toThrow(
-      new ValidationError('page must be a number')
+      new ValidationError('page must be one of [number, object]')
     )
   })
 })

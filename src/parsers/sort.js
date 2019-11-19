@@ -18,20 +18,24 @@ class SortParser extends BaseParser {
   defineValidation(schema) {
     const keys = Array.from(this.schema.sorts.keys())
 
-    return schema.alternatives().try([
-      schema.string().valid(keys),
+    if (!keys.length) {
+      return schema.any().forbidden()
+    }
+
+    return schema.alternatives().try(
+      schema.string().valid(...keys),
       schema
         .array()
-        .items(schema.string().valid(keys))
+        .items(schema.string().valid(...keys))
         .unique(),
       schema.object().pattern(
-        schema.string().valid(keys),
+        schema.string().valid(...keys),
         schema
           .string()
           .valid('asc', 'desc')
           .insensitive()
-      ),
-    ])
+      )
+    )
   }
 
   flatten(map) {

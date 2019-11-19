@@ -22,22 +22,38 @@ describe('buildKey', () => {
 })
 
 describe('validation', () => {
+  test('throws if no fields are whitelisted in the schema', () => {
+    const parser = new SortParser('sort', 'invalid', new Schema())
+
+    expect(() => parser.validate()).toThrow(
+      new ValidationError('sort is not allowed')
+    )
+  })
+
   describe('`sort=field`', () => {
     test('throws if the field is not whitelisted in the schema', () => {
-      const parser = new SortParser('sort', 'invalid', new Schema())
+      const parser = new SortParser(
+        'sort',
+        'invalid',
+        new Schema().sort('valid')
+      )
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('sort must be one of []')
+        new ValidationError('sort must be one of [valid, array, object]')
       )
     })
   })
 
   describe('`sort[]=field`', () => {
     test('throws if the field is not whitelisted in the schema', () => {
-      const parser = new SortParser('sort', ['invalid'], new Schema())
+      const parser = new SortParser(
+        'sort',
+        ['invalid'],
+        new Schema().sort('valid')
+      )
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('sort:0 must be one of []')
+        new ValidationError('sort:0 must be [valid]')
       )
     })
 
@@ -49,14 +65,18 @@ describe('validation', () => {
       )
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('sort:1 position 1 contains a duplicate value')
+        new ValidationError('sort:1 contains a duplicate value')
       )
     })
   })
 
   describe('`sort[field]=order`', () => {
     test('throws if the field is not whitelisted in the schema', () => {
-      const parser = new SortParser('sort', { invalid: 'asc' }, new Schema())
+      const parser = new SortParser(
+        'sort',
+        { invalid: 'asc' },
+        new Schema().sort('valid')
+      )
 
       expect(() => parser.validate()).toThrow(
         new ValidationError('sort:invalid is not allowed')
@@ -183,10 +203,10 @@ describe('parse', () => {
   })
 
   test('throws `ValidationError` if invalid', () => {
-    const parser = new SortParser('sort', 'invalid', new Schema())
+    const parser = new SortParser('sort', 'invalid', new Schema().sort('valid'))
 
     expect(() => parser.parse()).toThrow(
-      new ValidationError('sort must be one of []')
+      new ValidationError('sort must be one of [valid, array, object]')
     )
   })
 })

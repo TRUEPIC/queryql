@@ -22,7 +22,7 @@ class PageParser extends BaseParser {
   }
 
   defineValidation(schema) {
-    return schema.alternatives().try([
+    return schema.alternatives().try(
       schema
         .number()
         .integer()
@@ -36,8 +36,8 @@ class PageParser extends BaseParser {
           .number()
           .integer()
           .positive(),
-      }),
-    ])
+      })
+    )
   }
 
   flatten(map, includeQueryKey = true) {

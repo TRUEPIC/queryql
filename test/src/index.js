@@ -152,7 +152,7 @@ describe('validate', () => {
     const querier = new TestQuerier({ page: 'invalid' }, knex('test'))
 
     expect(() => querier.validate()).toThrow(
-      new ValidationError('page must be a number')
+      new ValidationError('page must be one of [number, object]')
     )
   })
 })

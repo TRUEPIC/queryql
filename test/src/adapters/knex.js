@@ -215,7 +215,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:=', 'test', null)).toThrow(
-        new ValidationError('test must be a boolean')
+        new ValidationError('test must be one of [boolean, number, string]')
       )
     })
   })
@@ -243,7 +243,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:!=', 'test', null)).toThrow(
-        new ValidationError('test must be a boolean')
+        new ValidationError('test must be one of [boolean, number, string]')
       )
     })
   })
@@ -271,7 +271,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:<>', 'test', null)).toThrow(
-        new ValidationError('test must be a boolean')
+        new ValidationError('test must be one of [boolean, number, string]')
       )
     })
   })
@@ -352,7 +352,7 @@ describe('validation', () => {
 
       expect(() =>
         validator.validateValue('filter:is', 'test', 'invalid')
-      ).toThrow(new ValidationError('test must be one of [null]'))
+      ).toThrow(new ValidationError('test must be [null]'))
     })
   })
 
@@ -368,7 +368,7 @@ describe('validation', () => {
 
       expect(() =>
         validator.validateValue('filter:is not', 'test', 'invalid')
-      ).toThrow(new ValidationError('test must be one of [null]'))
+      ).toThrow(new ValidationError('test must be [null]'))
     })
   })
 

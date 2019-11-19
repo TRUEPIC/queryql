@@ -11,7 +11,7 @@ describe('constructor', () => {
     const validator = new JoiValidator(defineSchema)
 
     expect(defineSchema).toHaveBeenCalledWith(Joi)
-    expect(validator.schema.isJoi).toBe(true)
+    expect(Joi.isSchema(validator.schema)).toBe(true)
   })
 })
 

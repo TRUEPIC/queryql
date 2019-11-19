@@ -30,7 +30,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@hapi/joi": "^15.1.1",
+    "@hapi/joi": "^16.1.7",
     "is": "^3.3.0"
   },
   "devDependencies": {

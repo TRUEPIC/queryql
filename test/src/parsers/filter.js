@@ -57,7 +57,7 @@ describe('validation', () => {
     )
 
     expect(() => parser.validate()).toThrow(
-      new ValidationError('filter:invalid must be an object')
+      new ValidationError('filter:invalid must be of type object')
     )
   })
 
@@ -109,7 +109,9 @@ describe('validation', () => {
     )
 
     expect(() => parser.validate()).toThrow(
-      new ValidationError('filter:invalid[=] must be an array')
+      new ValidationError(
+        'filter:invalid[=] must be one of [array, boolean, number, string]'
+      )
     )
   })
 })

@@ -94,7 +94,7 @@ describe('validate', () => {
     const pager = new Pager(new TestQuerier({ page: 'invalid' }, knex('test')))
 
     expect(() => pager.validate()).toThrow(
-      new ValidationError('page must be a number')
+      new ValidationError('page must be one of [number, object]')
     )
   })
 })
@@ -145,7 +145,7 @@ describe('run', () => {
     const pager = new Pager(new TestQuerier({ page: 'invalid' }, knex('test')))
 
     expect(() => pager.run()).toThrow(
-      new ValidationError('page must be a number')
+      new ValidationError('page must be one of [number, object]')
     )
   })
 })

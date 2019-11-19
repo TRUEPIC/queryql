@@ -33,7 +33,7 @@ class FilterParser extends BaseParser {
       mapFieldsToOperators.reduce((accumulator, [field, operators]) => {
         const operatorObject = schema
           .object()
-          .pattern(schema.string().valid(operators), values)
+          .pattern(schema.string().valid(...operators), values)
 
         return {
           ...accumulator,

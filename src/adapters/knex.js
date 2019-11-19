@@ -31,13 +31,13 @@ class KnexAdapter extends BaseAdapter {
     return {
       'filter:=': schema
         .alternatives()
-        .try([schema.boolean(), schema.number(), schema.string()]),
+        .try(schema.boolean(), schema.number(), schema.string()),
       'filter:!=': schema
         .alternatives()
-        .try([schema.boolean(), schema.number(), schema.string()]),
+        .try(schema.boolean(), schema.number(), schema.string()),
       'filter:<>': schema
         .alternatives()
-        .try([schema.boolean(), schema.number(), schema.string()]),
+        .try(schema.boolean(), schema.number(), schema.string()),
       'filter:>': schema.number(),
       'filter:>=': schema.number(),
       'filter:<': schema.number(),
