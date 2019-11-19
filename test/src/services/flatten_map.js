@@ -1,7 +1,10 @@
 const flattenMap = require('../../../src/services/flatten_map')
 
 test('uses the map key/value as the object key/value by default', () => {
-  const map = new Map([['test', 123], ['testing', 456]])
+  const map = new Map([
+    ['test', 123],
+    ['testing', 456],
+  ])
 
   expect(flattenMap({ map })).toEqual({
     test: 123,
