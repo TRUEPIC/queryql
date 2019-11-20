@@ -1,9 +1,7 @@
 const ValidationError = require('../errors/validation')
 
 module.exports = (error, pathPrefix = null) => {
-  const detail = error.details.reduce((mostSpecific, detail) =>
-    mostSpecific.path.length >= detail.path.length ? mostSpecific : detail
-  )
+  const detail = error.details[0]
 
   let path = detail.path.reduce(
     (accumulator, value, index) =>
