@@ -3,8 +3,11 @@
 [![npm](https://img.shields.io/npm/v/@truepic/queryql?color=0f4484)](https://www.npmjs.com/package/@truepic/queryql)
 [![CircleCI](https://img.shields.io/circleci/build/github/TRUEPIC/queryql)](https://circleci.com/gh/TRUEPIC/queryql)
 
-QueryQL makes it easy to add filtering, sorting, and pagination to your REST API
-through your old friend: the query string!
+QueryQL makes it easy to add filtering, sorting, and pagination to your Node.js
+REST API through your old friend: the query string!
+[Read our introductory article](https://medium.com/truepicinc/queryql-easily-add-filtering-sorting-and-pagination-to-your-node-js-rest-api-9222135c93ae)
+to learn more about why we wrote it and the problems it solves at
+[Truepic](https://truepic.com).
 
 QueryQL works with any Node.js web framework (be it Express, Koa, etc.),
 supports any query builder / ORM through _adapters_, and allows for custom
