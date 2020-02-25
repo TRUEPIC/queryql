@@ -13,7 +13,9 @@
     "api",
     "query",
     "querystring",
-    "qs"
+    "qs",
+    "knex",
+    "orm"
   ],
   "homepage": "https://github.com/TRUEPIC/queryql#readme",
   "bugs": "https://github.com/TRUEPIC/queryql/issues",
