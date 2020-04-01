@@ -115,9 +115,9 @@ const { Config } = require('@truepic/queryql')
 
 const MyAdapter = require('./my_adapter')
 
-Config.defaults({
+Config.defaults = {
   adapter: MyAdapter,
-})
+}
 ```
 
 You only need to specify the keys you want to override – the defaults will be
