@@ -91,6 +91,16 @@ describe('validation', () => {
     expect(() => parser.validate()).not.toThrow()
   })
 
+  test('permits an object value', () => {
+    const parser = new FilterParser(
+      'filter',
+      { valid: { '=': { test: 123 } } },
+      new Schema().filter('valid', '=')
+    )
+
+    expect(() => parser.validate()).not.toThrow()
+  })
+
   test('permits a string value', () => {
     const parser = new FilterParser(
       'filter',
@@ -114,13 +124,13 @@ describe('validation', () => {
   test('throws for a non-permitted value', () => {
     const parser = new FilterParser(
       'filter',
-      { invalid: { '=': {} } },
+      { invalid: { '=': Date } },
       new Schema().filter('invalid', '=')
     )
 
     expect(() => parser.validate()).toThrow(
       new ValidationError(
-        'filter:invalid[=] must be one of [array, boolean, number, string, null]'
+        'filter:invalid[=] must be one of [array, boolean, number, object, string, null]'
       )
     )
   })

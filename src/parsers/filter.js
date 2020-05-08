@@ -26,6 +26,7 @@ class FilterParser extends BaseParser {
       schema.array(),
       schema.boolean(),
       schema.number(),
+      schema.object(),
       schema.string(),
       schema.valid(null),
     ]
