@@ -53,7 +53,7 @@ describe('validate', () => {
 
   test('returns `true` if valid', () => {
     const validator = new ParserValidator(
-      schema => schema.number(),
+      (schema) => schema.number(),
       'test',
       123
     )
@@ -63,7 +63,7 @@ describe('validate', () => {
 
   test('throws `ValidationError` if invalid', () => {
     const validator = new ParserValidator(
-      schema => schema.number(),
+      (schema) => schema.number(),
       'test',
       'invalid'
     )

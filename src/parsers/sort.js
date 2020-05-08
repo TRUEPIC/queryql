@@ -28,20 +28,19 @@ class SortParser extends BaseParser {
         .array()
         .items(schema.string().valid(...keys))
         .unique(),
-      schema.object().pattern(
-        schema.string().valid(...keys),
-        schema
-          .string()
-          .valid('asc', 'desc')
-          .insensitive()
-      )
+      schema
+        .object()
+        .pattern(
+          schema.string().valid(...keys),
+          schema.string().valid('asc', 'desc').insensitive()
+        )
     )
   }
 
   flatten(map) {
     return flattenMap({
       map,
-      value: value => value.order,
+      value: (value) => value.order,
     })
   }
 
@@ -53,7 +52,7 @@ class SortParser extends BaseParser {
   }
 
   parseArray(fields) {
-    return fields.map(field => ({
+    return fields.map((field) => ({
       ...this.defaults,
       field,
     }))
@@ -84,7 +83,7 @@ class SortParser extends BaseParser {
       sorts.push(...this.parseObject(this.query))
     }
 
-    return new Map(sorts.map(sort => [this.buildKey(sort), sort]))
+    return new Map(sorts.map((sort) => [this.buildKey(sort), sort]))
   }
 }
 

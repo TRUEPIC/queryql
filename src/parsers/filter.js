@@ -49,12 +49,12 @@ class FilterParser extends BaseParser {
   flatten(map) {
     return flattenMap({
       map,
-      value: value => value.value,
+      value: (value) => value.value,
     })
   }
 
   parseObject(field, value) {
-    return Object.keys(value).map(operator => ({
+    return Object.keys(value).map((operator) => ({
       ...this.defaults,
       field,
       operator,
@@ -88,7 +88,7 @@ class FilterParser extends BaseParser {
       }
     }
 
-    return new Map(filters.map(filter => [this.buildKey(filter), filter]))
+    return new Map(filters.map((filter) => [this.buildKey(filter), filter]))
   }
 }
 

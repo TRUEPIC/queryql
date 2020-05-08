@@ -5,7 +5,7 @@ const ValidationError = require('../../../../src/errors/validation')
 
 describe('constructor', () => {
   test('accepts/calls `defineSchema(Joi)` and sets the returned value', () => {
-    const defineSchema = jest.fn(schema => ({
+    const defineSchema = jest.fn((schema) => ({
       'filter:test[=]': schema.number(),
     }))
     const validator = new JoiValidator(defineSchema)
@@ -47,7 +47,7 @@ describe('validate', () => {
   })
 
   test('returns `true` if valid', () => {
-    const validator = new JoiValidator(schema => ({
+    const validator = new JoiValidator((schema) => ({
       'filter:test[=]': schema.number(),
     }))
 
@@ -55,7 +55,7 @@ describe('validate', () => {
   })
 
   test('throws `ValidationError` if invalid', () => {
-    const validator = new JoiValidator(schema => ({
+    const validator = new JoiValidator((schema) => ({
       'filter:test[=]': schema.number(),
     }))
 
