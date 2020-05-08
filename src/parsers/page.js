@@ -23,19 +23,10 @@ class PageParser extends BaseParser {
 
   defineValidation(schema) {
     return schema.alternatives().try(
-      schema
-        .number()
-        .integer()
-        .positive(),
+      schema.number().integer().positive(),
       schema.object().keys({
-        size: schema
-          .number()
-          .integer()
-          .positive(),
-        number: schema
-          .number()
-          .integer()
-          .positive(),
+        size: schema.number().integer().positive(),
+        number: schema.number().integer().positive(),
       })
     )
   }
@@ -44,7 +35,7 @@ class PageParser extends BaseParser {
     return flattenMap({
       map,
       key: (key, value) => this.buildKey(value, includeQueryKey),
-      value: value => value.value,
+      value: (value) => value.value,
     })
   }
 

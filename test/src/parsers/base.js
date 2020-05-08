@@ -99,7 +99,7 @@ describe('validate', () => {
   test('returns `true` if valid', () => {
     const defineValidation = jest
       .spyOn(BaseParser.prototype, 'defineValidation')
-      .mockImplementation(schema =>
+      .mockImplementation((schema) =>
         schema.object().keys({
           test: schema.number(),
         })
@@ -115,7 +115,7 @@ describe('validate', () => {
   test('returns the cached `true` on subsequent calls', () => {
     const defineValidation = jest
       .spyOn(BaseParser.prototype, 'defineValidation')
-      .mockImplementation(schema =>
+      .mockImplementation((schema) =>
         schema.object().keys({
           test: schema.number(),
         })
@@ -135,7 +135,7 @@ describe('validate', () => {
   test('throws `ValidationError` if invalid', () => {
     const defineValidation = jest
       .spyOn(BaseParser.prototype, 'defineValidation')
-      .mockImplementation(schema =>
+      .mockImplementation((schema) =>
         schema.object().keys({
           invalid: schema.number(),
         })

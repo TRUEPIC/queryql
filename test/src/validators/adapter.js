@@ -45,7 +45,7 @@ describe('validateValue', () => {
   })
 
   test('returns `true` if no schema key is defined', () => {
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
     }))
 
@@ -56,7 +56,7 @@ describe('validateValue', () => {
   })
 
   test('returns `true` if valid', () => {
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
     }))
 
@@ -66,7 +66,7 @@ describe('validateValue', () => {
   })
 
   test('throws `ValidationError` if invalid', () => {
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
     }))
 
@@ -100,7 +100,7 @@ describe('validateFilters', () => {
       },
       new Schema().filter('test', '=').filter('test', '!=')
     )
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
       'filter:!=': schema.number(),
     }))
@@ -114,7 +114,7 @@ describe('validateFilters', () => {
       { test: { '=': 'invalid' } },
       new Schema().filter('test', '=')
     )
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
     }))
 
@@ -135,7 +135,7 @@ describe('validateSorts', () => {
 
   test('returns `true` if no schema key is defined', () => {
     const parser = new SortParser('sort', 'test', new Schema().sort('test'))
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
     }))
 
@@ -149,7 +149,7 @@ describe('validateSorts', () => {
       ['test1', 'test2'],
       new Schema().sort('test1').sort('test2')
     )
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       sort: schema.string().valid('asc'),
     }))
 
@@ -158,7 +158,7 @@ describe('validateSorts', () => {
 
   test('throws `ValidationError` if a sort is invalid', () => {
     const parser = new SortParser('sort', 'test', new Schema().sort('test'))
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       sort: schema.string().invalid('asc'),
     }))
 
@@ -179,7 +179,7 @@ describe('validatePage', () => {
 
   test('returns `true` if page is valid', () => {
     const parser = new PageParser('page', '2', new Schema())
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       'page:size': schema.number().valid(20),
       'page:number': schema.number().valid(2),
     }))
@@ -189,7 +189,7 @@ describe('validatePage', () => {
 
   test('throws `ValidationError` if page is invalid', () => {
     const parser = new PageParser('page', '2', new Schema())
-    const validator = new AdapterValidator(schema => ({
+    const validator = new AdapterValidator((schema) => ({
       'page:number': schema.number().invalid(2),
     }))
 
