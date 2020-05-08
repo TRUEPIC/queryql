@@ -150,10 +150,10 @@ formats are supported:
 
 - `operator` can be optional if the adapter specifies a default operator. If
   not, `operator` is required. `=` is the default operator for the Knex adapter.
-- `value` can be a string, number, boolean, array, or object. If an object,
-  however, the `operator` must be specified to avoid ambiguity. Each adapter can
-  add additional validation to restrict the `value` of a specific `operator`.
-  For example, an `in` operator might require an array `value`.
+- `value` can be a string, number, boolean, array, object, or `null`. If an
+  object, however, the `operator` must be specified to avoid ambiguity. Each
+  adapter can add additional validation to restrict the `value` of a specific
+  `operator`. For example, an `in` operator might require an array `value`.
 
 ### Supported Operators
 
