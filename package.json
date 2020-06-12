@@ -39,6 +39,7 @@
     "eslint": "^7.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.13.2",
+    "eslint-plugin-node": "^11.1.0",
     "jest": "^26.0.1",
     "jest-junit": "^10.0.0",
     "knex": "^0.21.1",
