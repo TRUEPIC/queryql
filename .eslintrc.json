@@ -8,11 +8,20 @@
   "plugins": ["jest"],
   "extends": [
     "eslint:recommended",
+    "plugin:node/recommended",
     "plugin:jest/recommended",
     "plugin:jest/style",
     "prettier"
   ],
   "parserOptions": {
     "ecmaVersion": 2018
+  },
+  "rules": {
+    "node/no-unpublished-require": [
+      "error",
+      {
+        "allowModules": ["knex"]
+      }
+    ]
   }
 }
