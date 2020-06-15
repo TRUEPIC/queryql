@@ -74,14 +74,6 @@ describe('validate', () => {
     expect(sorter.validate()).toBe(true)
   })
 
-  test('returns the cached `true` on subsequent calls', () => {
-    const sorter = new Sorter(new TestQuerier({ sort: 'test' }, knex('test')))
-
-    expect(sorter.validate()).toBe(true)
-    expect(sorter._validate).toBe(true)
-    expect(sorter.validate()).toBe(true)
-  })
-
   test('returns `true` if disabled', () => {
     const sorter = new Sorter(new TestQuerier({}, knex('test')))
 

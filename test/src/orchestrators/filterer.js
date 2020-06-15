@@ -76,16 +76,6 @@ describe('validate', () => {
     expect(filterer.validate()).toBe(true)
   })
 
-  test('returns the cached `true` on subsequent calls', () => {
-    const filterer = new Filterer(
-      new TestQuerier({ filter: { test: 123 } }, knex('test'))
-    )
-
-    expect(filterer.validate()).toBe(true)
-    expect(filterer._validate).toBe(true)
-    expect(filterer.validate()).toBe(true)
-  })
-
   test('returns `true` if disabled', () => {
     const filterer = new Filterer(new TestQuerier({}, knex('test')))
 

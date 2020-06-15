@@ -1,3 +1,4 @@
+const cache = require('../services/cache_function')
 const NotImplementedError = require('../errors/not_implemented')
 const ParserValidator = require('../validators/parser')
 
@@ -13,7 +14,8 @@ class BaseParser {
       queryKey,
       query
     )
-    this._validate = null
+
+    this.validate = cache(this.validate, this)
   }
 
   buildKey(/* parsed */) {
@@ -48,11 +50,7 @@ class BaseParser {
   }
 
   validate() {
-    if (!this._validate) {
-      this._validate = this.validator.validate()
-    }
-
-    return this._validate
+    return this.validator.validate()
   }
 }
 

@@ -74,14 +74,6 @@ describe('validate', () => {
     expect(pager.validate()).toBe(true)
   })
 
-  test('returns the cached `true` on subsequent calls', () => {
-    const pager = new Pager(new TestQuerier({ page: 2 }, knex('test')))
-
-    expect(pager.validate()).toBe(true)
-    expect(pager._validate).toBe(true)
-    expect(pager.validate()).toBe(true)
-  })
-
   test('returns `true` if disabled', () => {
     const pager = new Pager(new TestQuerier({}, knex('test')))
 

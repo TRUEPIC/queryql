@@ -1,5 +1,6 @@
 const is = require('is')
 
+const cache = require('../services/cache_function')
 const NotImplementedError = require('../errors/not_implemented')
 const ValidationError = require('../errors/validation')
 
@@ -8,9 +9,9 @@ class BaseOrchestrator {
     this.querier = querier
 
     this.parser = this.buildParser()
-    this._parse = null
 
-    this._validate = null
+    this.validate = cache(this.validate, this)
+    this.parse = cache(this.parse, this)
   }
 
   get queryKey() {
@@ -50,11 +51,7 @@ class BaseOrchestrator {
       return null
     }
 
-    if (!this._parse) {
-      this._parse = this.parser.parse()
-    }
-
-    return this._parse
+    return this.parser.parse()
   }
 
   apply(values, querierMethod = null) {
