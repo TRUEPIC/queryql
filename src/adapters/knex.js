@@ -50,8 +50,14 @@ class KnexAdapter extends BaseAdapter {
       'filter:not like': schema.string(),
       'filter:ilike': schema.string(),
       'filter:not ilike': schema.string(),
-      'filter:between': schema.array().length(2).items(schema.number()),
-      'filter:not between': schema.array().length(2).items(schema.number()),
+      'filter:between': schema
+        .array()
+        .length(2)
+        .items(schema.number(), schema.string()),
+      'filter:not between': schema
+        .array()
+        .length(2)
+        .items(schema.number(), schema.string()),
     }
   }
 
