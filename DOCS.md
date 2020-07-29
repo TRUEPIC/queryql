@@ -178,8 +178,8 @@ That said, the default Knex adapter supports the following operators/values:
 - `not like`: string
 - `ilike`: string
 - `not ilike`: string
-- `between`: array of two numbers
-- `not between`: array of two numbers
+- `between`: array of two strings and/or numbers
+- `not between`: array of two strings and/or numbers
 
 ### Defining the Schema
 

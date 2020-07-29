@@ -487,6 +487,14 @@ describe('validation', () => {
       ).toBe(true)
     })
 
+    test('permits an array of two string values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(
+        validator.validateValue('filter:between', 'test', ['test', 'test'])
+      ).toBe(true)
+    })
+
     test('throws for a non-permitted value', () => {
       const validator = new KnexAdapter().validator
 
@@ -502,6 +510,14 @@ describe('validation', () => {
 
       expect(
         validator.validateValue('filter:not between', 'test', [123, 456])
+      ).toBe(true)
+    })
+
+    test('permits an array of two string values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(
+        validator.validateValue('filter:not between', 'test', ['test', 'test'])
       ).toBe(true)
     })
 
