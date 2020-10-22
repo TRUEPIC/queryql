@@ -1,6 +1,2 @@
-.gitattributes
-.gitignore
-.prettierignore
-LICENSE
-test/coverage
-test/reports
+/test/coverage
+/test/reports
