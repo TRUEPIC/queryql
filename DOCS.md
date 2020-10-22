@@ -17,7 +17,7 @@ It's up to you.
 
 The code behind queriers that maps calls to a query builder / ORM is called an
 _adapter_. At this point, the only officially supported adapter is for
-[Knex](https://knexjs.org/) – which is the default adapter out-of-the-box – but
+[Knex](https://knexjs.org/) – which is the default adapter out of the box – but
 anyone can build their own adapter.
 
 ### Defining a Querier
@@ -489,7 +489,7 @@ ensuring that a `status` filter is only the string `open` or `closed`, or that
 page `size` isn't greater than `100`. It's also recommended to prevent invalid
 values from reaching your database and causing query errors.
 
-QueryQL provides validation out-of-the-box with
+QueryQL provides validation out of the box with
 [Joi](https://github.com/hapijs/joi), although anyone can build their own
 validator to use a validation library they're more familiar with.
 

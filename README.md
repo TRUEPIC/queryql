@@ -13,7 +13,7 @@ QueryQL works with any Node.js web framework (be it Express, Koa, etc.),
 supports any query builder / ORM through _adapters_, and allows for custom
 _validators_ so you can define validation in a familiar way.
 
-Out-of-the-box, QueryQL supports the following:
+Out of the box, QueryQL supports the following:
 
 - Adapter: [Knex](https://knexjs.org/) (works with
   [Objection.js](https://vincit.github.io/objection.js) and other ORMs that use
