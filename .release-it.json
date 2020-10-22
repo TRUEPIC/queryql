@@ -1,11 +1,11 @@
 {
   "git": {
-    "commitMessage": "Release v${version}",
+    "commitMessage": "v${version}",
     "tagName": "v${version}",
-    "tagAnnotation": "Release v${version}"
+    "tagAnnotation": "v${version}"
   },
   "github": {
     "release": true,
-    "releaseName": "Release v${version}"
+    "releaseName": "v${version}"
   }
 }
