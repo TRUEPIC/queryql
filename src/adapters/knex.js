@@ -38,10 +38,10 @@ class KnexAdapter extends BaseAdapter {
       'filter:<>': schema
         .alternatives()
         .try(schema.boolean(), schema.number(), schema.string()),
-      'filter:>': schema.number(),
-      'filter:>=': schema.number(),
-      'filter:<': schema.number(),
-      'filter:<=': schema.number(),
+      'filter:>': schema.alternatives().try(schema.number(), schema.string()),
+      'filter:>=': schema.alternatives().try(schema.number(), schema.string()),
+      'filter:<': schema.alternatives().try(schema.number(), schema.string()),
+      'filter:<=': schema.alternatives().try(schema.number(), schema.string()),
       'filter:is': schema.any().valid(null),
       'filter:is not': schema.any().valid(null),
       'filter:in': schema.array().items(schema.number(), schema.string()),

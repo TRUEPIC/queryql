@@ -166,10 +166,10 @@ That said, the default Knex adapter supports the following operators/values:
 - `=`: string, number, or boolean
 - `!=`: string, number, or boolean
 - `<>`: string, number, or boolean
-- `>`: number
-- `>=`: number
-- `<`: number
-- `<=`: number
+- `>`: string or number
+- `>=`: string or number
+- `<`: string or number
+- `<=`: string or number
 - `is`: `null`
 - `is not`: `null`
 - `in`: array of strings and/or numbers
