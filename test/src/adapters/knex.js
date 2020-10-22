@@ -283,12 +283,18 @@ describe('validation', () => {
       expect(validator.validateValue('filter:>', 'test', 123)).toBe(true)
     })
 
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:>', 'test', 'valid')).toBe(true)
+    })
+
     test('throws for a non-permitted value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(() =>
-        validator.validateValue('filter:>', 'test', 'invalid')
-      ).toThrow(new ValidationError('test must be a number'))
+      expect(() => validator.validateValue('filter:>', 'test', false)).toThrow(
+        new ValidationError('test must be one of [number, string]')
+      )
     })
   })
 
@@ -299,12 +305,18 @@ describe('validation', () => {
       expect(validator.validateValue('filter:>=', 'test', 123)).toBe(true)
     })
 
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:>=', 'test', 'valid')).toBe(true)
+    })
+
     test('throws for a non-permitted value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(() =>
-        validator.validateValue('filter:>=', 'test', 'invalid')
-      ).toThrow(new ValidationError('test must be a number'))
+      expect(() => validator.validateValue('filter:>=', 'test', false)).toThrow(
+        new ValidationError('test must be one of [number, string]')
+      )
     })
   })
 
@@ -315,12 +327,18 @@ describe('validation', () => {
       expect(validator.validateValue('filter:<', 'test', 123)).toBe(true)
     })
 
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:<', 'test', 'valid')).toBe(true)
+    })
+
     test('throws for a non-permitted value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(() =>
-        validator.validateValue('filter:<', 'test', 'invalid')
-      ).toThrow(new ValidationError('test must be a number'))
+      expect(() => validator.validateValue('filter:<', 'test', false)).toThrow(
+        new ValidationError('test must be one of [number, string]')
+      )
     })
   })
 
@@ -331,12 +349,18 @@ describe('validation', () => {
       expect(validator.validateValue('filter:<=', 'test', 123)).toBe(true)
     })
 
+    test('permits a string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:<=', 'test', 'valid')).toBe(true)
+    })
+
     test('throws for a non-permitted value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(() =>
-        validator.validateValue('filter:<=', 'test', 'invalid')
-      ).toThrow(new ValidationError('test must be a number'))
+      expect(() => validator.validateValue('filter:<=', 'test', false)).toThrow(
+        new ValidationError('test must be one of [number, string]')
+      )
     })
   })
 
