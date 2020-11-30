@@ -15,16 +15,16 @@ class ParserValidator {
 
   validate() {
     if (!this.schema) {
-      return true
+      return this.query
     }
 
-    const { error } = this.schema.validate(this.query)
+    const { value, error } = this.schema.validate(this.query)
 
     if (error) {
       throw this.buildError(error)
     }
 
-    return true
+    return value
   }
 }
 

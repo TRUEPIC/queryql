@@ -31,11 +31,11 @@ class Filterer extends BaseOrchestrator {
       return true
     }
 
-    return (
-      this.parser.validate() &&
-      this.querier.adapter.validator.validateFilters(this.parse()) &&
-      this.querier.validator.validate(this.parser.flatten(this.parse()))
-    )
+    this.parser.validate()
+    this.querier.adapter.validator.validateFilters(this.parse())
+    this.querier.validator.validateFilters(this.parse())
+
+    return true
   }
 
   run() {

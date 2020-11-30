@@ -5,6 +5,10 @@ const joiValidationErrorConverter = require('../services/joi_validation_error_co
 class AdapterValidator {
   constructor(defineSchema) {
     this.schema = defineSchema(Joi)
+
+    if (this.schema) {
+      this.schema = Joi.object().keys(this.schema)
+    }
   }
 
   buildError(error, key) {
@@ -12,55 +16,69 @@ class AdapterValidator {
   }
 
   validateValue(schemaKey, key, value) {
-    if (!this.schema || !this.schema[schemaKey]) {
-      return true
+    let keySchema
+
+    try {
+      keySchema = this.schema && this.schema.extract(schemaKey)
+    } catch (error) {
+      // Don't throw error if key doesn't exist.
     }
 
-    const { error } = this.schema[schemaKey].validate(value)
+    if (!keySchema) {
+      return value
+    }
+
+    const { value: valueValidated, error } = keySchema.validate(value)
 
     if (error) {
       throw this.buildError(error, key)
     }
 
-    return true
+    return valueValidated
   }
 
   validateFilters(filters) {
     if (!this.schema) {
-      return true
+      return filters
     }
 
     for (const [key, filter] of filters) {
-      this.validateValue(`filter:${filter.operator}`, key, filter.value)
+      filter.value = this.validateValue(
+        `filter:${filter.operator}`,
+        key,
+        filter.value
+      )
     }
 
-    return true
+    return filters
   }
 
   validateSorts(sorts) {
-    const schemaKey = 'sort'
-
-    if (!this.schema || !this.schema[schemaKey]) {
-      return true
+    if (!this.schema) {
+      return sorts
     }
 
     for (const [key, sort] of sorts) {
-      this.validateValue(schemaKey, key, sort.order)
+      sort.order = this.validateValue('sort', key, sort.order)
     }
 
-    return true
+    return sorts
   }
 
   validatePage(page) {
     if (!this.schema) {
-      return true
+      return page
     }
 
     for (const [key, pageField] of page) {
-      this.validateValue(`page:${pageField.field}`, key, pageField.value)
+      pageField.value = this.validateValue(
+        `page:${pageField.field}`,
+        key,
+        pageField.value
+      )
     }
 
-    return true
+    return page
   }
 }
 

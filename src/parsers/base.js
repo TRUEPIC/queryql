@@ -50,7 +50,9 @@ class BaseParser {
   }
 
   validate() {
-    return this.validator.validate()
+    this.query = this.validator.validate()
+
+    return this.query
   }
 }
 

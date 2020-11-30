@@ -12,11 +12,27 @@ describe('constructor', () => {
   })
 })
 
-describe('validate', () => {
+describe('validateFilters', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const validator = new BaseValidator(() => {})
 
-    expect(() => validator.validate()).toThrow(NotImplementedError)
+    expect(() => validator.validateFilters()).toThrow(NotImplementedError)
+  })
+})
+
+describe('validateSorts', () => {
+  test('throws `NotImplementedError` when not extended', () => {
+    const validator = new BaseValidator(() => {})
+
+    expect(() => validator.validateSorts()).toThrow(NotImplementedError)
+  })
+})
+
+describe('validatePage', () => {
+  test('throws `NotImplementedError` when not extended', () => {
+    const validator = new BaseValidator(() => {})
+
+    expect(() => validator.validatePage()).toThrow(NotImplementedError)
   })
 })
 

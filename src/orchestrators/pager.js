@@ -28,11 +28,11 @@ class Pager extends BaseOrchestrator {
       return true
     }
 
-    return (
-      this.parser.validate() &&
-      this.querier.adapter.validator.validatePage(this.parse()) &&
-      this.querier.validator.validate(this.parser.flatten(this.parse()))
-    )
+    this.parser.validate()
+    this.querier.adapter.validator.validatePage(this.parse())
+    this.querier.validator.validatePage(this.parse())
+
+    return true
   }
 
   run() {

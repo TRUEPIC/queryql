@@ -28,11 +28,11 @@ class Sorter extends BaseOrchestrator {
       return true
     }
 
-    return (
-      this.parser.validate() &&
-      this.querier.adapter.validator.validateSorts(this.parse()) &&
-      this.querier.validator.validate(this.parser.flatten(this.parse()))
-    )
+    this.parser.validate()
+    this.querier.adapter.validator.validateSorts(this.parse())
+    this.querier.validator.validateSorts(this.parse())
+
+    return true
   }
 
   run() {
