@@ -15,7 +15,7 @@ describe('constructor', () => {
     const validator = new AdapterValidator(defineSchema)
 
     expect(defineSchema).toHaveBeenCalledWith(Joi)
-    expect(validator.schema).toEqual(schema)
+    expect(Joi.isSchema(validator.schema)).toBe(true)
   })
 })
 
@@ -35,34 +35,30 @@ describe('buildError', () => {
 })
 
 describe('validateValue', () => {
-  test('returns `true` if no schema is defined', () => {
+  test('returns the value if no schema is defined', () => {
     const validator = new AdapterValidator(() => {})
 
     expect(validator.schema).toBeUndefined()
-    expect(validator.validateValue('filter:=', 'filter:test[=]', 123)).toBe(
-      true
-    )
+    expect(validator.validateValue('filter:=', 'filter:test[=]', 123)).toBe(123)
   })
 
-  test('returns `true` if no schema key is defined', () => {
+  test('returns the value if no schema key is defined', () => {
     const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
     }))
 
-    expect(validator.schema['filter:!=']).toBeUndefined()
+    expect(() => validator.schema.extract('filter:!=')).toThrow()
     expect(validator.validateValue('filter:!=', 'filter:test[!=]', 123)).toBe(
-      true
+      123
     )
   })
 
-  test('returns `true` if valid', () => {
+  test('returns the value if valid', () => {
     const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
     }))
 
-    expect(validator.validateValue('filter:=', 'filter:test[=]', 123)).toBe(
-      true
-    )
+    expect(validator.validateValue('filter:=', 'filter:test[=]', 123)).toBe(123)
   })
 
   test('throws `ValidationError` if invalid', () => {
@@ -77,7 +73,7 @@ describe('validateValue', () => {
 })
 
 describe('validateFilters', () => {
-  test('returns `true` if no schema is defined', () => {
+  test('returns the parsed filters if no schema is defined', () => {
     const parser = new FilterParser(
       'filter',
       { test: { '=': 123 } },
@@ -86,10 +82,10 @@ describe('validateFilters', () => {
     const validator = new AdapterValidator(() => {})
 
     expect(validator.schema).toBeUndefined()
-    expect(validator.validateFilters(parser.parse())).toBe(true)
+    expect(validator.validateFilters(parser.parse())).toBeInstanceOf(Map)
   })
 
-  test('returns `true` if all filters are valid', () => {
+  test('returns the parsed filters if all filters are valid', () => {
     const parser = new FilterParser(
       'filter',
       {
@@ -105,7 +101,7 @@ describe('validateFilters', () => {
       'filter:!=': schema.number(),
     }))
 
-    expect(validator.validateFilters(parser.parse())).toBe(true)
+    expect(validator.validateFilters(parser.parse())).toBeInstanceOf(Map)
   })
 
   test('throws `ValidationError` if a filter is invalid', () => {
@@ -125,25 +121,15 @@ describe('validateFilters', () => {
 })
 
 describe('validateSorts', () => {
-  test('returns `true` if no schema is defined', () => {
+  test('returns the parsed sorts if no schema is defined', () => {
     const parser = new SortParser('sort', 'test', new Schema().sort('test'))
     const validator = new AdapterValidator(() => {})
 
     expect(validator.schema).toBeUndefined()
-    expect(validator.validateSorts(parser.parse())).toBe(true)
+    expect(validator.validateSorts(parser.parse())).toBeInstanceOf(Map)
   })
 
-  test('returns `true` if no schema key is defined', () => {
-    const parser = new SortParser('sort', 'test', new Schema().sort('test'))
-    const validator = new AdapterValidator((schema) => ({
-      'filter:=': schema.number(),
-    }))
-
-    expect(validator.schema['sort']).toBeUndefined()
-    expect(validator.validateSorts(parser.parse())).toBe(true)
-  })
-
-  test('returns `true` if all sorts are valid', () => {
+  test('returns the parsed sorts if all sorts are valid', () => {
     const parser = new SortParser(
       'sort',
       ['test1', 'test2'],
@@ -153,7 +139,7 @@ describe('validateSorts', () => {
       sort: schema.string().valid('asc'),
     }))
 
-    expect(validator.validateSorts(parser.parse())).toBe(true)
+    expect(validator.validateSorts(parser.parse())).toBeInstanceOf(Map)
   })
 
   test('throws `ValidationError` if a sort is invalid', () => {
@@ -169,22 +155,22 @@ describe('validateSorts', () => {
 })
 
 describe('validatePage', () => {
-  test('returns `true` if no schema is defined', () => {
+  test('returns the parsed page if no schema is defined', () => {
     const parser = new PageParser('page', '2', new Schema())
     const validator = new AdapterValidator(() => {})
 
     expect(validator.schema).toBeUndefined()
-    expect(validator.validatePage(parser.parse())).toBe(true)
+    expect(validator.validatePage(parser.parse())).toBeInstanceOf(Map)
   })
 
-  test('returns `true` if page is valid', () => {
+  test('returns the parsed page if page is valid', () => {
     const parser = new PageParser('page', '2', new Schema())
     const validator = new AdapterValidator((schema) => ({
       'page:size': schema.number().valid(20),
       'page:number': schema.number().valid(2),
     }))
 
-    expect(validator.validatePage(parser.parse())).toBe(true)
+    expect(validator.validatePage(parser.parse())).toBeInstanceOf(Map)
   })
 
   test('throws `ValidationError` if page is invalid', () => {

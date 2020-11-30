@@ -125,7 +125,7 @@ describe('parse', () => {
 
     expect(parsed.get('page:number')).toEqual({
       field: 'number',
-      value: '2',
+      value: 2,
     })
 
     expect(parsed.get('page:offset')).toEqual({
@@ -165,7 +165,7 @@ describe('parse', () => {
 
     expect(parsed.get('page:number')).toEqual({
       field: 'number',
-      value: '2',
+      value: 2,
     })
 
     expect(parsed.get('page:offset')).toEqual({
@@ -180,7 +180,7 @@ describe('parse', () => {
 
     expect(parsed.get('page:size')).toEqual({
       field: 'size',
-      value: '10',
+      value: 10,
     })
 
     expect(parsed.get('page:number')).toEqual({
@@ -204,12 +204,12 @@ describe('parse', () => {
 
     expect(parsed.get('page:size')).toEqual({
       field: 'size',
-      value: '10',
+      value: 10,
     })
 
     expect(parsed.get('page:number')).toEqual({
       field: 'number',
-      value: '2',
+      value: 2,
     })
 
     expect(parsed.get('page:offset')).toEqual({

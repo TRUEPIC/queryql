@@ -202,13 +202,13 @@ describe('validation', () => {
     test('permits a number value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:=', 'test', 123)).toBe(true)
+      expect(validator.validateValue('filter:=', 'test', 123)).toBe(123)
     })
 
     test('permits a string value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:=', 'test', 'valid')).toBe(true)
+      expect(validator.validateValue('filter:=', 'test', 'valid')).toBe('valid')
     })
 
     test('throws for a non-permitted value', () => {
@@ -230,13 +230,15 @@ describe('validation', () => {
     test('permits a number value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:!=', 'test', 123)).toBe(true)
+      expect(validator.validateValue('filter:!=', 'test', 123)).toBe(123)
     })
 
     test('permits a string value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:!=', 'test', 'valid')).toBe(true)
+      expect(validator.validateValue('filter:!=', 'test', 'valid')).toBe(
+        'valid'
+      )
     })
 
     test('throws for a non-permitted value', () => {
@@ -258,13 +260,15 @@ describe('validation', () => {
     test('permits a number value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:<>', 'test', 123)).toBe(true)
+      expect(validator.validateValue('filter:<>', 'test', 123)).toBe(123)
     })
 
     test('permits a string value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:<>', 'test', 'valid')).toBe(true)
+      expect(validator.validateValue('filter:<>', 'test', 'valid')).toBe(
+        'valid'
+      )
     })
 
     test('throws for a non-permitted value', () => {
@@ -280,13 +284,13 @@ describe('validation', () => {
     test('permits a number value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:>', 'test', 123)).toBe(true)
+      expect(validator.validateValue('filter:>', 'test', 123)).toBe(123)
     })
 
     test('permits a string value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:>', 'test', 'valid')).toBe(true)
+      expect(validator.validateValue('filter:>', 'test', 'valid')).toBe('valid')
     })
 
     test('throws for a non-permitted value', () => {
@@ -302,13 +306,15 @@ describe('validation', () => {
     test('permits a number value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:>=', 'test', 123)).toBe(true)
+      expect(validator.validateValue('filter:>=', 'test', 123)).toBe(123)
     })
 
     test('permits a string value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:>=', 'test', 'valid')).toBe(true)
+      expect(validator.validateValue('filter:>=', 'test', 'valid')).toBe(
+        'valid'
+      )
     })
 
     test('throws for a non-permitted value', () => {
@@ -324,13 +330,13 @@ describe('validation', () => {
     test('permits a number value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:<', 'test', 123)).toBe(true)
+      expect(validator.validateValue('filter:<', 'test', 123)).toBe(123)
     })
 
     test('permits a string value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:<', 'test', 'valid')).toBe(true)
+      expect(validator.validateValue('filter:<', 'test', 'valid')).toBe('valid')
     })
 
     test('throws for a non-permitted value', () => {
@@ -346,13 +352,15 @@ describe('validation', () => {
     test('permits a number value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:<=', 'test', 123)).toBe(true)
+      expect(validator.validateValue('filter:<=', 'test', 123)).toBe(123)
     })
 
     test('permits a string value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:<=', 'test', 'valid')).toBe(true)
+      expect(validator.validateValue('filter:<=', 'test', 'valid')).toBe(
+        'valid'
+      )
     })
 
     test('throws for a non-permitted value', () => {
@@ -368,7 +376,7 @@ describe('validation', () => {
     test('permits a `null` value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:is', 'test', null)).toBe(true)
+      expect(validator.validateValue('filter:is', 'test', null)).toBeNull()
     })
 
     test('throws for a non-permitted value', () => {
@@ -384,7 +392,7 @@ describe('validation', () => {
     test('permits a `null` value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:is not', 'test', null)).toBe(true)
+      expect(validator.validateValue('filter:is not', 'test', null)).toBeNull()
     })
 
     test('throws for a non-permitted value', () => {
@@ -400,9 +408,9 @@ describe('validation', () => {
     test('permits an array of number / string values', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:in', 'test', [123, 'test'])).toBe(
-        true
-      )
+      expect(
+        validator.validateValue('filter:in', 'test', [123, 'test'])
+      ).toEqual([123, 'test'])
     })
 
     test('throws for a non-permitted value', () => {
@@ -420,7 +428,7 @@ describe('validation', () => {
 
       expect(
         validator.validateValue('filter:not in', 'test', [123, 'test'])
-      ).toBe(true)
+      ).toEqual([123, 'test'])
     })
 
     test('throws for a non-permitted value', () => {
@@ -436,7 +444,9 @@ describe('validation', () => {
     test('permits a string value', () => {
       const validator = new KnexAdapter().validator
 
-      expect(validator.validateValue('filter:like', 'test', 'valid')).toBe(true)
+      expect(validator.validateValue('filter:like', 'test', 'valid')).toBe(
+        'valid'
+      )
     })
 
     test('throws for a non-permitted value', () => {
@@ -453,7 +463,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:not like', 'test', 'valid')).toBe(
-        true
+        'valid'
       )
     })
 
@@ -471,7 +481,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:ilike', 'test', 'valid')).toBe(
-        true
+        'valid'
       )
     })
 
@@ -489,7 +499,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:not ilike', 'test', 'valid')).toBe(
-        true
+        'valid'
       )
     })
 
@@ -508,7 +518,7 @@ describe('validation', () => {
 
       expect(
         validator.validateValue('filter:between', 'test', [123, 456])
-      ).toBe(true)
+      ).toEqual([123, 456])
     })
 
     test('permits an array of two string values', () => {
@@ -516,7 +526,7 @@ describe('validation', () => {
 
       expect(
         validator.validateValue('filter:between', 'test', ['test', 'test'])
-      ).toBe(true)
+      ).toEqual(['test', 'test'])
     })
 
     test('throws for a non-permitted value', () => {
@@ -534,7 +544,7 @@ describe('validation', () => {
 
       expect(
         validator.validateValue('filter:not between', 'test', [123, 456])
-      ).toBe(true)
+      ).toEqual([123, 456])
     })
 
     test('permits an array of two string values', () => {
@@ -542,7 +552,7 @@ describe('validation', () => {
 
       expect(
         validator.validateValue('filter:not between', 'test', ['test', 'test'])
-      ).toBe(true)
+      ).toEqual(['test', 'test'])
     })
 
     test('throws for a non-permitted value', () => {

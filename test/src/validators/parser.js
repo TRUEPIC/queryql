@@ -44,21 +44,21 @@ describe('buildError', () => {
 })
 
 describe('validate', () => {
-  test('returns `true` if no schema is defined', () => {
+  test('returns the value if no schema is defined', () => {
     const validator = new ParserValidator(() => {}, 'test', 123)
 
     expect(validator.schema).toBeUndefined()
-    expect(validator.validate()).toBe(true)
+    expect(validator.validate()).toBe(123)
   })
 
-  test('returns `true` if valid', () => {
+  test('returns the value if valid', () => {
     const validator = new ParserValidator(
       (schema) => schema.number(),
       'test',
       123
     )
 
-    expect(validator.validate()).toBe(true)
+    expect(validator.validate()).toBe(123)
   })
 
   test('throws `ValidationError` if invalid', () => {

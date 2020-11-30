@@ -96,7 +96,7 @@ describe('defaults', () => {
 })
 
 describe('validate', () => {
-  test('returns `true` if valid', () => {
+  test('returns the validated query if valid', () => {
     const defineValidation = jest
       .spyOn(BaseParser.prototype, 'defineValidation')
       .mockImplementation((schema) =>
@@ -107,12 +107,12 @@ describe('validate', () => {
 
     const parser = new BaseParser('test', { test: 123 }, new Schema())
 
-    expect(parser.validate()).toBe(true)
+    expect(parser.validate()).toEqual({ test: 123 })
 
     defineValidation.mockRestore()
   })
 
-  test('returns the cached `true` on subsequent calls', () => {
+  test('returns the cached validated query on subsequent calls', () => {
     const defineValidation = jest
       .spyOn(BaseParser.prototype, 'defineValidation')
       .mockImplementation((schema) =>
@@ -125,8 +125,8 @@ describe('validate', () => {
 
     const validate = jest.spyOn(parser.validator, 'validate')
 
-    expect(parser.validate()).toBe(true)
-    expect(parser.validate()).toBe(true)
+    expect(parser.validate()).toEqual({ test: 123 })
+    expect(parser.validate()).toEqual({ test: 123 })
     expect(validate).toHaveBeenCalledTimes(1)
 
     defineValidation.mockRestore()

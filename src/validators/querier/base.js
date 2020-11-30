@@ -6,7 +6,15 @@ class BaseValidator {
     this.schema = defineSchema(...this.defineSchemaArgs)
   }
 
-  validate(/* values */) {
+  validateFilters(/* filters */) {
+    throw new NotImplementedError()
+  }
+
+  validateSorts(/* sorts */) {
+    throw new NotImplementedError()
+  }
+
+  validatePage(/* page */) {
     throw new NotImplementedError()
   }
 
