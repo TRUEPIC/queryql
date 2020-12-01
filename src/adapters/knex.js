@@ -42,8 +42,12 @@ class KnexAdapter extends BaseAdapter {
       'filter:>=': schema.alternatives().try(schema.number(), schema.string()),
       'filter:<': schema.alternatives().try(schema.number(), schema.string()),
       'filter:<=': schema.alternatives().try(schema.number(), schema.string()),
-      'filter:is': schema.any().valid(null),
-      'filter:is not': schema.any().valid(null),
+      'filter:is': schema.any().valid(null).empty(['null', '']).default(null),
+      'filter:is not': schema
+        .any()
+        .valid(null)
+        .empty(['null', ''])
+        .default(null),
       'filter:in': schema.array().items(schema.number(), schema.string()),
       'filter:not in': schema.array().items(schema.number(), schema.string()),
       'filter:like': schema.string(),
