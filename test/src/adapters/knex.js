@@ -379,6 +379,18 @@ describe('validation', () => {
       expect(validator.validateValue('filter:is', 'test', null)).toBeNull()
     })
 
+    test('permits a "null" string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:is', 'test', 'null')).toBeNull()
+    })
+
+    test('permits an empty string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:is', 'test', '')).toBeNull()
+    })
+
     test('throws for a non-permitted value', () => {
       const validator = new KnexAdapter().validator
 
@@ -393,6 +405,20 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:is not', 'test', null)).toBeNull()
+    })
+
+    test('permits a "null" string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(
+        validator.validateValue('filter:is not', 'test', 'null')
+      ).toBeNull()
+    })
+
+    test('permits an empty string value', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(validator.validateValue('filter:is not', 'test', '')).toBeNull()
     })
 
     test('throws for a non-permitted value', () => {

@@ -170,8 +170,8 @@ That said, the default Knex adapter supports the following operators/values:
 - `>=`: string or number
 - `<`: string or number
 - `<=`: string or number
-- `is`: `null`
-- `is not`: `null`
+- `is`: `null` / `'null'` as a string / empty string (all mean the same)
+- `is not`: `null` / `'null'` as a string / empty string (all mean the same)
 - `in`: array of strings and/or numbers
 - `not in`: array of strings and/or numbers
 - `like`: string
