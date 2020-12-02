@@ -7,12 +7,18 @@ class Schema {
     this.page(false)
   }
 
-  filter(field, operator, options = {}) {
-    this.filters.set(`${field}[${operator}]`, {
-      field,
-      operator,
-      options,
-    })
+  filter(field, operatorOrOperators, options = {}) {
+    const operators = Array.isArray(operatorOrOperators)
+      ? operatorOrOperators
+      : [operatorOrOperators]
+
+    for (const operator of operators) {
+      this.filters.set(`${field}[${operator}]`, {
+        field,
+        operator,
+        options,
+      })
+    }
 
     return this
   }

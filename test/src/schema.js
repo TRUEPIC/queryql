@@ -15,7 +15,7 @@ describe('constructor', () => {
 })
 
 describe('filter', () => {
-  test('whitelists a filter', () => {
+  test('whitelists one filter when one operator', () => {
     const schema = new Schema()
 
     schema.filter('test', '=')
@@ -23,6 +23,23 @@ describe('filter', () => {
     expect(schema.filters.get('test[=]')).toEqual({
       field: 'test',
       operator: '=',
+      options: {},
+    })
+  })
+
+  test('whitelists multiple filters when an array of operators', () => {
+    const schema = new Schema()
+
+    schema.filter('test', ['=', '!='])
+
+    expect(schema.filters.get('test[=]')).toEqual({
+      field: 'test',
+      operator: '=',
+      options: {},
+    })
+    expect(schema.filters.get('test[!=]')).toEqual({
+      field: 'test',
+      operator: '!=',
       options: {},
     })
   })

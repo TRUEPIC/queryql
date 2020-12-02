@@ -187,7 +187,7 @@ In the querier's `defineSchema(schema)` function, a filter can be
 added/whitelisted by calling:
 
 ```js
-schema.filter(field, operator, (options = {}))
+schema.filter(field, operatorOrOperators, (options = {}))
 ```
 
 For example:
@@ -199,7 +199,7 @@ class UserQuerier extends BaseQuerier {
   defineSchema(schema) {
     // ...
     schema.filter('id', 'in')
-    schema.filter('status', '=')
+    schema.filter('status', ['=', '!='])
   }
 }
 ```
