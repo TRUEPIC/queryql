@@ -6,20 +6,21 @@ const flattenMap = require('../services/flatten_map')
 class FilterParser extends BaseParser {
   static get DEFAULTS() {
     return {
+      name: null,
       field: null,
       operator: null,
       value: null,
     }
   }
 
-  buildKey({ field, operator }) {
-    return `${this.queryKey}:${field}[${operator}]`
+  buildKey({ name, operator }) {
+    return `${this.queryKey}:${name}[${operator}]`
   }
 
   defineValidation(schema) {
     const defaultOperator = this.defaults.operator
-    const mapFieldsToOperators = Object.entries(
-      this.schema.mapFilterFieldsToOperators()
+    const mapNamesToOperators = Object.entries(
+      this.schema.mapFilterNamesToOperators()
     )
 
     const values = [
@@ -32,7 +33,7 @@ class FilterParser extends BaseParser {
     ]
 
     return schema.object().keys(
-      mapFieldsToOperators.reduce((accumulator, [field, operators]) => {
+      mapNamesToOperators.reduce((accumulator, [field, operators]) => {
         const operatorObject = schema
           .object()
           .pattern(schema.string().valid(...operators), values)
@@ -54,19 +55,29 @@ class FilterParser extends BaseParser {
     })
   }
 
-  parseObject(field, value) {
-    return Object.keys(value).map((operator) => ({
-      ...this.defaults,
-      field,
-      operator,
-      value: value[operator],
-    }))
+  parseObject(name, value) {
+    return Object.keys(value).map((operator) => {
+      const { options } = this.schema.filters.get(`${name}[${operator}]`)
+
+      return {
+        ...this.defaults,
+        name,
+        field: options.field || name,
+        operator,
+        value: value[operator],
+      }
+    })
   }
 
-  parseNonObject(field, value) {
+  parseNonObject(name, value) {
+    const { options } = this.schema.filters.get(
+      `${name}[${this.defaults.operator}]`
+    )
+
     return {
       ...this.defaults,
-      field,
+      name,
+      field: options.field || name,
       value,
     }
   }
@@ -81,11 +92,11 @@ class FilterParser extends BaseParser {
     const entries = Object.entries(this.query)
     const filters = []
 
-    for (const [field, value] of entries) {
+    for (const [name, value] of entries) {
       if (is.object(value)) {
-        filters.push(...this.parseObject(field, value))
+        filters.push(...this.parseObject(name, value))
       } else {
-        filters.push(this.parseNonObject(field, value))
+        filters.push(this.parseNonObject(name, value))
       }
     }
 

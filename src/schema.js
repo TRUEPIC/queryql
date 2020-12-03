@@ -7,14 +7,14 @@ class Schema {
     this.page(false)
   }
 
-  filter(field, operatorOrOperators, options = {}) {
+  filter(name, operatorOrOperators, options = {}) {
     const operators = Array.isArray(operatorOrOperators)
       ? operatorOrOperators
       : [operatorOrOperators]
 
     for (const operator of operators) {
-      this.filters.set(`${field}[${operator}]`, {
-        field,
+      this.filters.set(`${name}[${operator}]`, {
+        name,
         operator,
         options,
       })
@@ -23,9 +23,9 @@ class Schema {
     return this
   }
 
-  sort(field, options = {}) {
-    this.sorts.set(field, {
-      field,
+  sort(name, options = {}) {
+    this.sorts.set(name, {
+      name,
       options,
     })
 
@@ -48,15 +48,15 @@ class Schema {
     return this
   }
 
-  mapFilterFieldsToOperators() {
+  mapFilterNamesToOperators() {
     const filters = Array.from(this.filters.values())
 
     return filters.reduce((accumulator, filter) => {
-      if (!accumulator[filter.field]) {
-        accumulator[filter.field] = []
+      if (!accumulator[filter.name]) {
+        accumulator[filter.name] = []
       }
 
-      accumulator[filter.field].push(filter.operator)
+      accumulator[filter.name].push(filter.operator)
 
       return accumulator
     }, {})

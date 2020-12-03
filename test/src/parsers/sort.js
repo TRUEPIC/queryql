@@ -3,6 +3,10 @@ const Schema = require('../../../src/schema')
 const ValidationError = require('../../../src/errors/validation')
 
 describe('DEFAULTS', () => {
+  test('returns `null` as the default name', () => {
+    expect(SortParser.DEFAULTS.name).toBeNull()
+  })
+
   test('returns `null` as the default field', () => {
     expect(SortParser.DEFAULTS.field).toBeNull()
   })
@@ -15,14 +19,14 @@ describe('DEFAULTS', () => {
 describe('buildKey', () => {
   test('builds/returns a string to use as a key', () => {
     const parser = new SortParser('sort', {}, new Schema())
-    const key = parser.buildKey({ field: 'test' })
+    const key = parser.buildKey({ name: 'test' })
 
     expect(key).toBe('sort:test')
   })
 })
 
 describe('validation', () => {
-  test('throws if no fields are whitelisted in the schema', () => {
+  test('throws if no sorts are whitelisted in the schema', () => {
     const parser = new SortParser('sort', 'invalid', new Schema())
 
     expect(() => parser.validate()).toThrow(
@@ -30,8 +34,8 @@ describe('validation', () => {
     )
   })
 
-  describe('`sort=field`', () => {
-    test('throws if the field is not whitelisted in the schema', () => {
+  describe('`sort=name`', () => {
+    test('throws if the sort is not whitelisted in the schema', () => {
       const parser = new SortParser(
         'sort',
         'invalid',
@@ -44,8 +48,8 @@ describe('validation', () => {
     })
   })
 
-  describe('`sort[]=field`', () => {
-    test('throws if the field is not whitelisted in the schema', () => {
+  describe('`sort[]=name`', () => {
+    test('throws if the sort is not whitelisted in the schema', () => {
       const parser = new SortParser(
         'sort',
         ['invalid'],
@@ -57,7 +61,7 @@ describe('validation', () => {
       )
     })
 
-    test('throws if the field appears more than once', () => {
+    test('throws if the sort appears more than once', () => {
       const parser = new SortParser(
         'sort',
         ['invalid', 'invalid'],
@@ -70,8 +74,8 @@ describe('validation', () => {
     })
   })
 
-  describe('`sort[field]=order`', () => {
-    test('throws if the field is not whitelisted in the schema', () => {
+  describe('`sort[name]=order`', () => {
+    test('throws if the sort is not whitelisted in the schema', () => {
       const parser = new SortParser(
         'sort',
         { invalid: 'asc' },
@@ -122,25 +126,55 @@ describe('flatten', () => {
 })
 
 describe('parse', () => {
-  test('`sort=field`', () => {
+  test('`sort=name`', () => {
     const parser = new SortParser('sort', 'test', new Schema().sort('test'))
 
     expect(parser.parse().get('sort:test')).toEqual({
+      name: 'test',
       field: 'test',
       order: 'asc',
     })
   })
 
-  test('`sort[]=field` with one field', () => {
+  test('`sort=name` with `field` option', () => {
+    const parser = new SortParser(
+      'sort',
+      'test',
+      new Schema().sort('test', { field: 'testing' })
+    )
+
+    expect(parser.parse().get('sort:test')).toEqual({
+      name: 'test',
+      field: 'testing',
+      order: 'asc',
+    })
+  })
+
+  test('`sort[]=name` with one name', () => {
     const parser = new SortParser('sort', ['test'], new Schema().sort('test'))
 
     expect(parser.parse().get('sort:test')).toEqual({
+      name: 'test',
       field: 'test',
       order: 'asc',
     })
   })
 
-  test('`sort[]=field` with multiple fields', () => {
+  test('`sort[]=name` with `field` option', () => {
+    const parser = new SortParser(
+      'sort',
+      ['test'],
+      new Schema().sort('test', { field: 'testing' })
+    )
+
+    expect(parser.parse().get('sort:test')).toEqual({
+      name: 'test',
+      field: 'testing',
+      order: 'asc',
+    })
+  })
+
+  test('`sort[]=name` with multiple names', () => {
     const parser = new SortParser(
       'sort',
       ['test1', 'test2'],
@@ -150,17 +184,19 @@ describe('parse', () => {
     const parsed = parser.parse()
 
     expect(parsed.get('sort:test1')).toEqual({
+      name: 'test1',
       field: 'test1',
       order: 'asc',
     })
 
     expect(parsed.get('sort:test2')).toEqual({
+      name: 'test2',
       field: 'test2',
       order: 'asc',
     })
   })
 
-  test('`sort[field]=order` with one field', () => {
+  test('`sort[name]=order` with one name', () => {
     const parser = new SortParser(
       'sort',
       { test: 'desc' },
@@ -168,12 +204,27 @@ describe('parse', () => {
     )
 
     expect(parser.parse().get('sort:test')).toEqual({
+      name: 'test',
       field: 'test',
       order: 'desc',
     })
   })
 
-  test('`sort[field]=order` with multiple fields', () => {
+  test('`sort[name]=order` with `field` option', () => {
+    const parser = new SortParser(
+      'sort',
+      { test: 'desc' },
+      new Schema().sort('test', { field: 'testing' })
+    )
+
+    expect(parser.parse().get('sort:test')).toEqual({
+      name: 'test',
+      field: 'testing',
+      order: 'desc',
+    })
+  })
+
+  test('`sort[name]=order` with multiple names', () => {
     const parser = new SortParser(
       'sort',
       {
@@ -186,11 +237,13 @@ describe('parse', () => {
     const parsed = parser.parse()
 
     expect(parsed.get('sort:test1')).toEqual({
+      name: 'test1',
       field: 'test1',
       order: 'desc',
     })
 
     expect(parsed.get('sort:test2')).toEqual({
+      name: 'test2',
       field: 'test2',
       order: 'asc',
     })

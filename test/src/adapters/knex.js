@@ -4,9 +4,27 @@ const KnexAdapter = require('../../../src/adapters/knex')
 const ValidationError = require('../../../src/errors/validation')
 
 describe('filter', () => {
+  test('uses `field` for the column, not `name`', () => {
+    const query = new KnexAdapter()
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'testing',
+        operator: '=',
+        value: 123,
+      })
+      .toString()
+
+    expect(query).toBe('select * from "test" where "testing" = 123')
+  })
+
   test('supports the `=` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: '=', value: 123 })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: '=',
+        value: 123,
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" = 123')
@@ -14,7 +32,12 @@ describe('filter', () => {
 
   test('supports the `!=` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: '!=', value: 123 })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: '!=',
+        value: 123,
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" != 123')
@@ -22,7 +45,12 @@ describe('filter', () => {
 
   test('supports the `<>` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: '<>', value: 123 })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: '<>',
+        value: 123,
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" <> 123')
@@ -30,7 +58,12 @@ describe('filter', () => {
 
   test('supports the `>` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: '>', value: 123 })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: '>',
+        value: 123,
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" > 123')
@@ -38,7 +71,12 @@ describe('filter', () => {
 
   test('supports the `>=` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: '>=', value: 123 })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: '>=',
+        value: 123,
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" >= 123')
@@ -46,7 +84,12 @@ describe('filter', () => {
 
   test('supports the `<` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: '<', value: 123 })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: '<',
+        value: 123,
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" < 123')
@@ -54,7 +97,12 @@ describe('filter', () => {
 
   test('supports the `<=` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: '<=', value: 123 })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: '<=',
+        value: 123,
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" <= 123')
@@ -62,7 +110,12 @@ describe('filter', () => {
 
   test('supports the `is` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: 'is', value: null })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: 'is',
+        value: null,
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" is null')
@@ -70,7 +123,12 @@ describe('filter', () => {
 
   test('supports the `is not` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: 'is not', value: null })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: 'is not',
+        value: null,
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" is not null')
@@ -79,6 +137,7 @@ describe('filter', () => {
   test('supports the `in` operator', () => {
     const query = new KnexAdapter()
       .filter(knex('test'), {
+        name: 'test',
         field: 'test',
         operator: 'in',
         value: [123, 456],
@@ -91,6 +150,7 @@ describe('filter', () => {
   test('supports the `not in` operator', () => {
     const query = new KnexAdapter()
       .filter(knex('test'), {
+        name: 'test',
         field: 'test',
         operator: 'not in',
         value: [123, 456],
@@ -102,7 +162,12 @@ describe('filter', () => {
 
   test('supports the `like` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), { field: 'test', operator: 'like', value: '%123%' })
+      .filter(knex('test'), {
+        name: 'test',
+        field: 'test',
+        operator: 'like',
+        value: '%123%',
+      })
       .toString()
 
     expect(query).toBe('select * from "test" where "test" like \'%123%\'')
@@ -111,6 +176,7 @@ describe('filter', () => {
   test('supports the `not like` operator', () => {
     const query = new KnexAdapter()
       .filter(knex('test'), {
+        name: 'test',
         field: 'test',
         operator: 'not like',
         value: '%123%',
@@ -123,6 +189,7 @@ describe('filter', () => {
   test('supports the `ilike` operator', () => {
     const query = new KnexAdapter()
       .filter(knex('test'), {
+        name: 'test',
         field: 'test',
         operator: 'ilike',
         value: '%123%',
@@ -135,6 +202,7 @@ describe('filter', () => {
   test('supports the `not ilike` operator', () => {
     const query = new KnexAdapter()
       .filter(knex('test'), {
+        name: 'test',
         field: 'test',
         operator: 'not ilike',
         value: '%123%',
@@ -147,6 +215,7 @@ describe('filter', () => {
   test('supports the `between` operator', () => {
     const query = new KnexAdapter()
       .filter(knex('test'), {
+        name: 'test',
         field: 'test',
         operator: 'between',
         value: [123, 456],
@@ -159,6 +228,7 @@ describe('filter', () => {
   test('supports the `not between` operator', () => {
     const query = new KnexAdapter()
       .filter(knex('test'), {
+        name: 'test',
         field: 'test',
         operator: 'not between',
         value: [123, 456],
@@ -174,10 +244,18 @@ describe('filter', () => {
 describe('sort', () => {
   test('adds an `order by` clause', () => {
     const query = new KnexAdapter()
-      .sort(knex('test'), { field: 'test', order: 'desc' })
+      .sort(knex('test'), { name: 'test', field: 'test', order: 'desc' })
       .toString()
 
     expect(query).toBe('select * from "test" order by "test" desc')
+  })
+
+  test('uses `field` for the column, not `name`', () => {
+    const query = new KnexAdapter()
+      .sort(knex('test'), { name: 'test', field: 'testing', order: 'desc' })
+      .toString()
+
+    expect(query).toBe('select * from "test" order by "testing" desc')
   })
 })
 

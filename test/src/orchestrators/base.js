@@ -147,6 +147,7 @@ describe('apply', () => {
     const querier = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
     const data = {
+      name: 'test',
       field: 'test',
       order: 'asc',
     }
@@ -162,6 +163,7 @@ describe('apply', () => {
     const querier = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
     const data = {
+      name: 'test',
       field: 'test',
       order: 'asc',
     }

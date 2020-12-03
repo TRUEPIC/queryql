@@ -3,6 +3,10 @@ const Schema = require('../../../src/schema')
 const ValidationError = require('../../../src/errors/validation')
 
 describe('DEFAULTS', () => {
+  test('returns `null` as the default name', () => {
+    expect(FilterParser.DEFAULTS.name).toBeNull()
+  })
+
   test('returns `null` as the default field', () => {
     expect(FilterParser.DEFAULTS.field).toBeNull()
   })
@@ -20,7 +24,7 @@ describe('buildKey', () => {
   test('builds/returns a string to use as a key', () => {
     const parser = new FilterParser('filter', {}, new Schema())
     const key = parser.buildKey({
-      field: 'test',
+      name: 'test',
       operator: '=',
     })
 
@@ -29,7 +33,7 @@ describe('buildKey', () => {
 })
 
 describe('validation', () => {
-  test('throws if the field is not whitelisted in the schema', () => {
+  test('throws if the filter is not whitelisted in the schema', () => {
     const parser = new FilterParser('filter', { invalid: 123 }, new Schema())
 
     expect(() => parser.validate()).toThrow(
@@ -151,7 +155,7 @@ describe('flatten', () => {
 })
 
 describe('parse', () => {
-  test('`filter[field]=value` with a default operator', () => {
+  test('`filter[name]=value` with a default operator', () => {
     const parser = new FilterParser(
       'filter',
       { test: 123 },
@@ -160,13 +164,30 @@ describe('parse', () => {
     )
 
     expect(parser.parse().get('filter:test[=]')).toEqual({
+      name: 'test',
       field: 'test',
       operator: '=',
       value: 123,
     })
   })
 
-  test('`filter[field][operator]=value` with one operator', () => {
+  test('`filter[name]=value` with `field` option', () => {
+    const parser = new FilterParser(
+      'filter',
+      { test: 123 },
+      new Schema().filter('test', '=', { field: 'testing' }),
+      { operator: '=' }
+    )
+
+    expect(parser.parse().get('filter:test[=]')).toEqual({
+      name: 'test',
+      field: 'testing',
+      operator: '=',
+      value: 123,
+    })
+  })
+
+  test('`filter[name][operator]=value` with one operator', () => {
     const parser = new FilterParser(
       'filter',
       { test: { '!=': 456 } },
@@ -174,13 +195,29 @@ describe('parse', () => {
     )
 
     expect(parser.parse().get('filter:test[!=]')).toEqual({
+      name: 'test',
       field: 'test',
       operator: '!=',
       value: 456,
     })
   })
 
-  test('`filter[field][operator]=value` with multiple operators', () => {
+  test('`filter[name][operator]=value` with `field` option', () => {
+    const parser = new FilterParser(
+      'filter',
+      { test: { '!=': 456 } },
+      new Schema().filter('test', '!=', { field: 'testing' })
+    )
+
+    expect(parser.parse().get('filter:test[!=]')).toEqual({
+      name: 'test',
+      field: 'testing',
+      operator: '!=',
+      value: 456,
+    })
+  })
+
+  test('`filter[name][operator]=value` with multiple operators', () => {
     const parser = new FilterParser(
       'filter',
       {
@@ -193,19 +230,21 @@ describe('parse', () => {
     )
 
     expect(parser.parse().get('filter:test[=]')).toEqual({
+      name: 'test',
       field: 'test',
       operator: '=',
       value: 123,
     })
 
     expect(parser.parse().get('filter:test[!=]')).toEqual({
+      name: 'test',
       field: 'test',
       operator: '!=',
       value: 456,
     })
   })
 
-  test('`filter[field][operator]=value` with multiple fields', () => {
+  test('`filter[name][operator]=value` with multiple names', () => {
     const parser = new FilterParser(
       'filter',
       {
@@ -216,12 +255,14 @@ describe('parse', () => {
     )
 
     expect(parser.parse().get('filter:test1[=]')).toEqual({
+      name: 'test1',
       field: 'test1',
       operator: '=',
       value: 123,
     })
 
     expect(parser.parse().get('filter:test2[!=]')).toEqual({
+      name: 'test2',
       field: 'test2',
       operator: '!=',
       value: 456,
