@@ -116,6 +116,7 @@ describe('run', () => {
     expect(filterer.apply).toHaveBeenNthCalledWith(
       1,
       {
+        name: 'test',
         field: 'test',
         operator: '=',
         value: 123,
@@ -126,6 +127,7 @@ describe('run', () => {
     expect(filterer.apply).toHaveBeenNthCalledWith(
       2,
       {
+        name: 'testing',
         field: 'testing',
         operator: '!=',
         value: 456,

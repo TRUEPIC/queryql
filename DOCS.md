@@ -144,8 +144,8 @@ Filtering is specified under the `filter` key in the query string. A number of
 formats are supported:
 
 ```
-?filter[field]=value
-?filter[field][operator]=value
+?filter[name]=value
+?filter[name][operator]=value
 ```
 
 - `operator` can be optional if the adapter specifies a default operator. If
@@ -187,7 +187,7 @@ In the querier's `defineSchema(schema)` function, a filter can be
 added/whitelisted by calling:
 
 ```js
-schema.filter(field, operatorOrOperators, (options = {}))
+schema.filter(name, operatorOrOperators, (options = {}))
 ```
 
 For example:
@@ -198,11 +198,17 @@ class UserQuerier extends BaseQuerier {
 
   defineSchema(schema) {
     // ...
-    schema.filter('id', 'in')
+    schema.filter('id', 'in', { field: 'users.id' })
     schema.filter('status', ['=', '!='])
   }
 }
 ```
+
+#### Options
+
+| Name    | Description                                                                            | Type   | Default     |
+| ------- | -------------------------------------------------------------------------------------- | ------ | ----------- |
+| `field` | The underlying field (i.e., database column) to use if different than the filter name. | String | Filter name |
 
 ### Customizing the Query
 
@@ -212,13 +218,13 @@ you may need to bypass the adapter and work with the query builder / ORM
 directly.
 
 This can easily be done by defining a function in your querier class to handle
-the `field[operator]` combination. For example:
+the `name[operator]` combination. For example:
 
 ```js
 class UserQuerier extends BaseQuerier {
   // ...
 
-  'filter:id[in]'(builder, { field, operator, value }) {
+  'filter:id[in]'(builder, { name, field, operator, value }) {
     return builder.where(field, operator, value)
   }
 }
@@ -229,7 +235,7 @@ As you can see, you simply call the appropriate function(s) on the query builder
 
 Now, this example is overly simplistic, and probably already handled
 appropriately by the adapter. It becomes more useful, for example, when you have
-a field that doesn't map directly to a field in your database, like a search
+a filter that doesn't map directly to a field in your database, like a search
 query:
 
 ```js
@@ -276,6 +282,7 @@ class UserQuerier extends BaseQuerier {
 
   get filterDefaults() {
     return {
+      name: null,
       field: null,
       operator: null,
       value: null,
@@ -294,13 +301,13 @@ Sorting is specified under the `sort` key in the query string. A number of
 formats are supported:
 
 ```
-?sort=field
-?sort[]=field
-?sort[field]=order
+?sort=name
+?sort[]=name
+?sort[name]=order
 ```
 
 - `order` can be `asc` or `desc` (case-insensitive), and defaults to `asc`.
-- `sort[]` and `sort[field]` support multiple fields, just be aware that the two
+- `sort[]` and `sort[name]` support multiple sorts, just be aware that the two
   formats can't be mixed.
 
 ### Defining the Schema
@@ -309,7 +316,7 @@ In the querier's `defineSchema(schema)` function, a sort can be
 added/whitelisted by calling:
 
 ```js
-schema.sort(field, (options = {}))
+schema.sort(name, (options = {}))
 ```
 
 For example:
@@ -321,9 +328,16 @@ class UserQuerier extends BaseQuerier {
   defineSchema(schema) {
     // ...
     schema.sort('name')
+    schema.sort('status', { field: 'current_status' })
   }
 }
 ```
+
+#### Options
+
+| Name    | Description                                                                          | Type   | Default   |
+| ------- | ------------------------------------------------------------------------------------ | ------ | --------- |
+| `field` | The underlying field (i.e., database column) to use if different than the sort name. | String | Sort name |
 
 ### Customizing the Query
 
@@ -333,13 +347,13 @@ you may need to bypass the adapter and work with the query builder / ORM
 directly.
 
 This can easily be done by defining a function in your querier class to handle
-the `field`. For example:
+the `name`. For example:
 
 ```js
 class UserQuerier extends BaseQuerier {
   // ...
 
-  'sort:name'(builder, { field, order }) {
+  'sort:name'(builder, { name, field, order }) {
     return builder.orderBy(field, order)
   }
 }
@@ -350,7 +364,7 @@ As you can see, you simply call the appropriate function(s) on the query builder
 
 Now, this example is overly simplistic, and probably already handled
 appropriately by the adapter. It becomes more useful, for example, when you have
-a field that doesn't map directly to a field in your database:
+a sort that doesn't map directly to a field in your database:
 
 ```js
 class UserQuerier extends BaseQuerier {
@@ -392,6 +406,7 @@ class UserQuerier extends BaseQuerier {
 
   get sortDefaults() {
     return {
+      name: null,
       field: null,
       order: 'asc',
     }
@@ -481,7 +496,7 @@ You only need to return the keys you want to override.
 
 QueryQL and the configured adapter validate the query structure and value types
 for free, without any additional configuration. You don't have to worry about
-the client misspelling a field name or using an unsupported filter operator – a
+the client misspelling a name or using an unsupported filter operator – a
 `ValidationError` will be thrown if they do.
 
 Still, it's often helpful to add your own app-specific validation. For example,

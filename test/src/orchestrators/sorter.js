@@ -111,6 +111,7 @@ describe('run', () => {
     expect(sorter.apply).toHaveBeenNthCalledWith(
       1,
       {
+        name: 'testing',
         field: 'testing',
         order: 'asc',
       },
@@ -120,6 +121,7 @@ describe('run', () => {
     expect(sorter.apply).toHaveBeenNthCalledWith(
       2,
       {
+        name: 'test',
         field: 'test',
         order: 'asc',
       },

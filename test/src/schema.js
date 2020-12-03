@@ -21,7 +21,7 @@ describe('filter', () => {
     schema.filter('test', '=')
 
     expect(schema.filters.get('test[=]')).toEqual({
-      field: 'test',
+      name: 'test',
       operator: '=',
       options: {},
     })
@@ -33,12 +33,12 @@ describe('filter', () => {
     schema.filter('test', ['=', '!='])
 
     expect(schema.filters.get('test[=]')).toEqual({
-      field: 'test',
+      name: 'test',
       operator: '=',
       options: {},
     })
     expect(schema.filters.get('test[!=]')).toEqual({
-      field: 'test',
+      name: 'test',
       operator: '!=',
       options: {},
     })
@@ -46,7 +46,7 @@ describe('filter', () => {
 
   test('accepts an optional options object', () => {
     const schema = new Schema()
-    const options = { test: 123 }
+    const options = { field: 'test.test' }
 
     schema.filter('test', '=', options)
 
@@ -67,14 +67,14 @@ describe('sort', () => {
     schema.sort('test')
 
     expect(schema.sorts.get('test')).toEqual({
-      field: 'test',
+      name: 'test',
       options: {},
     })
   })
 
   test('accepts an optional options object', () => {
     const schema = new Schema()
-    const options = { test: 123 }
+    const options = { field: 'test.test' }
 
     schema.sort('test', options)
 
@@ -138,15 +138,15 @@ describe('page', () => {
   })
 })
 
-describe('mapFilterFieldsToOperators', () => {
-  test('returns object with filter fields (keys) => operators (values)', () => {
+describe('mapFilterNamesToOperators', () => {
+  test('returns object with filter names (keys) => operators (values)', () => {
     const schema = new Schema()
 
     schema.filter('test1', '=')
     schema.filter('test1', '!=')
     schema.filter('test2', 'in')
 
-    expect(schema.mapFilterFieldsToOperators()).toEqual({
+    expect(schema.mapFilterNamesToOperators()).toEqual({
       test1: ['=', '!='],
       test2: ['in'],
     })

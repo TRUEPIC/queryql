@@ -6,13 +6,14 @@ const flattenMap = require('../services/flatten_map')
 class SortParser extends BaseParser {
   static get DEFAULTS() {
     return {
+      name: null,
       field: null,
       order: 'asc',
     }
   }
 
-  buildKey({ field }) {
-    return `${this.queryKey}:${field}`
+  buildKey({ name }) {
+    return `${this.queryKey}:${name}`
   }
 
   defineValidation(schema) {
@@ -44,26 +45,39 @@ class SortParser extends BaseParser {
     })
   }
 
-  parseString(field) {
+  parseString(name) {
+    const { options } = this.schema.sorts.get(name)
+
     return {
       ...this.defaults,
-      field,
+      name,
+      field: options.field || name,
     }
   }
 
-  parseArray(fields) {
-    return fields.map((field) => ({
-      ...this.defaults,
-      field,
-    }))
+  parseArray(names) {
+    return names.map((name) => {
+      const { options } = this.schema.sorts.get(name)
+
+      return {
+        ...this.defaults,
+        name,
+        field: options.field || name,
+      }
+    })
   }
 
   parseObject(query) {
-    return Object.entries(query).map(([field, order]) => ({
-      ...this.defaults,
-      field,
-      order,
-    }))
+    return Object.entries(query).map(([name, order]) => {
+      const { options } = this.schema.sorts.get(name)
+
+      return {
+        ...this.defaults,
+        name,
+        field: options.field || name,
+        order,
+      }
+    })
   }
 
   parse() {

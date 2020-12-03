@@ -16,11 +16,11 @@ class BaseAdapter {
     throw new NotImplementedError()
   }
 
-  'filter:*'(/* builder, { field, operator, value } */) {
+  'filter:*'(/* builder, { name, field, operator, value } */) {
     throw new NotImplementedError()
   }
 
-  sort(/* builder, { field, order } */) {
+  sort(/* builder, { name, field, order } */) {
     throw new NotImplementedError()
   }
 
