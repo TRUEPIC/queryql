@@ -31,25 +31,25 @@ class KnexAdapter extends BaseAdapter {
     return {
       'filter:=': schema
         .alternatives()
-        .try(schema.boolean(), schema.number(), schema.string()),
+        .try(schema.string(), schema.number(), schema.boolean()),
       'filter:!=': schema
         .alternatives()
-        .try(schema.boolean(), schema.number(), schema.string()),
+        .try(schema.string(), schema.number(), schema.boolean()),
       'filter:<>': schema
         .alternatives()
-        .try(schema.boolean(), schema.number(), schema.string()),
-      'filter:>': schema.alternatives().try(schema.number(), schema.string()),
-      'filter:>=': schema.alternatives().try(schema.number(), schema.string()),
-      'filter:<': schema.alternatives().try(schema.number(), schema.string()),
-      'filter:<=': schema.alternatives().try(schema.number(), schema.string()),
+        .try(schema.string(), schema.number(), schema.boolean()),
+      'filter:>': schema.alternatives().try(schema.string(), schema.number()),
+      'filter:>=': schema.alternatives().try(schema.string(), schema.number()),
+      'filter:<': schema.alternatives().try(schema.string(), schema.number()),
+      'filter:<=': schema.alternatives().try(schema.string(), schema.number()),
       'filter:is': schema.any().valid(null).empty(['null', '']).default(null),
       'filter:is not': schema
         .any()
         .valid(null)
         .empty(['null', ''])
         .default(null),
-      'filter:in': schema.array().items(schema.number(), schema.string()),
-      'filter:not in': schema.array().items(schema.number(), schema.string()),
+      'filter:in': schema.array().items(schema.string(), schema.number()),
+      'filter:not in': schema.array().items(schema.string(), schema.number()),
       'filter:like': schema.string(),
       'filter:not like': schema.string(),
       'filter:ilike': schema.string(),
@@ -57,11 +57,11 @@ class KnexAdapter extends BaseAdapter {
       'filter:between': schema
         .array()
         .length(2)
-        .items(schema.number(), schema.string()),
+        .items(schema.string(), schema.number()),
       'filter:not between': schema
         .array()
         .length(2)
-        .items(schema.number(), schema.string()),
+        .items(schema.string(), schema.number()),
     }
   }
 

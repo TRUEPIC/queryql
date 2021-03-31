@@ -25,10 +25,10 @@ class FilterParser extends BaseParser {
 
     const values = [
       schema.array(),
-      schema.boolean(),
-      schema.number(),
       schema.object(),
       schema.string(),
+      schema.number(),
+      schema.boolean(),
       schema.valid(null),
     ]
 

@@ -293,7 +293,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:=', 'test', null)).toThrow(
-        new ValidationError('test must be one of [boolean, number, string]')
+        new ValidationError('test must be one of [string, number, boolean]')
       )
     })
   })
@@ -323,7 +323,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:!=', 'test', null)).toThrow(
-        new ValidationError('test must be one of [boolean, number, string]')
+        new ValidationError('test must be one of [string, number, boolean]')
       )
     })
   })
@@ -353,7 +353,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:<>', 'test', null)).toThrow(
-        new ValidationError('test must be one of [boolean, number, string]')
+        new ValidationError('test must be one of [string, number, boolean]')
       )
     })
   })
@@ -375,7 +375,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:>', 'test', false)).toThrow(
-        new ValidationError('test must be one of [number, string]')
+        new ValidationError('test must be one of [string, number]')
       )
     })
   })
@@ -399,7 +399,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:>=', 'test', false)).toThrow(
-        new ValidationError('test must be one of [number, string]')
+        new ValidationError('test must be one of [string, number]')
       )
     })
   })
@@ -421,7 +421,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:<', 'test', false)).toThrow(
-        new ValidationError('test must be one of [number, string]')
+        new ValidationError('test must be one of [string, number]')
       )
     })
   })
@@ -445,7 +445,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:<=', 'test', false)).toThrow(
-        new ValidationError('test must be one of [number, string]')
+        new ValidationError('test must be one of [string, number]')
       )
     })
   })
