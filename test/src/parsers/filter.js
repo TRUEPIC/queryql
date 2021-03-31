@@ -134,7 +134,7 @@ describe('validation', () => {
 
     expect(() => parser.validate()).toThrow(
       new ValidationError(
-        'filter:invalid[=] must be one of [array, boolean, number, object, string, null]'
+        'filter:invalid[=] must be one of [array, object, string, number, boolean, null]'
       )
     )
   })
