@@ -1,6 +1,6 @@
-const BaseValidator = require('../../../../src/validators/querier/base')
-const NotImplementedError = require('../../../../src/errors/not_implemented')
-const ValidationError = require('../../../../src/errors/validation')
+const BaseValidator = require('./base')
+const NotImplementedError = require('../../errors/not_implemented')
+const ValidationError = require('../../errors/validation')
 
 describe('constructor', () => {
   test('accepts/calls `defineSchema` and sets the returned value', () => {

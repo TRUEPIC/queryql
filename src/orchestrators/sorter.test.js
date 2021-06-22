@@ -1,9 +1,9 @@
 const knex = require('knex')({ client: 'pg' })
 
-const EmptyQuerier = require('../../queriers/empty')
-const Sorter = require('../../../src/orchestrators/sorter')
-const TestQuerier = require('../../queriers/test')
-const ValidationError = require('../../../src/errors/validation')
+const EmptyQuerier = require('../../test/queriers/empty')
+const Sorter = require('./sorter')
+const TestQuerier = require('../../test/queriers/test')
+const ValidationError = require('../errors/validation')
 
 describe('queryKey', () => {
   test('returns the key for filters in the query', () => {

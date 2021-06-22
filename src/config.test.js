@@ -1,4 +1,4 @@
-const Config = require('../../src/config')
+const Config = require('./config')
 
 describe('constructor', () => {
   test('accepts an object of values to set', () => {

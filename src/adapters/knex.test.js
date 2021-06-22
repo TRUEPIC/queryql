@@ -1,7 +1,7 @@
 const knex = require('knex')({ client: 'pg' })
 
-const KnexAdapter = require('../../../src/adapters/knex')
-const ValidationError = require('../../../src/errors/validation')
+const KnexAdapter = require('./knex')
+const ValidationError = require('../errors/validation')
 
 describe('filter', () => {
   test('uses `field` for the column, not `name`', () => {

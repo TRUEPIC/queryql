@@ -1,6 +1,6 @@
-const SortParser = require('../../../src/parsers/sort')
-const Schema = require('../../../src/schema')
-const ValidationError = require('../../../src/errors/validation')
+const SortParser = require('./sort')
+const Schema = require('../schema')
+const ValidationError = require('../errors/validation')
 
 describe('DEFAULTS', () => {
   test('returns `null` as the default name', () => {

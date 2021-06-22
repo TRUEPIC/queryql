@@ -1,6 +1,6 @@
-const FilterParser = require('../../../src/parsers/filter')
-const Schema = require('../../../src/schema')
-const ValidationError = require('../../../src/errors/validation')
+const FilterParser = require('./filter')
+const Schema = require('../schema')
+const ValidationError = require('../errors/validation')
 
 describe('DEFAULTS', () => {
   test('returns `null` as the default name', () => {

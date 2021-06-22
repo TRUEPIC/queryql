@@ -1,9 +1,9 @@
 const knex = require('knex')({ client: 'pg' })
 
-const BaseOrchestrator = require('../../../src/orchestrators/base')
-const NotImplementedError = require('../../../src/errors/not_implemented')
-const TestQuerier = require('../../queriers/test')
-const ValidationError = require('../../../src/errors/validation')
+const BaseOrchestrator = require('./base')
+const NotImplementedError = require('../errors/not_implemented')
+const TestQuerier = require('../../test/queriers/test')
+const ValidationError = require('../errors/validation')
 let buildParser
 
 beforeEach(() => {

@@ -1,5 +1,5 @@
-const BaseAdapter = require('../../../src/adapters/base')
-const NotImplementedError = require('../../../src/errors/not_implemented')
+const BaseAdapter = require('./base')
+const NotImplementedError = require('../errors/not_implemented')
 
 describe('constructor', () => {
   test('creates an instance of the validator, calls `defineValidation`', () => {

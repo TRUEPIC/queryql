@@ -1,4 +1,4 @@
-const BaseError = require('../../../src/errors/base')
+const BaseError = require('./base')
 
 test('extends Error', () => {
   expect(new BaseError('test')).toBeInstanceOf(Error)

@@ -1,11 +1,11 @@
 const knex = require('knex')({ client: 'pg' })
 
-const Config = require('../../src/config')
-const EmptyQuerier = require('../queriers/empty')
-const NotImplementedError = require('../../src/errors/not_implemented')
-const QueryQL = require('../../src')
-const TestQuerier = require('../queriers/test')
-const ValidationError = require('../../src/errors/validation')
+const Config = require('./config')
+const EmptyQuerier = require('../test/queriers/empty')
+const NotImplementedError = require('./errors/not_implemented')
+const QueryQL = require('.')
+const TestQuerier = require('../test/queriers/test')
+const ValidationError = require('./errors/validation')
 
 describe('constructor', () => {
   test('accepts a query to set', () => {
