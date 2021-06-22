@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 
 const FilterParser = require('../../../../src/parsers/filter')
 const JoiValidator = require('../../../../src/validators/querier/joi')

@@ -32,8 +32,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@hapi/joi": "^16.1.8",
-    "is": "^3.3.0"
+    "is": "^3.3.0",
+    "joi": "^17.4.0"
   },
   "devDependencies": {
     "eslint": "^7.29.0",
