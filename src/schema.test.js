@@ -1,4 +1,4 @@
-const Schema = require('../../src/schema')
+const Schema = require('./schema')
 
 describe('constructor', () => {
   test('defaults to no whitelisted filters', () => {

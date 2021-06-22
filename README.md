@@ -129,9 +129,8 @@ $ npm install
 
 ### Tests
 
-[Jest](https://jestjs.io/) is our testing framework of choice, with
-file-specific tests contained in the `test/src` directory. We strive for 100%
-code coverage.
+[Jest](https://jestjs.io/) is our testing framework of choice. We strive for
+100% code coverage.
 
 To run the tests:
 

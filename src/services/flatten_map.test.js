@@ -1,4 +1,4 @@
-const flattenMap = require('../../../src/services/flatten_map')
+const flattenMap = require('./flatten_map')
 
 test('uses the map key/value as the object key/value by default', () => {
   const map = new Map([

@@ -1,7 +1,7 @@
-const BaseParser = require('../../../src/parsers/base')
-const NotImplementedError = require('../../../src/errors/not_implemented')
-const Schema = require('../../../src/schema')
-const ValidationError = require('../../../src/errors/validation')
+const BaseParser = require('./base')
+const NotImplementedError = require('../errors/not_implemented')
+const Schema = require('../schema')
+const ValidationError = require('../errors/validation')
 
 describe('constructor', () => {
   test('accepts a query key to set', () => {

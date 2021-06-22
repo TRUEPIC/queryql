@@ -9,5 +9,5 @@ module.exports = {
       },
     ],
   ],
-  testMatch: ['**/test/src/**/*.js'],
+  testPathIgnorePatterns: ['/node_modules/', '/test/'],
 }

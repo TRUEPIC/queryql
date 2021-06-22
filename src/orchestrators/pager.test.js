@@ -1,9 +1,9 @@
 const knex = require('knex')({ client: 'pg' })
 
-const EmptyQuerier = require('../../queriers/empty')
-const Pager = require('../../../src/orchestrators/pager')
-const TestQuerier = require('../../queriers/test')
-const ValidationError = require('../../../src/errors/validation')
+const EmptyQuerier = require('../../test/queriers/empty')
+const Pager = require('./pager')
+const TestQuerier = require('../../test/queriers/test')
+const ValidationError = require('../errors/validation')
 
 describe('queryKey', () => {
   test('returns the key for pagination in the query', () => {

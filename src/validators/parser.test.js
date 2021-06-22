@@ -1,7 +1,7 @@
 const Joi = require('joi')
 
-const ParserValidator = require('../../../src/validators/parser')
-const ValidationError = require('../../../src/errors/validation')
+const ParserValidator = require('./parser')
+const ValidationError = require('../errors/validation')
 
 describe('constructor', () => {
   test('accepts/calls `defineSchema` and sets the returned value', () => {

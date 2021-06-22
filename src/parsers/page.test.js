@@ -1,6 +1,6 @@
-const PageParser = require('../../../src/parsers/page')
-const Schema = require('../../../src/schema')
-const ValidationError = require('../../../src/errors/validation')
+const PageParser = require('./page')
+const Schema = require('../schema')
+const ValidationError = require('../errors/validation')
 
 describe('DEFAULTS', () => {
   test('returns `20` as the default size', () => {

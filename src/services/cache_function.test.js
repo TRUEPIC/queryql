@@ -1,4 +1,4 @@
-const cacheFunction = require('../../../src/services/cache_function')
+const cacheFunction = require('./cache_function')
 
 test('accepts/calls `func` and returns the value', () => {
   const value = 'test123'
