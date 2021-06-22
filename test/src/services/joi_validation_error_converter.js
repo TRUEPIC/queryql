@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 
 const joiValidationErrorConverter = require('../../../src/services/joi_validation_error_converter')
 const ValidationError = require('../../../src/errors/validation')
