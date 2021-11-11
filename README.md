@@ -33,6 +33,12 @@ QueryQL takes a parsed query string (like Express' `req.query`) and translates
 it into the appropriate function calls that your query builder / ORM understands
 to filter, sort, and paginate the records.
 
+(Make sure your framework uses a query string parser that supports nested
+objects. Node.js's native
+[`querystring`](https://nodejs.org/api/querystring.html) module _does not_, but
+a package like [qs](https://github.com/ljharb/qs) does. It's usually a simple
+config change to switch.)
+
 Let's consider an example to illustrate:
 
 ```
