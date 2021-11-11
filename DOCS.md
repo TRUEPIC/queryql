@@ -70,7 +70,11 @@ To run a querier, start by creating a new instance of one:
 const querier = new UserQuerier(query, builder, (config = {}))
 ```
 
-- `query` is a parsed query string, like Express' `req.query`.
+- `query` is a parsed query string, like Express' `req.query`. (Make sure your
+  framework uses a query string parser that supports nested objects. Node.js's
+  native [`querystring`](https://nodejs.org/api/querystring.html) module _does
+  not_, but a package like [qs](https://github.com/ljharb/qs) does. It's usually
+  a simple config change to switch.)
 - `builder` is a query builder / ORM object that the configured adapter works
   with, like Knex.
 - `config` is an optional instance-specific config that overrides the global
