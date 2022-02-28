@@ -1,6 +1,6 @@
 {
   "name": "@truepic/queryql",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "Easily add filtering, sorting, and pagination to your REST API through your old friend: the query string!",
   "keywords": [
     "filter",
