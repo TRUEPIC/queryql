@@ -25,7 +25,6 @@ class FilterParser extends BaseParser {
 
     const values = [
       schema.array(),
-      schema.object(),
       schema.string(),
       schema.number(),
       schema.boolean(),
@@ -36,7 +35,10 @@ class FilterParser extends BaseParser {
       mapNamesToOperators.reduce((accumulator, [field, operators]) => {
         const operatorObject = schema
           .object()
-          .pattern(schema.string().valid(...operators), values)
+          .pattern(schema.string().valid(...operators), [
+            schema.object(),
+            ...values,
+          ])
 
         return {
           ...accumulator,
