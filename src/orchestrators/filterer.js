@@ -22,7 +22,7 @@ class Filterer extends BaseOrchestrator {
       {
         operator: this.querier.adapter.constructor.DEFAULT_FILTER_OPERATOR,
         ...this.querier.filterDefaults,
-      }
+      },
     )
   }
 

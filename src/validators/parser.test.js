@@ -38,7 +38,7 @@ describe('buildError', () => {
       .validate({ invalid: 'invalid' })
 
     expect(validator.buildError(error)).toEqual(
-      new ValidationError('test:invalid must be a number')
+      new ValidationError('test:invalid must be a number'),
     )
   })
 })
@@ -55,7 +55,7 @@ describe('validate', () => {
     const validator = new ParserValidator(
       (schema) => schema.number(),
       'test',
-      123
+      123,
     )
 
     expect(validator.validate()).toBe(123)
@@ -65,11 +65,11 @@ describe('validate', () => {
     const validator = new ParserValidator(
       (schema) => schema.number(),
       'test',
-      'invalid'
+      'invalid',
     )
 
     expect(() => validator.validate()).toThrow(
-      new ValidationError('test must be a number')
+      new ValidationError('test must be a number'),
     )
   })
 })

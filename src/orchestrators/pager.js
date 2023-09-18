@@ -19,7 +19,7 @@ class Pager extends BaseOrchestrator {
       this.queryKey,
       this.query || this.querier.defaultPage,
       this.querier.schema,
-      this.querier.pageDefaults
+      this.querier.pageDefaults,
     )
   }
 

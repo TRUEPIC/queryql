@@ -46,7 +46,7 @@ class AdapterValidator {
       filter.value = this.validateValue(
         `filter:${filter.operator}`,
         key,
-        filter.value
+        filter.value,
       )
     }
 
@@ -74,7 +74,7 @@ class AdapterValidator {
       pageField.value = this.validateValue(
         `page:${pageField.field}`,
         key,
-        pageField.value
+        pageField.value,
       )
     }
 

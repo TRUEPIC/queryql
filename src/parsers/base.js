@@ -12,7 +12,7 @@ class BaseParser {
     this.validator = new ParserValidator(
       this.defineValidation.bind(this),
       queryKey,
-      query
+      query,
     )
 
     this.validate = cache(this.validate, this)

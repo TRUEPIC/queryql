@@ -102,7 +102,7 @@ describe('validate', () => {
       .mockImplementation((schema) =>
         schema.object().keys({
           test: schema.number(),
-        })
+        }),
       )
 
     const parser = new BaseParser('test', { test: 123 }, new Schema())
@@ -118,7 +118,7 @@ describe('validate', () => {
       .mockImplementation((schema) =>
         schema.object().keys({
           test: schema.number(),
-        })
+        }),
       )
 
     const parser = new BaseParser('test', { test: 123 }, new Schema())
@@ -138,13 +138,13 @@ describe('validate', () => {
       .mockImplementation((schema) =>
         schema.object().keys({
           invalid: schema.number(),
-        })
+        }),
       )
 
     const parser = new BaseParser('test', { invalid: 'invalid' }, new Schema())
 
     expect(() => parser.validate()).toThrow(
-      new ValidationError('test:invalid must be a number')
+      new ValidationError('test:invalid must be a number'),
     )
 
     defineValidation.mockRestore()

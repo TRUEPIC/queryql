@@ -25,7 +25,7 @@ class QueryQL {
     this.pager = new Pager(this)
 
     this.validator = new (this.config.get('validator'))(
-      this.defineValidation.bind(this)
+      this.defineValidation.bind(this),
     )
   }
 

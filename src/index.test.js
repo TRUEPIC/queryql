@@ -126,7 +126,7 @@ describe('validate', () => {
         sort: 'test',
         page: 2,
       },
-      knex('test')
+      knex('test'),
     )
 
     expect(querier.validate()).toBe(true)
@@ -136,7 +136,7 @@ describe('validate', () => {
     const querier = new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
 
     expect(() => querier.validate()).toThrow(
-      new ValidationError('filter:invalid is not allowed')
+      new ValidationError('filter:invalid is not allowed'),
     )
   })
 
@@ -144,7 +144,7 @@ describe('validate', () => {
     const querier = new TestQuerier({ sort: { test: 'invalid' } }, knex('test'))
 
     expect(() => querier.validate()).toThrow(
-      new ValidationError('sort:test must be one of [asc, desc]')
+      new ValidationError('sort:test must be one of [asc, desc]'),
     )
   })
 
@@ -152,7 +152,7 @@ describe('validate', () => {
     const querier = new TestQuerier({ page: 'invalid' }, knex('test'))
 
     expect(() => querier.validate()).toThrow(
-      new ValidationError('page must be one of [number, object]')
+      new ValidationError('page must be one of [number, object]'),
     )
   })
 })
@@ -165,7 +165,7 @@ describe('run', () => {
         sort: 'test',
         page: 2,
       },
-      knex('test')
+      knex('test'),
     )
 
     expect(querier.run().toString()).toBe(
@@ -173,7 +173,7 @@ describe('run', () => {
         'from "test" ' +
         'where "test" = 123 ' +
         'order by "test" asc ' +
-        'limit 20 offset 20'
+        'limit 20 offset 20',
     )
   })
 
@@ -181,7 +181,7 @@ describe('run', () => {
     const querier = new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
 
     expect(() => querier.run()).toThrow(
-      new ValidationError('filter:invalid is not allowed')
+      new ValidationError('filter:invalid is not allowed'),
     )
   })
 })

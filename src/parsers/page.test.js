@@ -28,7 +28,7 @@ describe('buildKey', () => {
       {
         field: 'size',
       },
-      false
+      false,
     )
 
     expect(key).toBe('size')
@@ -41,7 +41,7 @@ describe('validation', () => {
       const parser = new PageParser('page', '1.1', new Schema())
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('page must be an integer')
+        new ValidationError('page must be an integer'),
       )
     })
 
@@ -49,7 +49,7 @@ describe('validation', () => {
       const parser = new PageParser('page', '-1', new Schema())
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('page must be a positive number')
+        new ValidationError('page must be a positive number'),
       )
     })
   })
@@ -59,7 +59,7 @@ describe('validation', () => {
       const parser = new PageParser('page', { number: '1.1' }, new Schema())
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('page:number must be an integer')
+        new ValidationError('page:number must be an integer'),
       )
     })
 
@@ -67,7 +67,7 @@ describe('validation', () => {
       const parser = new PageParser('page', { number: '-1' }, new Schema())
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('page:number must be a positive number')
+        new ValidationError('page:number must be a positive number'),
       )
     })
   })
@@ -77,7 +77,7 @@ describe('validation', () => {
       const parser = new PageParser('page', { size: '1.1' }, new Schema())
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('page:size must be an integer')
+        new ValidationError('page:size must be an integer'),
       )
     })
 
@@ -85,7 +85,7 @@ describe('validation', () => {
       const parser = new PageParser('page', { size: '-1' }, new Schema())
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('page:size must be a positive number')
+        new ValidationError('page:size must be a positive number'),
       )
     })
   })
@@ -198,7 +198,7 @@ describe('parse', () => {
     const parser = new PageParser(
       'page',
       { number: '2', size: '10' },
-      new Schema().page()
+      new Schema().page(),
     )
     const parsed = parser.parse()
 
@@ -242,7 +242,7 @@ describe('parse', () => {
     const parser = new PageParser('page', 'invalid', new Schema())
 
     expect(() => parser.parse()).toThrow(
-      new ValidationError('page must be one of [number, object]')
+      new ValidationError('page must be one of [number, object]'),
     )
   })
 })

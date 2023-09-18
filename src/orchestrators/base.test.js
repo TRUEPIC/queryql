@@ -85,7 +85,7 @@ describe('run', () => {
 describe('query', () => {
   test('returns the query value specified by the query key', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({ test: 123 }, knex('test'))
+      new TestQuerier({ test: 123 }, knex('test')),
     )
 
     jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
@@ -130,14 +130,14 @@ describe('parse', () => {
 
   test('throws `ValidationError` if disabled, with query', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({ test: 123 }, knex('test'))
+      new TestQuerier({ test: 123 }, knex('test')),
     )
 
     jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
     jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false)
 
     expect(() => orchestrator.parse()).toThrow(
-      new ValidationError(`${orchestrator.queryKey} is disabled`)
+      new ValidationError(`${orchestrator.queryKey} is disabled`),
     )
   })
 })

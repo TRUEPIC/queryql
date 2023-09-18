@@ -11,7 +11,7 @@ test('prepends optional path prefix to path if path exists', () => {
     .validate({ invalid: 'invalid' })
 
   expect(joiValidationErrorConverter(error, 'test')).toEqual(
-    new ValidationError('test:invalid must be a number')
+    new ValidationError('test:invalid must be a number'),
   )
 })
 
@@ -19,7 +19,7 @@ test('uses optional path prefix as path if no path exists', () => {
   const { error } = Joi.number().validate({ invalid: 'invalid' })
 
   expect(joiValidationErrorConverter(error, 'test')).toEqual(
-    new ValidationError('test must be a number')
+    new ValidationError('test must be a number'),
   )
 })
 
@@ -33,6 +33,6 @@ test('delineates path segments with []', () => {
     .validate({ invalid: { not_valid: 'invalid' } })
 
   expect(joiValidationErrorConverter(error)).toEqual(
-    new ValidationError('invalid[not_valid] must be a number')
+    new ValidationError('invalid[not_valid] must be a number'),
   )
 })

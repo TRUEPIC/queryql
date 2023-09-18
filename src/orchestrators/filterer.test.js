@@ -42,8 +42,8 @@ describe('parse', () => {
         {
           filter: { test: 123 },
         },
-        knex('test')
-      )
+        knex('test'),
+      ),
     )
 
     expect(filterer.parse().has('filter:test[=]')).toBe(true)
@@ -70,7 +70,7 @@ describe('parse', () => {
 describe('validate', () => {
   test('returns `true` if valid', () => {
     const filterer = new Filterer(
-      new TestQuerier({ filter: { test: 123 } }, knex('test'))
+      new TestQuerier({ filter: { test: 123 } }, knex('test')),
     )
 
     expect(filterer.validate()).toBe(true)
@@ -86,11 +86,11 @@ describe('validate', () => {
 
   test('throws `ValidationError` if invalid', () => {
     const filterer = new Filterer(
-      new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
+      new TestQuerier({ filter: { invalid: 123 } }, knex('test')),
     )
 
     expect(() => filterer.validate()).toThrow(
-      new ValidationError('filter:invalid is not allowed')
+      new ValidationError('filter:invalid is not allowed'),
     )
   })
 })
@@ -105,8 +105,8 @@ describe('run', () => {
             test: 123,
           },
         },
-        knex('test')
-      )
+        knex('test'),
+      ),
     )
 
     filterer.apply = jest.fn()
@@ -121,7 +121,7 @@ describe('run', () => {
         operator: '=',
         value: 123,
       },
-      'filter:test[=]'
+      'filter:test[=]',
     )
 
     expect(filterer.apply).toHaveBeenNthCalledWith(
@@ -132,7 +132,7 @@ describe('run', () => {
         operator: '!=',
         value: 456,
       },
-      'filter:testing[!=]'
+      'filter:testing[!=]',
     )
   })
 
@@ -156,11 +156,11 @@ describe('run', () => {
 
   test('throws `ValidationError` if invalid', () => {
     const filterer = new Filterer(
-      new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
+      new TestQuerier({ filter: { invalid: 123 } }, knex('test')),
     )
 
     expect(() => filterer.run()).toThrow(
-      new ValidationError('filter:invalid is not allowed')
+      new ValidationError('filter:invalid is not allowed'),
     )
   })
 })

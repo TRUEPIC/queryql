@@ -5,11 +5,11 @@ describe('constructor', () => {
   test('creates an instance of the validator, calls `defineValidation`', () => {
     const defineValidation = jest.spyOn(
       BaseAdapter.prototype,
-      'defineValidation'
+      'defineValidation',
     )
 
     expect(new BaseAdapter().validator.constructor.name).toBe(
-      'AdapterValidator'
+      'AdapterValidator',
     )
     expect(defineValidation).toHaveBeenCalled()
 
@@ -26,7 +26,7 @@ describe('FILTER_OPERATORS', () => {
 describe('DEFAULT_FILTER_OPERATOR', () => {
   test('throws `NotImplementedError` when not extended', () => {
     expect(() => BaseAdapter.DEFAULT_FILTER_OPERATOR).toThrow(
-      NotImplementedError
+      NotImplementedError,
     )
   })
 })
@@ -100,7 +100,7 @@ describe('filter', () => {
       .mockReturnValue(['='])
 
     expect(() =>
-      new BaseAdapter().filter('builder', { operator: 'invalid' })
+      new BaseAdapter().filter('builder', { operator: 'invalid' }),
     ).toThrow(NotImplementedError)
 
     FILTER_OPERATORS.mockRestore()

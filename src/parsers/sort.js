@@ -33,8 +33,8 @@ class SortParser extends BaseParser {
         .object()
         .pattern(
           schema.string().valid(...keys),
-          schema.string().valid('asc', 'desc').insensitive()
-        )
+          schema.string().valid('asc', 'desc').insensitive(),
+        ),
     )
   }
 

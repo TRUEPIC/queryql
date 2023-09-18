@@ -37,7 +37,7 @@ describe('validation', () => {
     const parser = new FilterParser('filter', { invalid: 123 }, new Schema())
 
     expect(() => parser.validate()).toThrow(
-      new ValidationError('filter:invalid is not allowed')
+      new ValidationError('filter:invalid is not allowed'),
     )
   })
 
@@ -45,11 +45,11 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { invalid: { '!=': 123 } },
-      new Schema().filter('invalid', '=')
+      new Schema().filter('invalid', '='),
     )
 
     expect(() => parser.validate()).toThrow(
-      new ValidationError('filter:invalid[!=] is not allowed')
+      new ValidationError('filter:invalid[!=] is not allowed'),
     )
   })
 
@@ -57,11 +57,11 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { invalid: 123 },
-      new Schema().filter('invalid', '=')
+      new Schema().filter('invalid', '='),
     )
 
     expect(() => parser.validate()).toThrow(
-      new ValidationError('filter:invalid must be of type object')
+      new ValidationError('filter:invalid must be of type object'),
     )
   })
 
@@ -69,7 +69,7 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { valid: { in: [1, 2, 3] } },
-      new Schema().filter('valid', 'in')
+      new Schema().filter('valid', 'in'),
     )
 
     expect(() => parser.validate()).not.toThrow()
@@ -79,7 +79,7 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { valid: { '=': true } },
-      new Schema().filter('valid', '=')
+      new Schema().filter('valid', '='),
     )
 
     expect(() => parser.validate()).not.toThrow()
@@ -89,7 +89,7 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { valid: { '=': 123 } },
-      new Schema().filter('valid', '=')
+      new Schema().filter('valid', '='),
     )
 
     expect(() => parser.validate()).not.toThrow()
@@ -99,7 +99,7 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { valid: { '=': { test: 123 } } },
-      new Schema().filter('valid', '=')
+      new Schema().filter('valid', '='),
     )
 
     expect(() => parser.validate()).not.toThrow()
@@ -109,11 +109,11 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { invalid: { test: 123 } },
-      new Schema().filter('invalid', '=')
+      new Schema().filter('invalid', '='),
     )
 
     expect(() => parser.validate()).toThrow(
-      new ValidationError('filter:invalid[test] is not allowed')
+      new ValidationError('filter:invalid[test] is not allowed'),
     )
   })
 
@@ -121,7 +121,7 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { valid: { '=': 'string' } },
-      new Schema().filter('valid', '=')
+      new Schema().filter('valid', '='),
     )
 
     expect(() => parser.validate()).not.toThrow()
@@ -131,7 +131,7 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { valid: { '=': null } },
-      new Schema().filter('valid', '=')
+      new Schema().filter('valid', '='),
     )
 
     expect(() => parser.validate()).not.toThrow()
@@ -141,13 +141,13 @@ describe('validation', () => {
     const parser = new FilterParser(
       'filter',
       { invalid: { '=': Date } },
-      new Schema().filter('invalid', '=')
+      new Schema().filter('invalid', '='),
     )
 
     expect(() => parser.validate()).toThrow(
       new ValidationError(
-        'filter:invalid[=] must be one of [object, array, string, number, boolean, null]'
-      )
+        'filter:invalid[=] must be one of [object, array, string, number, boolean, null]',
+      ),
     )
   })
 })
@@ -157,7 +157,7 @@ describe('flatten', () => {
     const parser = new FilterParser(
       'filter',
       { test: { '=': 123 } },
-      new Schema().filter('test', '=')
+      new Schema().filter('test', '='),
     )
 
     expect(parser.flatten(parser.parse())).toEqual({
@@ -172,7 +172,7 @@ describe('parse', () => {
       'filter',
       { test: 123 },
       new Schema().filter('test', '='),
-      { operator: '=' }
+      { operator: '=' },
     )
 
     expect(parser.parse().get('filter:test[=]')).toEqual({
@@ -188,7 +188,7 @@ describe('parse', () => {
       'filter',
       { test: 123 },
       new Schema().filter('test', '=', { field: 'testing' }),
-      { operator: '=' }
+      { operator: '=' },
     )
 
     expect(parser.parse().get('filter:test[=]')).toEqual({
@@ -203,7 +203,7 @@ describe('parse', () => {
     const parser = new FilterParser(
       'filter',
       { test: { '!=': 456 } },
-      new Schema().filter('test', '!=')
+      new Schema().filter('test', '!='),
     )
 
     expect(parser.parse().get('filter:test[!=]')).toEqual({
@@ -218,7 +218,7 @@ describe('parse', () => {
     const parser = new FilterParser(
       'filter',
       { test: { '!=': 456 } },
-      new Schema().filter('test', '!=', { field: 'testing' })
+      new Schema().filter('test', '!=', { field: 'testing' }),
     )
 
     expect(parser.parse().get('filter:test[!=]')).toEqual({
@@ -238,7 +238,7 @@ describe('parse', () => {
           '!=': 456,
         },
       },
-      new Schema().filter('test', '=').filter('test', '!=')
+      new Schema().filter('test', '=').filter('test', '!='),
     )
 
     expect(parser.parse().get('filter:test[=]')).toEqual({
@@ -263,7 +263,7 @@ describe('parse', () => {
         test1: { '=': 123 },
         test2: { '!=': 456 },
       },
-      new Schema().filter('test1', '=').filter('test2', '!=')
+      new Schema().filter('test1', '=').filter('test2', '!='),
     )
 
     expect(parser.parse().get('filter:test1[=]')).toEqual({
@@ -291,7 +291,7 @@ describe('parse', () => {
     const parser = new FilterParser('filter', { invalid: 123 }, new Schema())
 
     expect(() => parser.parse()).toThrow(
-      new ValidationError('filter:invalid is not allowed')
+      new ValidationError('filter:invalid is not allowed'),
     )
   })
 })

@@ -42,8 +42,8 @@ describe('parse', () => {
         {
           page: 2,
         },
-        knex('test')
-      )
+        knex('test'),
+      ),
     )
 
     expect(pager.parse().get('page:number').value).toBe(2)
@@ -86,7 +86,7 @@ describe('validate', () => {
     const pager = new Pager(new TestQuerier({ page: 'invalid' }, knex('test')))
 
     expect(() => pager.validate()).toThrow(
-      new ValidationError('page must be one of [number, object]')
+      new ValidationError('page must be one of [number, object]'),
     )
   })
 })
@@ -98,8 +98,8 @@ describe('run', () => {
         {
           page: 2,
         },
-        knex('test')
-      )
+        knex('test'),
+      ),
     )
 
     pager.apply = jest.fn()
@@ -137,7 +137,7 @@ describe('run', () => {
     const pager = new Pager(new TestQuerier({ page: 'invalid' }, knex('test')))
 
     expect(() => pager.run()).toThrow(
-      new ValidationError('page must be one of [number, object]')
+      new ValidationError('page must be one of [number, object]'),
     )
   })
 })

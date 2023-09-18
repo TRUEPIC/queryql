@@ -42,8 +42,8 @@ describe('parse', () => {
         {
           sort: 'test',
         },
-        knex('test')
-      )
+        knex('test'),
+      ),
     )
 
     expect(sorter.parse().has('sort:test')).toBe(true)
@@ -84,11 +84,11 @@ describe('validate', () => {
 
   test('throws `ValidationError` if invalid', () => {
     const sorter = new Sorter(
-      new TestQuerier({ sort: { test: 'invalid' } }, knex('test'))
+      new TestQuerier({ sort: { test: 'invalid' } }, knex('test')),
     )
 
     expect(() => sorter.validate()).toThrow(
-      new ValidationError('sort:test must be one of [asc, desc]')
+      new ValidationError('sort:test must be one of [asc, desc]'),
     )
   })
 })
@@ -100,8 +100,8 @@ describe('run', () => {
         {
           sort: ['testing', 'test'],
         },
-        knex('test')
-      )
+        knex('test'),
+      ),
     )
 
     sorter.apply = jest.fn()
@@ -115,7 +115,7 @@ describe('run', () => {
         field: 'testing',
         order: 'asc',
       },
-      'sort:testing'
+      'sort:testing',
     )
 
     expect(sorter.apply).toHaveBeenNthCalledWith(
@@ -125,7 +125,7 @@ describe('run', () => {
         field: 'test',
         order: 'asc',
       },
-      'sort:test'
+      'sort:test',
     )
   })
 
@@ -149,11 +149,11 @@ describe('run', () => {
 
   test('throws `ValidationError` if invalid', () => {
     const sorter = new Sorter(
-      new TestQuerier({ sort: { test: 'invalid' } }, knex('test'))
+      new TestQuerier({ sort: { test: 'invalid' } }, knex('test')),
     )
 
     expect(() => sorter.run()).toThrow(
-      new ValidationError('sort:test must be one of [asc, desc]')
+      new ValidationError('sort:test must be one of [asc, desc]'),
     )
   })
 })
