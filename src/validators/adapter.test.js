@@ -29,7 +29,7 @@ describe('buildError', () => {
       .validate({ invalid: 'invalid' })
 
     expect(validator.buildError(error)).toEqual(
-      new ValidationError('invalid must be a number')
+      new ValidationError('invalid must be a number'),
     )
   })
 })
@@ -49,7 +49,7 @@ describe('validateValue', () => {
 
     expect(() => validator.schema.extract('filter:!=')).toThrow()
     expect(validator.validateValue('filter:!=', 'filter:test[!=]', 123)).toBe(
-      123
+      123,
     )
   })
 
@@ -67,7 +67,7 @@ describe('validateValue', () => {
     }))
 
     expect(() =>
-      validator.validateValue('filter:=', 'filter:test[=]', 'invalid')
+      validator.validateValue('filter:=', 'filter:test[=]', 'invalid'),
     ).toThrow(new ValidationError('filter:test[=] must be a number'))
   })
 })
@@ -77,7 +77,7 @@ describe('validateFilters', () => {
     const parser = new FilterParser(
       'filter',
       { test: { '=': 123 } },
-      new Schema().filter('test', '=')
+      new Schema().filter('test', '='),
     )
     const validator = new AdapterValidator(() => {})
 
@@ -94,7 +94,7 @@ describe('validateFilters', () => {
           '!=': 456,
         },
       },
-      new Schema().filter('test', '=').filter('test', '!=')
+      new Schema().filter('test', '=').filter('test', '!='),
     )
     const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
@@ -108,14 +108,14 @@ describe('validateFilters', () => {
     const parser = new FilterParser(
       'filter',
       { test: { '=': 'invalid' } },
-      new Schema().filter('test', '=')
+      new Schema().filter('test', '='),
     )
     const validator = new AdapterValidator((schema) => ({
       'filter:=': schema.number(),
     }))
 
     expect(() => validator.validateFilters(parser.parse())).toThrow(
-      new ValidationError('filter:test[=] must be a number')
+      new ValidationError('filter:test[=] must be a number'),
     )
   })
 })
@@ -133,7 +133,7 @@ describe('validateSorts', () => {
     const parser = new SortParser(
       'sort',
       ['test1', 'test2'],
-      new Schema().sort('test1').sort('test2')
+      new Schema().sort('test1').sort('test2'),
     )
     const validator = new AdapterValidator((schema) => ({
       sort: schema.string().valid('asc'),
@@ -149,7 +149,7 @@ describe('validateSorts', () => {
     }))
 
     expect(() => validator.validateSorts(parser.parse())).toThrow(
-      new ValidationError('sort:test contains an invalid value')
+      new ValidationError('sort:test contains an invalid value'),
     )
   })
 })
@@ -180,7 +180,7 @@ describe('validatePage', () => {
     }))
 
     expect(() => validator.validatePage(parser.parse())).toThrow(
-      new ValidationError('page:number contains an invalid value')
+      new ValidationError('page:number contains an invalid value'),
     )
   })
 })

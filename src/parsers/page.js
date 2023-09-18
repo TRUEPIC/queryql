@@ -27,7 +27,7 @@ class PageParser extends BaseParser {
       schema.object().keys({
         size: schema.number().integer().positive(),
         number: schema.number().integer().positive(),
-      })
+      }),
     )
   }
 
@@ -72,7 +72,7 @@ class PageParser extends BaseParser {
       Object.entries(page).map(([field, value]) => [
         this.buildKey({ field }),
         { field, value },
-      ])
+      ]),
     )
   }
 }

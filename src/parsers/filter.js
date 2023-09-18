@@ -20,7 +20,7 @@ class FilterParser extends BaseParser {
   defineValidation(schema) {
     const defaultOperator = this.defaults.operator
     const mapNamesToOperators = Object.entries(
-      this.schema.mapFilterNamesToOperators()
+      this.schema.mapFilterNamesToOperators(),
     )
 
     const values = [
@@ -46,7 +46,7 @@ class FilterParser extends BaseParser {
             ? [...values, operatorObject]
             : operatorObject,
         }
-      }, {})
+      }, {}),
     )
   }
 
@@ -73,7 +73,7 @@ class FilterParser extends BaseParser {
 
   parseNonObject(name, value) {
     const { options } = this.schema.filters.get(
-      `${name}[${this.defaults.operator}]`
+      `${name}[${this.defaults.operator}]`,
     )
 
     return {

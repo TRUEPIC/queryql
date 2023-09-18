@@ -6,7 +6,7 @@ module.exports = (error, pathPrefix = null) => {
   let path = detail.path.reduce(
     (accumulator, value, index) =>
       index === 0 ? `${value}` : `${accumulator}[${value}]`,
-    null
+    null,
   )
 
   if (pathPrefix) {

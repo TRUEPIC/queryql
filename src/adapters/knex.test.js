@@ -236,7 +236,7 @@ describe('filter', () => {
       .toString()
 
     expect(query).toBe(
-      'select * from "test" where "test" not between 123 and 456'
+      'select * from "test" where "test" not between 123 and 456',
     )
   })
 })
@@ -293,7 +293,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:=', 'test', null)).toThrow(
-        new ValidationError('test must be one of [string, number, boolean]')
+        new ValidationError('test must be one of [string, number, boolean]'),
       )
     })
   })
@@ -315,7 +315,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:!=', 'test', 'valid')).toBe(
-        'valid'
+        'valid',
       )
     })
 
@@ -323,7 +323,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:!=', 'test', null)).toThrow(
-        new ValidationError('test must be one of [string, number, boolean]')
+        new ValidationError('test must be one of [string, number, boolean]'),
       )
     })
   })
@@ -345,7 +345,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:<>', 'test', 'valid')).toBe(
-        'valid'
+        'valid',
       )
     })
 
@@ -353,7 +353,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:<>', 'test', null)).toThrow(
-        new ValidationError('test must be one of [string, number, boolean]')
+        new ValidationError('test must be one of [string, number, boolean]'),
       )
     })
   })
@@ -375,7 +375,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:>', 'test', false)).toThrow(
-        new ValidationError('test must be one of [string, number]')
+        new ValidationError('test must be one of [string, number]'),
       )
     })
   })
@@ -391,7 +391,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:>=', 'test', 'valid')).toBe(
-        'valid'
+        'valid',
       )
     })
 
@@ -399,7 +399,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:>=', 'test', false)).toThrow(
-        new ValidationError('test must be one of [string, number]')
+        new ValidationError('test must be one of [string, number]'),
       )
     })
   })
@@ -421,7 +421,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:<', 'test', false)).toThrow(
-        new ValidationError('test must be one of [string, number]')
+        new ValidationError('test must be one of [string, number]'),
       )
     })
   })
@@ -437,7 +437,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:<=', 'test', 'valid')).toBe(
-        'valid'
+        'valid',
       )
     })
 
@@ -445,7 +445,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:<=', 'test', false)).toThrow(
-        new ValidationError('test must be one of [string, number]')
+        new ValidationError('test must be one of [string, number]'),
       )
     })
   })
@@ -473,7 +473,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() =>
-        validator.validateValue('filter:is', 'test', 'invalid')
+        validator.validateValue('filter:is', 'test', 'invalid'),
       ).toThrow(new ValidationError('test must be [null]'))
     })
   })
@@ -489,7 +489,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(
-        validator.validateValue('filter:is not', 'test', 'null')
+        validator.validateValue('filter:is not', 'test', 'null'),
       ).toBeNull()
     })
 
@@ -503,7 +503,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() =>
-        validator.validateValue('filter:is not', 'test', 'invalid')
+        validator.validateValue('filter:is not', 'test', 'invalid'),
       ).toThrow(new ValidationError('test must be [null]'))
     })
   })
@@ -513,7 +513,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(
-        validator.validateValue('filter:in', 'test', [123, 'test'])
+        validator.validateValue('filter:in', 'test', [123, 'test']),
       ).toEqual([123, 'test'])
     })
 
@@ -521,7 +521,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() =>
-        validator.validateValue('filter:in', 'test', 'invalid')
+        validator.validateValue('filter:in', 'test', 'invalid'),
       ).toThrow(new ValidationError('test must be an array'))
     })
   })
@@ -531,7 +531,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(
-        validator.validateValue('filter:not in', 'test', [123, 'test'])
+        validator.validateValue('filter:not in', 'test', [123, 'test']),
       ).toEqual([123, 'test'])
     })
 
@@ -539,7 +539,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() =>
-        validator.validateValue('filter:not in', 'test', 'invalid')
+        validator.validateValue('filter:not in', 'test', 'invalid'),
       ).toThrow(new ValidationError('test must be an array'))
     })
   })
@@ -549,7 +549,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:like', 'test', 'valid')).toBe(
-        'valid'
+        'valid',
       )
     })
 
@@ -557,7 +557,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() => validator.validateValue('filter:like', 'test', 123)).toThrow(
-        new ValidationError('test must be a string')
+        new ValidationError('test must be a string'),
       )
     })
   })
@@ -567,7 +567,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:not like', 'test', 'valid')).toBe(
-        'valid'
+        'valid',
       )
     })
 
@@ -575,7 +575,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() =>
-        validator.validateValue('filter:not like', 'test', 123)
+        validator.validateValue('filter:not like', 'test', 123),
       ).toThrow(new ValidationError('test must be a string'))
     })
   })
@@ -585,7 +585,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:ilike', 'test', 'valid')).toBe(
-        'valid'
+        'valid',
       )
     })
 
@@ -593,7 +593,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() =>
-        validator.validateValue('filter:ilike', 'test', 123)
+        validator.validateValue('filter:ilike', 'test', 123),
       ).toThrow(new ValidationError('test must be a string'))
     })
   })
@@ -603,7 +603,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(validator.validateValue('filter:not ilike', 'test', 'valid')).toBe(
-        'valid'
+        'valid',
       )
     })
 
@@ -611,7 +611,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() =>
-        validator.validateValue('filter:not ilike', 'test', 123)
+        validator.validateValue('filter:not ilike', 'test', 123),
       ).toThrow(new ValidationError('test must be a string'))
     })
   })
@@ -621,7 +621,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(
-        validator.validateValue('filter:between', 'test', [123, 456])
+        validator.validateValue('filter:between', 'test', [123, 456]),
       ).toEqual([123, 456])
     })
 
@@ -629,7 +629,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(
-        validator.validateValue('filter:between', 'test', ['test', 'test'])
+        validator.validateValue('filter:between', 'test', ['test', 'test']),
       ).toEqual(['test', 'test'])
     })
 
@@ -637,7 +637,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() =>
-        validator.validateValue('filter:between', 'test', 'invalid')
+        validator.validateValue('filter:between', 'test', 'invalid'),
       ).toThrow(new ValidationError('test must be an array'))
     })
   })
@@ -647,7 +647,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(
-        validator.validateValue('filter:not between', 'test', [123, 456])
+        validator.validateValue('filter:not between', 'test', [123, 456]),
       ).toEqual([123, 456])
     })
 
@@ -655,7 +655,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(
-        validator.validateValue('filter:not between', 'test', ['test', 'test'])
+        validator.validateValue('filter:not between', 'test', ['test', 'test']),
       ).toEqual(['test', 'test'])
     })
 
@@ -663,7 +663,7 @@ describe('validation', () => {
       const validator = new KnexAdapter().validator
 
       expect(() =>
-        validator.validateValue('filter:not between', 'test', 'invalid')
+        validator.validateValue('filter:not between', 'test', 'invalid'),
       ).toThrow(new ValidationError('test must be an array'))
     })
   })

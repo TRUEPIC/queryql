@@ -30,7 +30,7 @@ describe('validation', () => {
     const parser = new SortParser('sort', 'invalid', new Schema())
 
     expect(() => parser.validate()).toThrow(
-      new ValidationError('sort is not allowed')
+      new ValidationError('sort is not allowed'),
     )
   })
 
@@ -39,11 +39,11 @@ describe('validation', () => {
       const parser = new SortParser(
         'sort',
         'invalid',
-        new Schema().sort('valid')
+        new Schema().sort('valid'),
       )
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('sort must be one of [valid, array, object]')
+        new ValidationError('sort must be one of [valid, array, object]'),
       )
     })
   })
@@ -53,11 +53,11 @@ describe('validation', () => {
       const parser = new SortParser(
         'sort',
         ['invalid'],
-        new Schema().sort('valid')
+        new Schema().sort('valid'),
       )
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('sort:0 must be [valid]')
+        new ValidationError('sort:0 must be [valid]'),
       )
     })
 
@@ -65,11 +65,11 @@ describe('validation', () => {
       const parser = new SortParser(
         'sort',
         ['invalid', 'invalid'],
-        new Schema().sort('invalid')
+        new Schema().sort('invalid'),
       )
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('sort:1 contains a duplicate value')
+        new ValidationError('sort:1 contains a duplicate value'),
       )
     })
   })
@@ -79,11 +79,11 @@ describe('validation', () => {
       const parser = new SortParser(
         'sort',
         { invalid: 'asc' },
-        new Schema().sort('valid')
+        new Schema().sort('valid'),
       )
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('sort:invalid is not allowed')
+        new ValidationError('sort:invalid is not allowed'),
       )
     })
 
@@ -91,11 +91,11 @@ describe('validation', () => {
       const parser = new SortParser(
         'sort',
         { invalid: 'test' },
-        new Schema().sort('invalid')
+        new Schema().sort('invalid'),
       )
 
       expect(() => parser.validate()).toThrow(
-        new ValidationError('sort:invalid must be one of [asc, desc]')
+        new ValidationError('sort:invalid must be one of [asc, desc]'),
       )
     })
 
@@ -103,7 +103,7 @@ describe('validation', () => {
       const parser = new SortParser(
         'sort',
         { valid: 'ASC' },
-        new Schema().sort('valid')
+        new Schema().sort('valid'),
       )
 
       expect(() => parser.validate()).not.toThrow()
@@ -116,7 +116,7 @@ describe('flatten', () => {
     const parser = new SortParser(
       'sort',
       { test: 'asc' },
-      new Schema().sort('test')
+      new Schema().sort('test'),
     )
 
     expect(parser.flatten(parser.parse())).toEqual({
@@ -140,7 +140,7 @@ describe('parse', () => {
     const parser = new SortParser(
       'sort',
       'test',
-      new Schema().sort('test', { field: 'testing' })
+      new Schema().sort('test', { field: 'testing' }),
     )
 
     expect(parser.parse().get('sort:test')).toEqual({
@@ -164,7 +164,7 @@ describe('parse', () => {
     const parser = new SortParser(
       'sort',
       ['test'],
-      new Schema().sort('test', { field: 'testing' })
+      new Schema().sort('test', { field: 'testing' }),
     )
 
     expect(parser.parse().get('sort:test')).toEqual({
@@ -178,7 +178,7 @@ describe('parse', () => {
     const parser = new SortParser(
       'sort',
       ['test1', 'test2'],
-      new Schema().sort('test1').sort('test2')
+      new Schema().sort('test1').sort('test2'),
     )
 
     const parsed = parser.parse()
@@ -200,7 +200,7 @@ describe('parse', () => {
     const parser = new SortParser(
       'sort',
       { test: 'desc' },
-      new Schema().sort('test')
+      new Schema().sort('test'),
     )
 
     expect(parser.parse().get('sort:test')).toEqual({
@@ -214,7 +214,7 @@ describe('parse', () => {
     const parser = new SortParser(
       'sort',
       { test: 'desc' },
-      new Schema().sort('test', { field: 'testing' })
+      new Schema().sort('test', { field: 'testing' }),
     )
 
     expect(parser.parse().get('sort:test')).toEqual({
@@ -231,7 +231,7 @@ describe('parse', () => {
         test1: 'desc',
         test2: 'asc',
       },
-      new Schema().sort('test1').sort('test2')
+      new Schema().sort('test1').sort('test2'),
     )
 
     const parsed = parser.parse()
@@ -259,7 +259,7 @@ describe('parse', () => {
     const parser = new SortParser('sort', 'invalid', new Schema().sort('valid'))
 
     expect(() => parser.parse()).toThrow(
-      new ValidationError('sort must be one of [valid, array, object]')
+      new ValidationError('sort must be one of [valid, array, object]'),
     )
   })
 })

@@ -19,7 +19,7 @@ class Sorter extends BaseOrchestrator {
       this.queryKey,
       this.query || this.querier.defaultSort,
       this.querier.schema,
-      this.querier.sortDefaults
+      this.querier.sortDefaults,
     )
   }
 
