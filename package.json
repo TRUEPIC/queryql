@@ -48,7 +48,7 @@
     "release-it": "^16.1.5"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "publishConfig": {
     "access": "public"
