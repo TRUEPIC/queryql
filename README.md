@@ -173,8 +173,8 @@ $ npm run lint
 ## Releasing
 
 After development is done in the `development` branch and is ready for release,
-it should be merged into the `master` branch, where the latest release code
-lives. [Release It!](https://github.com/release-it/release-it) is then used to
+it should be merged into the `main` branch, where the latest release code lives.
+[Release It!](https://github.com/release-it/release-it) is then used to
 interactively orchestrate the release process:
 
 ```bash
