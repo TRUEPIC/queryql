@@ -25,10 +25,10 @@ jobs:
       - name: Upload test reports
         uses: actions/upload-artifact@v3
         with:
-          name: test-reports
+          name: test/reports
           path: test/reports
       - name: Upload test coverage
         uses: actions/upload-artifact@v3
         with:
-          name: test-coverage
+          name: test/coverage
           path: test/coverage
