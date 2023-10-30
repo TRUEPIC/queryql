@@ -1,7 +1,7 @@
 # QueryQL
 
 [![npm](https://img.shields.io/npm/v/@truepic/queryql?color=0f4484)](https://www.npmjs.com/package/@truepic/queryql)
-[![CircleCI](https://img.shields.io/circleci/build/github/TRUEPIC/queryql)](https://circleci.com/gh/TRUEPIC/queryql)
+[![CircleCI](https://img.shields.io/circleci/build/github/TRUEPIC/queryql)](https://app.circleci.com/pipelines/github/TRUEPIC/queryql)
 ![piratepx](https://app.piratepx.com/ship?p=e91ddd1b-31ad-4c36-b03e-be4a1e9a7678&i=queryql)
 
 QueryQL makes it easy to add filtering, sorting, and pagination to your Node.js
@@ -24,7 +24,7 @@ Out of the box, QueryQL supports the following:
 ## Installation
 
 ```bash
-$ npm install @truepic/queryql
+npm install @truepic/queryql
 ```
 
 ## Getting Started
@@ -123,14 +123,14 @@ the queries, and more.
 ### Prerequisites
 
 The only prerequisite is a compatible version of Node.js (see `engines.node` in
-`package.json`).
+[`package.json`](package.json)).
 
 ### Dependencies
 
 Install dependencies with npm:
 
 ```bash
-$ npm install
+npm install
 ```
 
 ### Tests
@@ -141,33 +141,33 @@ $ npm install
 To run the tests:
 
 ```bash
-$ npm test
+npm test
 ```
 
 During development, it's recommended to run the tests automatically on file
 change:
 
 ```bash
-$ npm test -- --watch [--notify]
+npm test -- --watch [--notify]
 ```
 
 ### Code Style & Linting
 
-[Prettier](https://prettier.com/) is setup to enforce a consistent code style.
+[Prettier](https://prettier.io/) is setup to enforce a consistent code style.
 It's highly recommended to
 [add an integration to your editor](https://prettier.io/docs/en/editors.html)
 that automatically formats on save.
 
 [ESLint](https://eslint.org/) is setup with the
-["recommended" rules](https://eslint.org/docs/rules/) to enforce a level of code
-quality. It's also highly recommended to
-[add an integration to your editor](https://eslint.org/docs/user-guide/integrations#editors)
+["recommended" rules](https://eslint.org/docs/latest/rules/) to enforce a level
+of code quality. It's also highly recommended to
+[add an integration to your editor](https://eslint.org/docs/latest/use/integrations#editors)
 that automatically formats on save.
 
 To run via the command line:
 
 ```bash
-$ npm run lint
+npm run lint
 ```
 
 ## Releasing
@@ -175,8 +175,11 @@ $ npm run lint
 After development is done in the `development` branch and is ready for release,
 it should be merged into the `main` branch, where the latest release code lives.
 [Release It!](https://github.com/release-it/release-it) is then used to
-interactively orchestrate the release process:
+orchestrate the release process:
 
 ```bash
-$ npm run release
+npm run release
 ```
+
+Once the release process is complete, merge the `main` branch back into the
+`development` branch. They should have the same history at this point.
