@@ -20,10 +20,10 @@
   "homepage": "https://github.com/TRUEPIC/queryql#readme",
   "bugs": "https://github.com/TRUEPIC/queryql/issues",
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "./src/index.js",
   "repository": "TRUEPIC/queryql",
   "scripts": {
-    "lint": "run-p lint:*",
+    "lint": "npm run lint:format && npm run lint:quality",
     "lint:format": "prettier --check .",
     "lint:format:fix": "prettier --write .",
     "lint:quality": "eslint .",
@@ -43,7 +43,6 @@
     "jest": "^29.7.0",
     "jest-junit": "^16.0.0",
     "knex": "^3.1.0",
-    "npm-run-all": "^4.1.5",
     "prettier": "3.1.1",
     "release-it": "^17.0.1"
   },

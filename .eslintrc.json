@@ -2,20 +2,12 @@
   "root": true,
   "env": {
     "node": true,
-    "es6": true,
-    "jest/globals": true
+    "es2021": true
   },
-  "plugins": ["jest"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:node/recommended",
-    "plugin:jest/recommended",
-    "plugin:jest/style",
-    "prettier"
-  ],
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": "latest"
   },
+  "extends": ["eslint:recommended", "plugin:node/recommended", "prettier"],
   "rules": {
     "node/no-unpublished-require": [
       "error",
@@ -23,5 +15,15 @@
         "allowModules": ["knex"]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["./src/**/*.test.js"],
+      "env": {
+        "jest/globals": true
+      },
+      "plugins": ["jest"],
+      "extends": ["plugin:jest/recommended", "plugin:jest/style"]
+    }
+  ]
 }
