@@ -1,11 +1,11 @@
 module.exports = {
-  coverageDirectory: 'test/coverage',
+  coverageDirectory: './test/coverage',
   reporters: [
     'default',
     [
       'jest-junit',
       {
-        outputDirectory: 'test/reports',
+        outputDirectory: './test/reports',
       },
     ],
   ],

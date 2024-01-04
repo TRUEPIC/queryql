@@ -172,14 +172,13 @@ npm run lint
 
 ## Releasing
 
-After development is done in the `development` branch and is ready for release,
-it should be merged into the `main` branch, where the latest release code lives.
-[Release It!](https://github.com/release-it/release-it) is then used to
-orchestrate the release process:
+When the `development` branch is ready for release,
+[Release It!](https://github.com/release-it/release-it) is used to orchestrate
+the release process:
 
 ```bash
 npm run release
 ```
 
-Once the release process is complete, merge the `main` branch back into the
-`development` branch. They should have the same history at this point.
+Once the release process is complete, merge the `development` branch into the
+`main` branch, which should always reflect the latest release.
