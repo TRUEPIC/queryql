@@ -7,9 +7,9 @@
   "parserOptions": {
     "ecmaVersion": "latest"
   },
-  "extends": ["eslint:recommended", "plugin:node/recommended", "prettier"],
+  "extends": ["eslint:recommended", "plugin:n/recommended", "prettier"],
   "rules": {
-    "node/no-unpublished-require": [
+    "n/no-unpublished-require": [
       "error",
       {
         "allowModules": ["knex"]
