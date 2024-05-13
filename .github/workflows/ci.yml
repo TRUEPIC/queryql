@@ -1,16 +1,20 @@
 name: CI
 
-on: push
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
-  lint-and-test:
+  lint-test:
+    name: Lint & test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['18.x', '20.x']
+        node-version: ['18.x', '20.x', '22.x']
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js v${{ matrix.node-version }}
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js v${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
