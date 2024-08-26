@@ -12,7 +12,7 @@ module.exports = [
     },
   },
   js.configs.recommended,
-  node.configs['flat/recommended-script'],
+  node.configs['flat/recommended'],
   prettier,
   {
     files: ['src/**/*.test.js'],
