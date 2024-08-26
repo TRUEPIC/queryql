@@ -21,7 +21,15 @@
   "bugs": "https://github.com/TRUEPIC/queryql/issues",
   "license": "MIT",
   "main": "./src/index.js",
-  "repository": "TRUEPIC/queryql",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TRUEPIC/queryql.git"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.js",
+    "DOCS.md"
+  ],
   "scripts": {
     "lint": "npm run lint:format && npm run lint:quality",
     "lint:format": "prettier --check .",
