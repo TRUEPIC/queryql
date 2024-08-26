@@ -25,7 +25,7 @@ class JoiValidator extends BaseValidator {
 
     try {
       keySchema = this.schema && this.schema.extract(key)
-    } catch (error) {
+    } catch {
       // Don't throw error if key doesn't exist.
     }
 

@@ -20,7 +20,7 @@ class AdapterValidator {
 
     try {
       keySchema = this.schema && this.schema.extract(schemaKey)
-    } catch (error) {
+    } catch {
       // Don't throw error if key doesn't exist.
     }
 
