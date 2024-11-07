@@ -26,12 +26,12 @@ jobs:
       - name: Run tests
         run: npm test -- --ci --coverage --runInBand
       - name: Upload test reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: test-reports-${{ matrix.node-version }}
           path: test/reports
       - name: Upload test coverage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: test-coverage
+          name: test-coverage-${{ matrix.node-version }}
           path: test/coverage
