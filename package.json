@@ -45,6 +45,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
+    "@types/is": "^0.0.25",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.0",
     "eslint": "^9.31.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-jest": "^29.0.1",
@@ -54,11 +57,13 @@
     "jest-junit": "^16.0.0",
     "knex": "^3.1.0",
     "prettier": "3.6.2",
-    "release-it": "^19.0.3"
+    "release-it": "^19.0.3",
+    "typescript": "^5.9.2"
   },
   "engines": {
     "node": ">=20"
   },
+  "type": "module",
   "publishConfig": {
     "access": "public"
   }
