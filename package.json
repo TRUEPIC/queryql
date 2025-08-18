@@ -40,21 +40,21 @@
     "test": "jest"
   },
   "dependencies": {
-    "is": "^3.3.0",
-    "joi": "^17.13.3"
+    "is": "^3.3.2",
+    "joi": "^18.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.31.0",
-    "eslint": "^9.31.0",
-    "eslint-config-prettier": "^10.1.5",
+    "@eslint/js": "^9.33.0",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest": "^29.0.1",
-    "eslint-plugin-n": "^17.21.0",
+    "eslint-plugin-n": "^17.21.3",
     "globals": "^16.3.0",
-    "jest": "^30.0.4",
+    "jest": "^30.0.5",
     "jest-junit": "^16.0.0",
     "knex": "^3.1.0",
     "prettier": "3.6.2",
-    "release-it": "^19.0.3"
+    "release-it": "^19.0.4"
   },
   "engines": {
     "node": ">=20"
