@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const joi_1 = __importDefault(require("joi"));
+const vitest_1 = require("vitest");
 const filter_1 = __importDefault(require("../../parsers/filter"));
 const joi_2 = __importDefault(require("./joi"));
 const page_1 = __importDefault(require("../../parsers/page"));
@@ -12,7 +13,7 @@ const sort_1 = __importDefault(require("../../parsers/sort"));
 const validation_1 = __importDefault(require("../../errors/validation"));
 describe('constructor', () => {
     test('accepts/calls `defineSchema(Joi)` and sets the returned value', () => {
-        const defineSchema = jest.fn((schema) => ({
+        const defineSchema = vitest_1.vi.fn((schema) => ({
             'filter:test[=]': schema.number(),
         }));
         const validator = new joi_2.default(defineSchema);

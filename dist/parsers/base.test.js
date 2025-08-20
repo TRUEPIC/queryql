@@ -7,6 +7,7 @@ const base_1 = __importDefault(require("./base"));
 const not_implemented_1 = __importDefault(require("../errors/not_implemented"));
 const schema_1 = __importDefault(require("../schema"));
 const validation_1 = __importDefault(require("../errors/validation"));
+const vitest_1 = require("vitest");
 describe('constructor', () => {
     test('accepts a query key to set', () => {
         const queryKey = 'test';
@@ -78,7 +79,7 @@ describe('defaults', () => {
 });
 describe('validate', () => {
     test('returns the validated query if valid', () => {
-        const defineValidation = jest
+        const defineValidation = vitest_1.vi
             .spyOn(base_1.default.prototype, 'defineValidation')
             .mockImplementation((schema) => schema.object().keys({
             test: schema.number(),
@@ -88,20 +89,20 @@ describe('validate', () => {
         defineValidation.mockRestore();
     });
     test('returns the cached validated query on subsequent calls', () => {
-        const defineValidation = jest
+        const defineValidation = vitest_1.vi
             .spyOn(base_1.default.prototype, 'defineValidation')
             .mockImplementation((schema) => schema.object().keys({
             test: schema.number(),
         }));
         const parser = new base_1.default('test', { test: 123 }, new schema_1.default());
-        const validate = jest.spyOn(parser.validator, 'validate');
+        const validate = vitest_1.vi.spyOn(parser.validator, 'validate');
         expect(parser.validate()).toEqual({ test: 123 });
         expect(parser.validate()).toEqual({ test: 123 });
         expect(validate).toHaveBeenCalledTimes(1);
         defineValidation.mockRestore();
     });
     test('throws `ValidationError` if invalid', () => {
-        const defineValidation = jest
+        const defineValidation = vitest_1.vi
             .spyOn(base_1.default.prototype, 'defineValidation')
             .mockImplementation((schema) => schema.object().keys({
             invalid: schema.number(),

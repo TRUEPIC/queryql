@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_1 = __importDefault(require("./base"));
+const vitest_1 = require("vitest");
 const not_implemented_1 = __importDefault(require("../../errors/not_implemented"));
 const validation_1 = __importDefault(require("../../errors/validation"));
 describe('constructor', () => {
     test('accepts/calls `defineSchema` and sets the returned value', () => {
-        const defineSchema = jest.fn(() => 'test');
+        const defineSchema = vitest_1.vi.fn(() => 'test');
         const validator = new base_1.default(defineSchema);
         expect(defineSchema).toHaveBeenCalled();
         expect(validator.schema).toBe('test');

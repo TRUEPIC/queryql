@@ -22,15 +22,16 @@ class Pager extends base_1.default {
         if (!this.isEnabled) {
             return true;
         }
-        this.parser.validate();
+        this.parser.validate?.();
         this.querier.adapter.validator.validatePage(this.parse());
-        this.querier.validator.validatePage(this.parse());
+        this.querier.validator?.validatePage(this.parse());
         return true;
     }
     run() {
         this.validate();
         const page = this.parse();
         if (page) {
+            // parser.flatten may be optional on the parser type
             this.apply(this.parser.flatten(page, false));
         }
         return this.querier;

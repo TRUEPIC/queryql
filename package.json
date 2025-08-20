@@ -1,6 +1,6 @@
 {
   "name": "@truepic/queryql",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "Easily add filtering, sorting, and pagination to your REST API through your old friend: the query string!",
   "keywords": [
     "filter",
@@ -37,26 +37,28 @@
     "lint:quality": "eslint .",
     "lint:quality:fix": "eslint --fix .",
     "release": "release-it --only-version",
-    "test": "vitest"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "ts": "tsc"
   },
   "dependencies": {
-    "is": "^3.3.0",
-    "joi": "^17.13.3"
+    "is": "^3.3.2",
+    "joi": "^18.0.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.31.0",
+    "@eslint/js": "^9.33.0",
     "@types/is": "^0.0.25",
     "@types/node": "^24.3.0",
-    "eslint": "^9.31.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-n": "^17.21.0",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-n": "^17.21.3",
     "globals": "^16.3.0",
     "knex": "^3.1.0",
     "prettier": "3.6.2",
-    "release-it": "^19.0.3",
+    "release-it": "^19.0.4",
     "sqlite3": "^5.1.7",
-    "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "typescript": "^5.9.2"
   },
   "engines": {
     "node": ">=20"

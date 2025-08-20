@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const joi_1 = __importDefault(require("joi"));
+const vitest_1 = require("vitest");
 const adapter_1 = __importDefault(require("./adapter"));
 const filter_1 = __importDefault(require("../parsers/filter"));
 const page_1 = __importDefault(require("../parsers/page"));
@@ -13,7 +14,7 @@ const validation_1 = __importDefault(require("../errors/validation"));
 describe('constructor', () => {
     test('accepts/calls `defineSchema` and sets the returned value', () => {
         const schema = { 'filter:=': joi_1.default.string() };
-        const defineSchema = jest.fn(() => schema);
+        const defineSchema = vitest_1.vi.fn(() => schema);
         const validator = new adapter_1.default(defineSchema);
         expect(defineSchema).toHaveBeenCalledWith(joi_1.default);
         expect(validator.schema && joi_1.default.isSchema(validator.schema)).toBe(true);

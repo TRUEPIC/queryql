@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_1 = __importDefault(require("./base"));
+const vitest_1 = require("vitest");
 const not_implemented_1 = __importDefault(require("../errors/not_implemented"));
 describe('constructor', () => {
     test('creates an instance of the validator, calls `defineValidation`', () => {
-        const defineValidation = jest.spyOn(base_1.default.prototype, 'defineValidation');
+        const defineValidation = vitest_1.vi.spyOn(base_1.default.prototype, 'defineValidation');
         expect(new base_1.default().validator.constructor.name).toBe('AdapterValidator');
         expect(defineValidation).toHaveBeenCalled();
         defineValidation.mockRestore();
@@ -48,10 +49,10 @@ describe('filter', () => {
         const adapter = new base_1.default();
         const builder = 'builder';
         const filter = { operator: '=' };
-        const FILTER_OPERATORS = jest
+        const FILTER_OPERATORS = vitest_1.vi
             .spyOn(base_1.default, 'FILTER_OPERATORS', 'get')
             .mockReturnValue(['=']);
-        adapter['filter:='] = jest.fn(() => 'test');
+        adapter['filter:='] = vitest_1.vi.fn(() => 'test');
         adapter.filter(builder, filter);
         expect(adapter['filter:=']).toHaveBeenCalledWith(builder, filter);
         expect(adapter['filter:=']).toHaveReturnedWith('test');
@@ -61,17 +62,17 @@ describe('filter', () => {
         const adapter = new base_1.default();
         const builder = 'builder';
         const filter = { operator: '=' };
-        const FILTER_OPERATORS = jest
+        const FILTER_OPERATORS = vitest_1.vi
             .spyOn(base_1.default, 'FILTER_OPERATORS', 'get')
             .mockReturnValue(['=']);
-        adapter['filter:*'] = jest.fn(() => 'test');
+        adapter['filter:*'] = vitest_1.vi.fn(() => 'test');
         adapter.filter(builder, filter);
         expect(adapter['filter:*']).toHaveBeenCalledWith(builder, filter);
         expect(adapter['filter:*']).toHaveReturnedWith('test');
         FILTER_OPERATORS.mockRestore();
     });
     test('throws `NotImplementedError` if operator is not supported', () => {
-        const FILTER_OPERATORS = jest
+        const FILTER_OPERATORS = vitest_1.vi
             .spyOn(base_1.default, 'FILTER_OPERATORS', 'get')
             .mockReturnValue(['=']);
         expect(() => new base_1.default().filter('builder', { operator: 'invalid' })).toThrow(not_implemented_1.default);

@@ -55,18 +55,20 @@ class QueryQL {
         this.query = query;
         this.builder = builder;
         this.config = new config_1.default(config);
-        this.adapter = new (this.config.get('adapter'))();
+        const AdapterCtor = this.config.get('adapter');
+        this.adapter = new AdapterCtor();
         this.schema = new schema_1.default();
         this.defineSchema(this.schema);
         this.filterer = new filterer_1.default(this);
         this.sorter = new sorter_1.default(this);
         this.pager = new pager_1.default(this);
-        this.validator = new (this.config.get('validator'))(this.defineValidation.bind(this));
+        const ValidatorCtor = this.config.get('validator');
+        this.validator = new ValidatorCtor(this.defineValidation.bind(this));
     }
-    defineSchema( /* schema */) {
+    defineSchema(schema) {
         throw new not_implemented_1.default();
     }
-    defineValidation( /* ...args */) {
+    defineValidation(...args) {
         return undefined;
     }
     get defaultFilter() {
@@ -100,4 +102,11 @@ class QueryQL {
         return this.builder;
     }
 }
+// Attach helpers as static properties to match existing runtime API/tests
+(function (QueryQL) {
+})(QueryQL || (QueryQL = {}));
+QueryQL.adapters = adapters;
+QueryQL.Config = config_1.default;
+QueryQL.errors = errors;
+QueryQL.validators = validators;
 exports.default = QueryQL;

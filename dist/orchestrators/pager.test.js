@@ -5,10 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const knex_1 = __importDefault(require("knex"));
 const knex = (0, knex_1.default)({ client: 'pg' });
-const test_1 = __importDefault(require("../../test/queriers/test"));
-const empty_1 = __importDefault(require("../../test/queriers/empty"));
+const test_1 = __importDefault(require("../test/queriers/test"));
+const empty_1 = __importDefault(require("../test/queriers/empty"));
 const pager_1 = __importDefault(require("./pager"));
 const validation_1 = __importDefault(require("../errors/validation"));
+const vitest_1 = require("vitest");
 describe('queryKey', () => {
     test('returns the key for pagination in the query', () => {
         const pager = new pager_1.default(new test_1.default({}, knex('test')));
@@ -40,7 +41,7 @@ describe('parse', () => {
     });
     test('calls/uses `querier.defaultPage` if no query', () => {
         const querier = new test_1.default({}, knex('test'));
-        const defaultPage = jest
+        const defaultPage = vitest_1.vi
             .spyOn(querier, 'defaultPage', 'get')
             .mockReturnValue(2);
         const pager = new pager_1.default(querier);
@@ -58,7 +59,7 @@ describe('validate', () => {
     });
     test('returns `true` if disabled', () => {
         const pager = new pager_1.default(new test_1.default({}, knex('test')));
-        jest.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false);
+        vitest_1.vi.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false);
         expect(pager.validate()).toBe(true);
     });
     test('throws `ValidationError` if invalid', () => {
@@ -71,7 +72,7 @@ describe('run', () => {
         const pager = new pager_1.default(new test_1.default({
             page: 2,
         }, knex('test')));
-        pager.apply = jest.fn();
+        pager.apply = vitest_1.vi.fn();
         pager.run();
         expect(pager.apply).toHaveBeenCalledWith({
             size: 20,
@@ -81,15 +82,15 @@ describe('run', () => {
     });
     test('does not apply pagination if disabled', () => {
         const pager = new pager_1.default(new test_1.default({}, knex('test')));
-        jest.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false);
-        pager.apply = jest.fn();
+        vitest_1.vi.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false);
+        pager.apply = vitest_1.vi.fn();
         pager.run();
         expect(pager.apply).not.toHaveBeenCalled();
     });
     test('returns the querier', () => {
         const querier = new test_1.default({}, knex('test'));
         const pager = new pager_1.default(querier);
-        pager.apply = jest.fn();
+        pager.apply = vitest_1.vi.fn();
         expect(pager.run()).toBe(querier);
     });
     test('throws `ValidationError` if invalid', () => {

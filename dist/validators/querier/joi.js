@@ -9,8 +9,12 @@ const joi_validation_error_converter_1 = __importDefault(require("../../services
 class JoiValidator extends base_1.default {
     constructor(defineSchema) {
         super(defineSchema);
-        if (this.schema) {
+        // If defineSchema returns an empty object or undefined, treat as no schema
+        if (this.schema && Object.keys(this.schema).length > 0) {
             this.schema = joi_1.default.object().keys(this.schema);
+        }
+        else {
+            this.schema = undefined;
         }
     }
     get defineSchemaArgs() {

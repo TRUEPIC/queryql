@@ -4,14 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const knex_1 = __importDefault(require("knex"));
+const vitest_1 = require("vitest");
 const knex = (0, knex_1.default)({ client: 'pg' });
 const base_1 = __importDefault(require("./base"));
 const not_implemented_1 = __importDefault(require("../errors/not_implemented"));
-const test_1 = __importDefault(require("../../test/queriers/test"));
+const test_1 = __importDefault(require("../test/queriers/test"));
 const validation_1 = __importDefault(require("../errors/validation"));
 let buildParser;
 beforeEach(() => {
-    buildParser = jest
+    buildParser = vitest_1.vi
         .spyOn(base_1.default.prototype, 'buildParser')
         .mockReturnValue({ parse: () => { } });
 });
@@ -70,21 +71,21 @@ describe('run', () => {
 describe('query', () => {
     test('returns the query value specified by the query key', () => {
         const orchestrator = new base_1.default(new test_1.default({ test: 123 }, knex('test')));
-        jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test');
+        vitest_1.vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test');
         expect(orchestrator.query).toBe(123);
     });
 });
 describe('parse', () => {
     test('parses/returns the query', () => {
         const orchestrator = new base_1.default(new test_1.default({}, knex('test')));
-        jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true);
+        vitest_1.vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true);
         orchestrator.parser = { parse: () => 123 };
         expect(orchestrator.parse()).toBe(123);
     });
     test('returns the cached parsed query on subsequent calls', () => {
         const orchestrator = new base_1.default(new test_1.default({}, knex('test')));
-        jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true);
-        const parse = jest.fn(() => 123);
+        vitest_1.vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true);
+        const parse = vitest_1.vi.fn(() => 123);
         orchestrator.parser = { parse };
         expect(orchestrator.parse()).toBe(123);
         expect(orchestrator.parse()).toBe(123);
@@ -92,14 +93,14 @@ describe('parse', () => {
     });
     test('returns `null` if disabled, no query', () => {
         const orchestrator = new base_1.default(new test_1.default({}, knex('test')));
-        jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test');
-        jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false);
+        vitest_1.vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test');
+        vitest_1.vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false);
         expect(orchestrator.parse()).toBeNull();
     });
     test('throws `ValidationError` if disabled, with query', () => {
         const orchestrator = new base_1.default(new test_1.default({ test: 123 }, knex('test')));
-        jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test');
-        jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false);
+        vitest_1.vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test');
+        vitest_1.vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false);
         expect(() => orchestrator.parse()).toThrow(new validation_1.default(`${orchestrator.queryKey} is disabled`));
     });
 });
@@ -112,8 +113,8 @@ describe('apply', () => {
             field: 'test',
             order: 'asc',
         };
-        jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort');
-        querier['sort:test'] = jest.fn((builder) => builder);
+        vitest_1.vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort');
+        querier['sort:test'] = vitest_1.vi.fn((builder) => builder);
         expect(orchestrator.apply(data, 'sort:test')).toBe(querier.builder);
         expect(querier['sort:test']).toHaveBeenCalledWith(querier.builder, data);
     });
@@ -125,8 +126,8 @@ describe('apply', () => {
             field: 'test',
             order: 'asc',
         };
-        jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort');
-        jest.spyOn(querier.adapter, 'sort');
+        vitest_1.vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort');
+        vitest_1.vi.spyOn(querier.adapter, 'sort');
         expect(orchestrator.apply(data, 'test')).toBe(querier.builder);
         expect(querier.adapter.sort).toHaveBeenCalledWith(querier.builder, data);
     });
@@ -138,8 +139,8 @@ describe('apply', () => {
             number: 2,
             offset: 20,
         };
-        jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('page');
-        jest.spyOn(querier.adapter, 'page');
+        vitest_1.vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('page');
+        vitest_1.vi.spyOn(querier.adapter, 'page');
         expect(orchestrator.apply(data)).toBe(querier.builder);
         expect(querier.adapter.page).toHaveBeenCalledWith(querier.builder, data);
     });

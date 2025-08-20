@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cache_function_1 = __importDefault(require("./cache_function"));
+const vitest_1 = require("vitest");
 test('accepts/calls `func` and returns the value', () => {
     const value = 'test123';
-    const func = jest.fn(() => value);
+    const func = vitest_1.vi.fn(() => value);
     expect((0, cache_function_1.default)(func)()).toEqual(value);
     expect(func).toHaveBeenCalled();
 });
@@ -30,7 +31,7 @@ test('sets `this` to `undefined` for `func` if `bind` not set', () => {
 });
 test('returns the cached value on subsequent calls', () => {
     const value = 'test123';
-    const func = jest.fn(() => value);
+    const func = vitest_1.vi.fn(() => value);
     const cachedFunc = (0, cache_function_1.default)(func);
     expect(cachedFunc()).toEqual(value);
     expect(cachedFunc()).toEqual(value);
@@ -38,7 +39,7 @@ test('returns the cached value on subsequent calls', () => {
 });
 test('does not cache the value if `undefined`', () => {
     const value = undefined;
-    const func = jest.fn(() => value);
+    const func = vitest_1.vi.fn(() => value);
     const cachedFunc = (0, cache_function_1.default)(func);
     expect(cachedFunc()).toEqual(value);
     expect(cachedFunc()).toEqual(value);
@@ -46,7 +47,7 @@ test('does not cache the value if `undefined`', () => {
 });
 test('does not cache the value if an error is thrown', () => {
     const error = new Error('test123');
-    const func = jest.fn(() => {
+    const func = vitest_1.vi.fn(() => {
         throw error;
     });
     const cachedFunc = (0, cache_function_1.default)(func);

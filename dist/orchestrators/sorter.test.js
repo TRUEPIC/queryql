@@ -5,9 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const knex_1 = __importDefault(require("knex"));
 const knex = (0, knex_1.default)({ client: 'pg' });
-const empty_1 = __importDefault(require("../../test/queriers/empty"));
+const empty_1 = __importDefault(require("../test/queriers/empty"));
 const sorter_1 = __importDefault(require("./sorter"));
-const test_1 = __importDefault(require("../../test/queriers/test"));
+const vitest_1 = require("vitest");
+const test_1 = __importDefault(require("../test/queriers/test"));
 const validation_1 = __importDefault(require("../errors/validation"));
 describe('queryKey', () => {
     test('returns the key for filters in the query', () => {
@@ -40,7 +41,7 @@ describe('parse', () => {
     });
     test('calls/uses `querier.defaultSort` if no query', () => {
         const querier = new test_1.default({}, knex('test'));
-        const defaultSort = jest
+        const defaultSort = vitest_1.vi
             .spyOn(querier, 'defaultSort', 'get')
             .mockReturnValue('test');
         const sorter = new sorter_1.default(querier);
@@ -58,7 +59,7 @@ describe('validate', () => {
     });
     test('returns `true` if disabled', () => {
         const sorter = new sorter_1.default(new test_1.default({}, knex('test')));
-        jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false);
+        vitest_1.vi.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false);
         expect(sorter.validate()).toBe(true);
     });
     test('throws `ValidationError` if invalid', () => {
@@ -71,7 +72,7 @@ describe('run', () => {
         const sorter = new sorter_1.default(new test_1.default({
             sort: ['testing', 'test'],
         }, knex('test')));
-        sorter.apply = jest.fn();
+        sorter.apply = vitest_1.vi.fn();
         sorter.run();
         expect(sorter.apply).toHaveBeenNthCalledWith(1, {
             name: 'testing',
@@ -86,8 +87,8 @@ describe('run', () => {
     });
     test('does not apply sorting if disabled', () => {
         const sorter = new sorter_1.default(new test_1.default({}, knex('test')));
-        jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false);
-        sorter.apply = jest.fn();
+        vitest_1.vi.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false);
+        sorter.apply = vitest_1.vi.fn();
         sorter.run();
         expect(sorter.apply).not.toHaveBeenCalled();
     });

@@ -6,10 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const knex_1 = __importDefault(require("knex"));
 const knex = (0, knex_1.default)({ client: 'pg' });
 const config_1 = __importDefault(require("./config"));
-const empty_1 = __importDefault(require("../test/queriers/empty"));
+const empty_1 = __importDefault(require("./test/queriers/empty"));
 const not_implemented_1 = __importDefault(require("./errors/not_implemented"));
 const _1 = __importDefault(require("."));
-const test_1 = __importDefault(require("../test/queriers/test"));
+const test_1 = __importDefault(require("./test/queriers/test"));
+const vitest_1 = require("vitest");
 const validation_1 = __importDefault(require("./errors/validation"));
 describe('constructor', () => {
     test('accepts a query to set', () => {
@@ -28,18 +29,18 @@ describe('constructor', () => {
         expect(querier.config.get()).toMatchObject(config);
     });
     test('calls `defineSchema` with a schema instance', () => {
-        const defineSchema = jest.spyOn(test_1.default.prototype, 'defineSchema');
+        const defineSchema = vitest_1.vi.spyOn(test_1.default.prototype, 'defineSchema');
         const querier = new test_1.default({}, knex('test'));
         expect(defineSchema).toHaveBeenCalledWith(querier.schema);
         defineSchema.mockRestore();
     });
     test('creates an instance of the configured adapter', () => {
-        const adapter = jest.fn();
+        const adapter = vitest_1.vi.fn();
         new test_1.default({}, knex('test'), { adapter });
         expect(adapter.mock.instances).toHaveLength(1);
     });
     test('creates an instance of the configured validator', () => {
-        const validator = jest.fn();
+        const validator = vitest_1.vi.fn();
         new test_1.default({}, knex('test'), { validator });
         expect(validator.mock.instances).toHaveLength(1);
     });
