@@ -1,18 +1,24 @@
 import Joi from 'joi'
 import joiValidationErrorConverter from '../services/joi_validation_error_converter'
 
-class ParserValidator {
-  constructor(defineSchema, queryKey, query) {
+export type DefineSchemaFn = (joi: typeof Joi) => Joi.Schema | undefined
+
+export default class ParserValidator {
+  schema?: Joi.Schema
+  queryKey: string
+  query: any
+
+  constructor(defineSchema: DefineSchemaFn, queryKey: string, query: any) {
     this.schema = defineSchema(Joi)
     this.queryKey = queryKey
     this.query = query
   }
 
-  buildError(error) {
+  buildError(error: Joi.ValidationError): any {
     return joiValidationErrorConverter(error, this.queryKey)
   }
 
-  validate() {
+  validate(): any {
     if (!this.schema) {
       return this.query
     }
@@ -26,5 +32,3 @@ class ParserValidator {
     return value
   }
 }
-
-export default ParserValidator

@@ -1,46 +1,49 @@
 import Joi from 'joi'
 import joiValidationErrorConverter from '../services/joi_validation_error_converter'
 
-class AdapterValidator {
-  constructor(defineSchema) {
-    this.schema = defineSchema(Joi)
+type FilterValue = { operator: string; value: any }
+type SortValue = { order: any }
+type PageValue = { field: string; value: any }
 
-    if (this.schema) {
-      this.schema = Joi.object().keys(this.schema)
+class AdapterValidator {
+  public schema?: Joi.ObjectSchema<any>
+
+  constructor(
+    defineSchema: (
+      schema: typeof Joi,
+    ) => Record<string, Joi.Schema> | undefined,
+  ) {
+    const defined = defineSchema(Joi)
+    if (defined) {
+      this.schema = Joi.object().keys(defined)
     }
   }
 
-  buildError(error, key) {
+  buildError(error: Joi.ValidationError, key?: string): Error {
     return joiValidationErrorConverter(error, key)
   }
 
-  validateValue(schemaKey, key, value) {
-    let keySchema
-
+  validateValue(schemaKey: string, key: string, value: any): any {
+    let keySchema: Joi.Schema | undefined
     try {
       keySchema = this.schema && this.schema.extract(schemaKey)
     } catch {
       // Don't throw error if key doesn't exist.
     }
-
     if (!keySchema) {
       return value
     }
-
     const { value: valueValidated, error } = keySchema.validate(value)
-
     if (error) {
       throw this.buildError(error, key)
     }
-
     return valueValidated
   }
 
-  validateFilters(filters) {
+  validateFilters(filters: Map<string, FilterValue>): Map<string, FilterValue> {
     if (!this.schema) {
       return filters
     }
-
     for (const [key, filter] of filters) {
       filter.value = this.validateValue(
         `filter:${filter.operator}`,
@@ -48,27 +51,23 @@ class AdapterValidator {
         filter.value,
       )
     }
-
     return filters
   }
 
-  validateSorts(sorts) {
+  validateSorts(sorts: Map<string, SortValue>): Map<string, SortValue> {
     if (!this.schema) {
       return sorts
     }
-
     for (const [key, sort] of sorts) {
       sort.order = this.validateValue('sort', key, sort.order)
     }
-
     return sorts
   }
 
-  validatePage(page) {
+  validatePage(page: Map<string, PageValue>): Map<string, PageValue> {
     if (!this.schema) {
       return page
     }
-
     for (const [key, pageField] of page) {
       pageField.value = this.validateValue(
         `page:${pageField.field}`,
@@ -76,7 +75,6 @@ class AdapterValidator {
         pageField.value,
       )
     }
-
     return page
   }
 }

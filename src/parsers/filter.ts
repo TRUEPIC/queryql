@@ -2,8 +2,17 @@ import is from 'is'
 import BaseParser from './base'
 import flattenMap from '../services/flatten_map'
 
+import Joi from 'joi'
+
+export interface Filter {
+  name: string | null
+  field: string | null
+  operator: string | null
+  value: unknown
+}
+
 export default class FilterParser extends BaseParser {
-  static get DEFAULTS() {
+  static get DEFAULTS(): Filter {
     return {
       name: null,
       field: null,
@@ -12,15 +21,21 @@ export default class FilterParser extends BaseParser {
     }
   }
 
-  buildKey({ name, operator }) {
+  buildKey({
+    name,
+    operator,
+  }: {
+    name: string | null
+    operator: string | null
+  }): string {
     return `${this.queryKey}:${name}[${operator}]`
   }
 
-  defineValidation(schema) {
+  defineValidation(schema: typeof Joi): Joi.ObjectSchema {
     const defaultOperator = this.defaults.operator
     const mapNamesToOperators = Object.entries(
-      this.schema.mapFilterNamesToOperators(),
-    )
+      this.schema.mapFilterNamesToOperators() as Record<string, string[]>,
+    ) as [string, string[]][]
 
     const values = [
       schema.array(),
@@ -31,32 +46,35 @@ export default class FilterParser extends BaseParser {
     ]
 
     return schema.object().keys(
-      mapNamesToOperators.reduce((accumulator, [field, operators]) => {
-        const operatorObject = schema
-          .object()
-          .pattern(schema.string().valid(...operators), [
-            schema.object(),
-            ...values,
-          ])
+      mapNamesToOperators.reduce(
+        (accumulator, [field, operators]) => {
+          const operatorObject = schema
+            .object()
+            .pattern(schema.string().valid(...operators), [
+              schema.object(),
+              ...values,
+            ])
 
-        return {
-          ...accumulator,
-          [field]: operators.includes(defaultOperator)
-            ? [...values, operatorObject]
-            : operatorObject,
-        }
-      }, {}),
+          return {
+            ...accumulator,
+            [field]: operators.includes(defaultOperator ?? '')
+              ? [...values, operatorObject]
+              : operatorObject,
+          }
+        },
+        {} as Record<string, any>,
+      ),
     )
   }
 
-  flatten(map) {
+  flatten(map: Map<string, Filter>) {
     return flattenMap({
       map,
-      value: (value) => value.value,
+      value: (value: Filter) => value.value,
     })
   }
 
-  parseObject(name, value) {
+  parseObject(name: string, value: Record<string, unknown>): Filter[] {
     return Object.keys(value).map((operator) => {
       const { options } = this.schema.filters.get(`${name}[${operator}]`)
 
@@ -70,7 +88,7 @@ export default class FilterParser extends BaseParser {
     })
   }
 
-  parseNonObject(name, value) {
+  parseNonObject(name: string, value: unknown): Filter {
     const { options } = this.schema.filters.get(
       `${name}[${this.defaults.operator}]`,
     )
@@ -79,11 +97,12 @@ export default class FilterParser extends BaseParser {
       ...this.defaults,
       name,
       field: options.field || name,
+      operator: this.defaults.operator,
       value,
     }
   }
 
-  parse() {
+  parse(): Map<string, Filter> {
     if (!this.query) {
       return new Map()
     }
@@ -91,11 +110,13 @@ export default class FilterParser extends BaseParser {
     this.validate()
 
     const entries = Object.entries(this.query)
-    const filters = []
+    const filters: Filter[] = []
 
     for (const [name, value] of entries) {
       if (is.object(value)) {
-        filters.push(...this.parseObject(name, value))
+        filters.push(
+          ...this.parseObject(name, value as Record<string, unknown>),
+        )
       } else {
         filters.push(this.parseNonObject(name, value))
       }

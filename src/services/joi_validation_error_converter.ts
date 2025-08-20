@@ -1,13 +1,13 @@
 import ValidationError from '../errors/validation'
 
-const joiValidationErrorConverter = (
+export default function joiValidationErrorConverter(
   error: any,
   pathPrefix: string | null = null,
-) => {
+) {
   const detail = error.details[0]
 
   let path = detail.path.reduce(
-    (accumulator, value, index) =>
+    (accumulator: string | null, value: any, index: number) =>
       index === 0 ? `${value}` : `${accumulator}[${value}]`,
     null,
   )
@@ -20,5 +20,3 @@ const joiValidationErrorConverter = (
 
   return new ValidationError(`${path} ${message}`)
 }
-
-export default joiValidationErrorConverter

@@ -21,7 +21,7 @@ describe('constructor', () => {
 
 describe('defineSchemaArgs', () => {
   test('returns `Joi` argument to call `defineSchema` with', () => {
-    const validator = new JoiValidator(() => {})
+    const validator = new JoiValidator(() => ({}))
 
     expect(validator.defineSchemaArgs).toEqual([Joi])
   })
@@ -29,7 +29,7 @@ describe('defineSchemaArgs', () => {
 
 describe('buildError', () => {
   test('returns a `ValidationError`', () => {
-    const validator = new JoiValidator(() => {})
+    const validator = new JoiValidator(() => ({}))
     const { error } = Joi.object()
       .keys({
         invalid: Joi.number(),
@@ -44,7 +44,7 @@ describe('buildError', () => {
 
 describe('validateValue', () => {
   test('returns the value if no schema is defined', () => {
-    const validator = new JoiValidator(() => {})
+    const validator = new JoiValidator(() => ({}))
 
     expect(validator.schema).toBeUndefined()
     expect(validator.validateValue('filter:test[=]', 123)).toBe(123)
@@ -85,7 +85,7 @@ describe('validateFilters', () => {
       { test: { '=': 123 } },
       new Schema().filter('test', '='),
     )
-    const validator = new JoiValidator(() => {})
+    const validator = new JoiValidator(() => ({}))
 
     expect(validator.schema).toBeUndefined()
     expect(validator.validateFilters(parser.parse())).toBeInstanceOf(Map)
@@ -129,7 +129,7 @@ describe('validateFilters', () => {
 describe('validateSorts', () => {
   test('returns the parsed sorts if no schema is defined', () => {
     const parser = new SortParser('sort', 'test', new Schema().sort('test'))
-    const validator = new JoiValidator(() => {})
+    const validator = new JoiValidator(() => ({}))
 
     expect(validator.schema).toBeUndefined()
     expect(validator.validateSorts(parser.parse())).toBeInstanceOf(Map)
@@ -163,7 +163,7 @@ describe('validateSorts', () => {
 describe('validatePage', () => {
   test('returns the parsed page if no schema is defined', () => {
     const parser = new PageParser('page', '2', new Schema())
-    const validator = new JoiValidator(() => {})
+    const validator = new JoiValidator(() => ({}))
 
     expect(validator.schema).toBeUndefined()
     expect(validator.validatePage(parser.parse())).toBeInstanceOf(Map)

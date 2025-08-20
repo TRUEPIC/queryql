@@ -1,10 +1,21 @@
 import is from 'is'
-
 import BaseParser from './base'
 import flattenMap from '../services/flatten_map'
 
+import type Schema from '../schema'
+
+interface SortOptions {
+  field?: string
+}
+
+interface SortResult {
+  name: string
+  field: string
+  order: 'asc' | 'desc'
+}
+
 class SortParser extends BaseParser {
-  static get DEFAULTS() {
+  static get DEFAULTS(): { name: null; field: null; order: 'asc' } {
     return {
       name: null,
       field: null,
@@ -12,11 +23,11 @@ class SortParser extends BaseParser {
     }
   }
 
-  buildKey({ name }) {
+  buildKey({ name }: { name: string }): string {
     return `${this.queryKey}:${name}`
   }
 
-  defineValidation(schema) {
+  defineValidation(schema: any): any {
     const keys = Array.from(this.schema.sorts.keys())
 
     if (!keys.length) {
@@ -38,56 +49,56 @@ class SortParser extends BaseParser {
     )
   }
 
-  flatten(map) {
+  flatten(map: Map<string, SortResult>): Record<string, 'asc' | 'desc'> {
     return flattenMap({
       map,
-      value: (value) => value.order,
+      value: (value: SortResult) => value.order,
     })
   }
 
-  parseString(name) {
-    const { options } = this.schema.sorts.get(name)
+  parseString(name: string): SortResult {
+    const { options }: { options: SortOptions } = this.schema.sorts.get(name)
 
     return {
       ...this.defaults,
       name,
       field: options.field || name,
+      order: 'asc',
     }
   }
 
-  parseArray(names) {
+  parseArray(names: string[]): SortResult[] {
     return names.map((name) => {
-      const { options } = this.schema.sorts.get(name)
-
+      const { options }: { options: SortOptions } = this.schema.sorts.get(name)
       return {
         ...this.defaults,
         name,
         field: options.field || name,
+        order: 'asc',
       }
     })
   }
 
-  parseObject(query) {
+  parseObject(query: Record<string, string>): SortResult[] {
     return Object.entries(query).map(([name, order]) => {
-      const { options } = this.schema.sorts.get(name)
-
+      const { options }: { options: SortOptions } = this.schema.sorts.get(name)
       return {
         ...this.defaults,
         name,
         field: options.field || name,
-        order,
+        order: order as 'asc' | 'desc',
       }
     })
   }
 
-  parse() {
+  parse(): Map<string, SortResult> {
     if (!this.query) {
       return new Map()
     }
 
     this.validate()
 
-    const sorts = []
+    const sorts: SortResult[] = []
 
     if (is.string(this.query)) {
       sorts.push(this.parseString(this.query))
@@ -101,4 +112,4 @@ class SortParser extends BaseParser {
   }
 }
 
-module.exports = SortParser
+export default SortParser

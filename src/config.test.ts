@@ -10,11 +10,11 @@ describe('constructor', () => {
 
 describe('DEFAULTS', () => {
   test('returns `KnexAdapter` as the default adapter', () => {
-    expect(Config.DEFAULTS.adapter.name).toBe('KnexAdapter')
+    expect(Config.DEFAULTS.adapter?.name).toBe('KnexAdapter')
   })
 
   test('returns `JoiValidator` as the default validator', () => {
-    expect(Config.DEFAULTS.validator.name).toBe('JoiValidator')
+    expect(Config.DEFAULTS.validator?.name).toBe('JoiValidator')
   })
 })
 

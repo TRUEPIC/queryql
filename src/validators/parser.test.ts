@@ -15,14 +15,14 @@ describe('constructor', () => {
 
   test('accepts a query key to set', () => {
     const queryKey = 'test'
-    const validator = new ParserValidator(() => {}, queryKey, 123)
+    const validator = new ParserValidator((joi) => undefined, queryKey, 123)
 
     expect(validator.queryKey).toBe(queryKey)
   })
 
   test('accepts a query to set', () => {
     const query = 123
-    const validator = new ParserValidator(() => {}, 'test', query)
+    const validator = new ParserValidator((joi) => undefined, 'test', query)
 
     expect(validator.query).toBe(query)
   })
@@ -30,22 +30,26 @@ describe('constructor', () => {
 
 describe('buildError', () => {
   test('returns a `ValidationError`', () => {
-    const validator = new ParserValidator(() => {}, 'test', 'invalid')
+    const validator = new ParserValidator((joi) => undefined, 'test', 'invalid')
     const { error } = Joi.object()
       .keys({
         invalid: Joi.number(),
       })
       .validate({ invalid: 'invalid' })
 
-    expect(validator.buildError(error)).toEqual(
-      new ValidationError('test:invalid must be a number'),
-    )
+    if (error) {
+      expect(validator.buildError(error)).toEqual(
+        new ValidationError('test:invalid must be a number'),
+      )
+    } else {
+      throw new Error('Expected Joi validation error')
+    }
   })
 })
 
 describe('validate', () => {
   test('returns the value if no schema is defined', () => {
-    const validator = new ParserValidator(() => {}, 'test', 123)
+    const validator = new ParserValidator((joi) => undefined, 'test', 123)
 
     expect(validator.schema).toBeUndefined()
     expect(validator.validate()).toBe(123)

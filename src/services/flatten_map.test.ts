@@ -14,7 +14,7 @@ test('uses the map key/value as the object key/value by default', () => {
 
 test('optionally calls a `key` function to build the key', () => {
   const map = new Map([['test', 123]])
-  const key = (key, value) => `${key}:${value}`
+  const key = (key: string, value: number) => `${key}:${value}`
 
   expect(flattenMap({ map, key })).toEqual({
     'test:123': 123,
@@ -23,7 +23,7 @@ test('optionally calls a `key` function to build the key', () => {
 
 test('optionally calls a `value` function to build the value', () => {
   const map = new Map([['test', 123]])
-  const value = (value, key) => `${value}:${key}`
+  const value = (value: number, key: string) => `${value}:${key}`
 
   expect(flattenMap({ map, value })).toEqual({
     test: '123:test',

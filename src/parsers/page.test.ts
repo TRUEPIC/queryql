@@ -56,7 +56,11 @@ describe('validation', () => {
 
   describe('`page[number]=value`', () => {
     test('throws if the number is not an integer', () => {
-      const parser = new PageParser('page', { number: '1.1' }, new Schema())
+      const parser = new PageParser(
+        'page',
+        { number: '1.1' as unknown as number },
+        new Schema(),
+      )
 
       expect(() => parser.validate()).toThrow(
         new ValidationError('page:number must be an integer'),
@@ -64,7 +68,11 @@ describe('validation', () => {
     })
 
     test('throws if the number is not positive', () => {
-      const parser = new PageParser('page', { number: '-1' }, new Schema())
+      const parser = new PageParser(
+        'page',
+        { number: '-1' as unknown as number },
+        new Schema(),
+      )
 
       expect(() => parser.validate()).toThrow(
         new ValidationError('page:number must be a positive number'),
@@ -74,7 +82,7 @@ describe('validation', () => {
 
   describe('`page[size]=value`', () => {
     test('throws if the number is not an integer', () => {
-      const parser = new PageParser('page', { size: '1.1' }, new Schema())
+      const parser = new PageParser('page', { size: 1.1 }, new Schema())
 
       expect(() => parser.validate()).toThrow(
         new ValidationError('page:size must be an integer'),
@@ -82,7 +90,7 @@ describe('validation', () => {
     })
 
     test('throws if the number is not positive', () => {
-      const parser = new PageParser('page', { size: '-1' }, new Schema())
+      const parser = new PageParser('page', { size: -1 }, new Schema())
 
       expect(() => parser.validate()).toThrow(
         new ValidationError('page:size must be a positive number'),
@@ -155,7 +163,7 @@ describe('parse', () => {
   })
 
   test('`page[number]=value`', () => {
-    const parser = new PageParser('page', { number: '2' }, new Schema())
+    const parser = new PageParser('page', { number: 2 }, new Schema())
     const parsed = parser.parse()
 
     expect(parsed.get('page:size')).toEqual({
@@ -175,7 +183,7 @@ describe('parse', () => {
   })
 
   test('`page[size]=value`', () => {
-    const parser = new PageParser('page', { size: '10' }, new Schema())
+    const parser = new PageParser('page', { size: 10 }, new Schema())
     const parsed = parser.parse()
 
     expect(parsed.get('page:size')).toEqual({
@@ -197,7 +205,7 @@ describe('parse', () => {
   test('`page[number]=value&page[size]=value`', () => {
     const parser = new PageParser(
       'page',
-      { number: '2', size: '10' },
+      { number: 2, size: 10 },
       new Schema().page(),
     )
     const parsed = parser.parse()
@@ -219,7 +227,11 @@ describe('parse', () => {
   })
 
   test('uses the defaults if no query', () => {
-    const parser = new PageParser('page', undefined, new Schema())
+    const parser = new PageParser(
+      'page',
+      undefined as unknown as number,
+      new Schema(),
+    )
     const parsed = parser.parse()
 
     expect(parsed.get('page:size')).toEqual({

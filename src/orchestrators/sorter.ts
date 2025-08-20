@@ -1,7 +1,12 @@
 import BaseOrchestrator from './base'
 import SortParser from '../parsers/sort'
+import type Schema from '../schema'
+import type { SortResult } from '../parsers/sort'
 
 export default class Sorter extends BaseOrchestrator {
+  querier: Querier
+  parser: SortParser
+
   get queryKey() {
     return 'sort'
   }
