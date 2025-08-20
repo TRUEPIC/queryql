@@ -4,3 +4,6 @@
 # Jest
 /test/coverage
 /test/reports
+
+# Build output
+/dist

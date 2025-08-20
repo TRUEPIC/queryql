@@ -1,33 +1,20 @@
-import BaseAdapter from './base'
+import Joi from 'joi'
+import BaseAdapter, { Filter, Sort, Page } from './base'
+import {
+  FILTER_OPERATORS as KNEX_FILTER_OPERATORS,
+  DEFAULT_FILTER_OPERATOR as KNEX_DEFAULT_FILTER_OPERATOR,
+} from '../types/filter_operator'
 
 export default class KnexAdapter extends BaseAdapter {
-  static get FILTER_OPERATORS() {
-    return [
-      '=',
-      '!=',
-      '<>',
-      '>',
-      '>=',
-      '<',
-      '<=',
-      'is',
-      'is not',
-      'in',
-      'not in',
-      'like',
-      'not like',
-      'ilike',
-      'not ilike',
-      'between',
-      'not between',
-    ]
+  static get FILTER_OPERATORS(): string[] {
+    return KNEX_FILTER_OPERATORS as unknown as string[]
   }
 
-  static get DEFAULT_FILTER_OPERATOR() {
-    return '='
+  static get DEFAULT_FILTER_OPERATOR(): string {
+    return KNEX_DEFAULT_FILTER_OPERATOR as string
   }
 
-  defineValidation(schema) {
+  defineValidation(schema: typeof Joi): Record<string, Joi.Schema> {
     return {
       'filter:=': schema
         .alternatives()
@@ -65,15 +52,21 @@ export default class KnexAdapter extends BaseAdapter {
     }
   }
 
-  'filter:*'(builder, { field, operator, value }) {
-    return builder.where(field, operator, value)
+  'filter:*'(builder: any, filter: Filter): any {
+    const { field, operator, value } = filter
+
+    return (builder as any).where(field, operator, value)
   }
 
-  sort(builder, { field, order }) {
-    return builder.orderBy(field, order)
+  sort(builder: any, sort: Sort): any {
+    const { field, order } = sort
+
+    return (builder as any).orderBy(field, order)
   }
 
-  page(builder, { size, offset }) {
-    return builder.limit(size).offset(offset)
+  page(builder: any, page: Page): any {
+    const { size, offset } = page
+
+    return (builder as any).limit(size).offset(offset)
   }
 }

@@ -1,11 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const is_1 = __importDefault(require("is"));
 class Schema {
     constructor() {
+        this.pageOptions = { isEnabled: false };
         this.filters = new Map();
         this.sorts = new Map();
         this.page(false);
@@ -31,7 +28,7 @@ class Schema {
         return this;
     }
     page(isEnabledOrOptions = true) {
-        if (is_1.default.bool(isEnabledOrOptions)) {
+        if (typeof isEnabledOrOptions === 'boolean') {
             this.pageOptions = { isEnabled: isEnabledOrOptions };
         }
         else {

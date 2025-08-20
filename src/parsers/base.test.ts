@@ -2,6 +2,7 @@ import BaseParser from './base'
 import NotImplementedError from '../errors/not_implemented'
 import Schema from '../schema'
 import ValidationError from '../errors/validation'
+import Joi from 'joi'
 
 describe('constructor', () => {
   test('accepts a query key to set', () => {
@@ -99,9 +100,9 @@ describe('validate', () => {
   test('returns the validated query if valid', () => {
     const defineValidation = jest
       .spyOn(BaseParser.prototype, 'defineValidation')
-      .mockImplementation((schema) =>
-        schema.object().keys({
-          test: schema.number(),
+      .mockImplementation((schema?: typeof Joi) =>
+        schema!.object().keys({
+          test: schema!.number(),
         }),
       )
 
@@ -115,9 +116,9 @@ describe('validate', () => {
   test('returns the cached validated query on subsequent calls', () => {
     const defineValidation = jest
       .spyOn(BaseParser.prototype, 'defineValidation')
-      .mockImplementation((schema) =>
-        schema.object().keys({
-          test: schema.number(),
+      .mockImplementation((schema?: typeof Joi) =>
+        schema!.object().keys({
+          test: schema!.number(),
         }),
       )
 
@@ -135,9 +136,9 @@ describe('validate', () => {
   test('throws `ValidationError` if invalid', () => {
     const defineValidation = jest
       .spyOn(BaseParser.prototype, 'defineValidation')
-      .mockImplementation((schema) =>
-        schema.object().keys({
-          invalid: schema.number(),
+      .mockImplementation((schema?: typeof Joi) =>
+        schema!.object().keys({
+          invalid: schema!.number(),
         }),
       )
 

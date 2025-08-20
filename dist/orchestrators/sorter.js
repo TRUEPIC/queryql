@@ -23,8 +23,8 @@ class Sorter extends base_1.default {
             return true;
         }
         this.parser.validate();
-        this.querier.adapter.validator.validateSorts(this.parse());
-        this.querier.validator.validateSorts(this.parse());
+        this.querier.adapter.validator?.validateSorts(this.parse());
+        this.querier.validator?.validateSorts(this.parse());
         return true;
     }
     run() {

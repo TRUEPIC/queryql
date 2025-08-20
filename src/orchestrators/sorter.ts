@@ -1,18 +1,19 @@
 import BaseOrchestrator from './base'
-import SortParser from '../parsers/sort'
+import SortParser, { SortResult } from '../parsers/sort'
 import type Schema from '../schema'
-import type { SortResult } from '../parsers/sort'
 
 export default class Sorter extends BaseOrchestrator {
-  querier: Querier
-  parser: SortParser
+  parser!: SortParser
 
   get queryKey() {
     return 'sort'
   }
 
   get schema() {
-    return this.querier.schema.sorts
+    return this.querier.schema!.sorts as Map<
+      string,
+      { name: string | null; options?: Record<string, any> }
+    >
   }
 
   get isEnabled() {
@@ -23,7 +24,7 @@ export default class Sorter extends BaseOrchestrator {
     return new SortParser(
       this.queryKey,
       this.query || this.querier.defaultSort,
-      this.querier.schema,
+      this.querier.schema!,
       this.querier.sortDefaults,
     )
   }
@@ -34,8 +35,8 @@ export default class Sorter extends BaseOrchestrator {
     }
 
     this.parser.validate()
-    this.querier.adapter.validator.validateSorts(this.parse())
-    this.querier.validator.validateSorts(this.parse())
+    this.querier.adapter.validator?.validateSorts(this.parse())
+    this.querier.validator?.validateSorts(this.parse())
 
     return true
   }
@@ -43,7 +44,7 @@ export default class Sorter extends BaseOrchestrator {
   run() {
     this.validate()
 
-    const sorts = this.parse()
+    const sorts = this.parse() as Map<string, SortResult>
 
     if (!sorts) {
       return this.querier

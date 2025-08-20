@@ -56,7 +56,7 @@ class FilterParser extends base_1.default {
                 ...this.defaults,
                 name,
                 field: options.field || name,
-                operator,
+                operator: operator,
                 value: value[operator],
             };
         });

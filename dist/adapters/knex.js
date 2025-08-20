@@ -4,34 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_1 = __importDefault(require("./base"));
+const filter_operator_1 = require("../types/filter_operator");
 class KnexAdapter extends base_1.default {
     static get FILTER_OPERATORS() {
-        return [
-            '=',
-            '!=',
-            '<>',
-            '>',
-            '>=',
-            '<',
-            '<=',
-            'is',
-            'is not',
-            'in',
-            'not in',
-            'like',
-            'not like',
-            'ilike',
-            'not ilike',
-            'between',
-            'not between',
-        ];
+        return filter_operator_1.FILTER_OPERATORS;
     }
     static get DEFAULT_FILTER_OPERATOR() {
-        return '=';
+        return filter_operator_1.DEFAULT_FILTER_OPERATOR;
     }
-    // keep parameterless signature to match BaseAdapter; read schema from arguments[0]
-    defineValidation() {
-        const schema = arguments[0];
+    defineValidation(schema) {
         return {
             'filter:=': schema
                 .alternatives()
@@ -68,13 +49,16 @@ class KnexAdapter extends base_1.default {
                 .items(schema.string(), schema.number()),
         };
     }
-    'filter:*'(builder, { field, operator, value }) {
+    'filter:*'(builder, filter) {
+        const { field, operator, value } = filter;
         return builder.where(field, operator, value);
     }
-    sort(builder, { field, order }) {
+    sort(builder, sort) {
+        const { field, order } = sort;
         return builder.orderBy(field, order);
     }
-    page(builder, { size, offset }) {
+    page(builder, page) {
+        const { size, offset } = page;
         return builder.limit(size).offset(offset);
     }
 }

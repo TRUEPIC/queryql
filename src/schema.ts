@@ -1,13 +1,36 @@
 import is from 'is'
 
+type Options = Record<string, any>
+
+interface FilterDefinition {
+  name: string
+  operator: string
+  options: Options
+}
+
+interface SortDefinition {
+  name: string
+  options: Options
+}
+
+type PageOptions = { isEnabled?: boolean } & Record<string, any>
+
 class Schema {
+  filters: Map<string, FilterDefinition>
+  sorts: Map<string, SortDefinition>
+  pageOptions: PageOptions = { isEnabled: false }
+
   constructor() {
     this.filters = new Map()
     this.sorts = new Map()
     this.page(false)
   }
 
-  filter(name, operatorOrOperators, options = {}) {
+  filter(
+    name: string,
+    operatorOrOperators: string | string[],
+    options: Options = {},
+  ): this {
     const operators = Array.isArray(operatorOrOperators)
       ? operatorOrOperators
       : [operatorOrOperators]
@@ -23,7 +46,7 @@ class Schema {
     return this
   }
 
-  sort(name, options = {}) {
+  sort(name: string, options: Options = {}): this {
     this.sorts.set(name, {
       name,
       options,
@@ -32,8 +55,8 @@ class Schema {
     return this
   }
 
-  page(isEnabledOrOptions = true) {
-    if (is.bool(isEnabledOrOptions)) {
+  page(isEnabledOrOptions: boolean | PageOptions = true): this {
+    if (typeof isEnabledOrOptions === 'boolean') {
       this.pageOptions = { isEnabled: isEnabledOrOptions }
     } else {
       this.pageOptions = {
@@ -48,10 +71,10 @@ class Schema {
     return this
   }
 
-  mapFilterNamesToOperators() {
+  mapFilterNamesToOperators(): Record<string, string[]> {
     const filters = Array.from(this.filters.values())
 
-    return filters.reduce((accumulator, filter) => {
+    return filters.reduce<Record<string, string[]>>((accumulator, filter) => {
       if (!accumulator[filter.name]) {
         accumulator[filter.name] = []
       }

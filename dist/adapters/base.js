@@ -16,21 +16,24 @@ class BaseAdapter {
     static get DEFAULT_FILTER_OPERATOR() {
         throw new not_implemented_1.default();
     }
-    'filter:*'(..._args) {
+    'filter:*'(builder, filter) {
         throw new not_implemented_1.default();
     }
-    sort(..._args) {
+    sort(builder, sort) {
         throw new not_implemented_1.default();
     }
-    page(..._args) {
+    page(builder, page) {
         throw new not_implemented_1.default();
     }
-    defineValidation(..._args) {
+    // defineValidation is expected to accept the Joi module and return
+    // an object mapping keys to Joi schemas or undefined.
+    defineValidation(schema) {
         return undefined;
     }
     filter(builder, filter) {
         const { operator } = filter;
-        if (!this.constructor.FILTER_OPERATORS.includes(operator)) {
+        const ctor = this.constructor;
+        if (!ctor.FILTER_OPERATORS.includes(operator)) {
             throw new not_implemented_1.default();
         }
         const operatorMethod = `filter:${operator}`;

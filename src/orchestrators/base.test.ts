@@ -5,7 +5,7 @@ import BaseOrchestrator from './base'
 import NotImplementedError from '../errors/not_implemented'
 import TestQuerier from '../../test/queriers/test'
 import ValidationError from '../errors/validation'
-let buildParser
+let buildParser: jest.SpyInstance<any, any[]>
 
 beforeEach(() => {
   buildParser = jest
@@ -19,14 +19,16 @@ afterEach(() => {
 
 describe('constructor', () => {
   test('accepts a querier to set', () => {
-    const querier = new TestQuerier({}, knex('test'))
+    const querier: any = new TestQuerier({}, knex('test'))
     const filterer = new BaseOrchestrator(querier)
 
     expect(filterer.querier).toBe(querier)
   })
 
   test('calls `buildParser` and sets the returned value', () => {
-    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+    const orchestrator = new BaseOrchestrator(
+      new TestQuerier({}, knex('test')) as any,
+    )
 
     expect(buildParser).toHaveBeenCalled()
     expect(orchestrator.parser).toBeDefined()
@@ -35,7 +37,9 @@ describe('constructor', () => {
 
 describe('queryKey', () => {
   test('throws `NotImplementedError` when not extended', () => {
-    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+    const orchestrator = new BaseOrchestrator(
+      new TestQuerier({}, knex('test')) as any,
+    )
 
     expect(() => orchestrator.queryKey).toThrow(NotImplementedError)
   })
@@ -43,7 +47,9 @@ describe('queryKey', () => {
 
 describe('schema', () => {
   test('throws `NotImplementedError` when not extended', () => {
-    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+    const orchestrator = new BaseOrchestrator(
+      new TestQuerier({}, knex('test')) as any,
+    )
 
     expect(() => orchestrator.schema).toThrow(NotImplementedError)
   })
@@ -51,7 +57,9 @@ describe('schema', () => {
 
 describe('isEnabled', () => {
   test('throws `NotImplementedError` when not extended', () => {
-    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+    const orchestrator = new BaseOrchestrator(
+      new TestQuerier({}, knex('test')) as any,
+    )
 
     expect(() => orchestrator.isEnabled).toThrow(NotImplementedError)
   })
@@ -59,7 +67,9 @@ describe('isEnabled', () => {
 
 describe('buildParser', () => {
   test('throws `NotImplementedError` when not extended', () => {
-    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+    const orchestrator = new BaseOrchestrator(
+      new TestQuerier({}, knex('test')) as any,
+    )
 
     buildParser.mockRestore()
 
@@ -86,7 +96,7 @@ describe('run', () => {
 describe('query', () => {
   test('returns the query value specified by the query key', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({ test: 123 }, knex('test')),
+      new TestQuerier({ test: 123 }, knex('test')) as any,
     )
 
     jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
@@ -97,7 +107,9 @@ describe('query', () => {
 
 describe('parse', () => {
   test('parses/returns the query', () => {
-    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+    const orchestrator = new BaseOrchestrator(
+      new TestQuerier({}, knex('test')) as any,
+    )
 
     jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
 
@@ -107,7 +119,9 @@ describe('parse', () => {
   })
 
   test('returns the cached parsed query on subsequent calls', () => {
-    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+    const orchestrator = new BaseOrchestrator(
+      new TestQuerier({}, knex('test')) as any,
+    )
 
     jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
 
@@ -121,7 +135,9 @@ describe('parse', () => {
   })
 
   test('returns `null` if disabled, no query', () => {
-    const orchestrator = new BaseOrchestrator(new TestQuerier({}, knex('test')))
+    const orchestrator = new BaseOrchestrator(
+      new TestQuerier({}, knex('test')) as any,
+    )
 
     jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
     jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false)
@@ -131,7 +147,7 @@ describe('parse', () => {
 
   test('throws `ValidationError` if disabled, with query', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({ test: 123 }, knex('test')),
+      new TestQuerier({ test: 123 }, knex('test')) as any,
     )
 
     jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
@@ -145,7 +161,7 @@ describe('parse', () => {
 
 describe('apply', () => {
   test('calls/returns method on querier if method defined', () => {
-    const querier = new TestQuerier({}, knex('test'))
+    const querier: any = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
     const data = {
       name: 'test',
@@ -154,14 +170,14 @@ describe('apply', () => {
     }
 
     jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort')
-    querier['sort:test'] = jest.fn((builder) => builder)
+    querier['sort:test'] = jest.fn((builder: any) => builder)
 
     expect(orchestrator.apply(data, 'sort:test')).toBe(querier.builder)
     expect(querier['sort:test']).toHaveBeenCalledWith(querier.builder, data)
   })
 
   test('calls/returns method on adapter if querier method not defined', () => {
-    const querier = new TestQuerier({}, knex('test'))
+    const querier: any = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
     const data = {
       name: 'test',
@@ -177,7 +193,7 @@ describe('apply', () => {
   })
 
   test('calls/returns method on adapter if no querier method specified', () => {
-    const querier = new TestQuerier({}, knex('test'))
+    const querier: any = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
     const data = {
       size: 20,

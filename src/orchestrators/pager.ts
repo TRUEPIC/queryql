@@ -7,7 +7,7 @@ export default class Pager extends BaseOrchestrator {
   }
 
   get schema() {
-    return this.querier.schema.pageOptions
+    return this.querier.schema!.pageOptions
   }
 
   get isEnabled() {
@@ -18,8 +18,8 @@ export default class Pager extends BaseOrchestrator {
     return new PageParser(
       this.queryKey,
       this.query || this.querier.defaultPage,
-      this.querier.schema,
-      this.querier.pageDefaults,
+      this.querier.schema!,
+      this.querier.pageDefaults as any,
     )
   }
 
@@ -28,9 +28,9 @@ export default class Pager extends BaseOrchestrator {
       return true
     }
 
-    this.parser.validate()
+    this.parser.validate?.()
     this.querier.adapter.validator.validatePage(this.parse())
-    this.querier.validator.validatePage(this.parse())
+    this.querier.validator?.validatePage(this.parse())
 
     return true
   }
@@ -41,7 +41,8 @@ export default class Pager extends BaseOrchestrator {
     const page = this.parse()
 
     if (page) {
-      this.apply(this.parser.flatten(page, false))
+      // parser.flatten may be optional on the parser type
+      this.apply((this.parser.flatten as any)(page, false))
     }
 
     return this.querier

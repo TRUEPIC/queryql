@@ -4,10 +4,12 @@ import flattenMap from '../services/flatten_map'
 
 import Joi from 'joi'
 
+import type { FilterOperator } from '../types/filter_operator'
+
 export interface Filter {
   name: string | null
   field: string | null
-  operator: string | null
+  operator: FilterOperator | null
   value: unknown
 }
 
@@ -26,7 +28,7 @@ export default class FilterParser extends BaseParser {
     operator,
   }: {
     name: string | null
-    operator: string | null
+    operator: FilterOperator | null
   }): string {
     return `${this.queryKey}:${name}[${operator}]`
   }
@@ -82,7 +84,7 @@ export default class FilterParser extends BaseParser {
         ...this.defaults,
         name,
         field: options.field || name,
-        operator,
+        operator: operator as FilterOperator,
         value: value[operator],
       }
     })

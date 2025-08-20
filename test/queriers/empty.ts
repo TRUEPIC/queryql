@@ -4,4 +4,4 @@ class EmptyQuerier extends QueryQL {
   defineSchema() {}
 }
 
-module.exports = EmptyQuerier
+export default EmptyQuerier

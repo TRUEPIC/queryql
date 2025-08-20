@@ -1,13 +1,23 @@
 import BaseOrchestrator from './base'
-import FilterParser from '../parsers/filter'
+import FilterParser, { Filter } from '../parsers/filter'
+import type { FilterOperator } from '../types/filter_operator'
+
+type RecordObj = Record<string, unknown>
+
+interface FilterSchema {
+  name: string | null
+  operator: FilterOperator | null
+  options?: RecordObj
+}
 
 export default class Filterer extends BaseOrchestrator {
+  parser!: FilterParser
   get queryKey() {
     return 'filter'
   }
 
   get schema() {
-    return this.querier.schema.filters
+    return this.querier.schema!.filters as Map<string, FilterSchema>
   }
 
   get isEnabled() {
@@ -18,11 +28,16 @@ export default class Filterer extends BaseOrchestrator {
     return new FilterParser(
       this.queryKey,
       this.query || this.querier.defaultFilter,
-      this.querier.schema,
+      // `querier.schema` is provided at runtime by the querier implementation
+      this.querier.schema!,
       {
-        operator: this.querier.adapter.constructor.DEFAULT_FILTER_OPERATOR,
-        ...this.querier.filterDefaults,
-      },
+        operator: (
+          this.querier.adapter.constructor as {
+            DEFAULT_FILTER_OPERATOR: string
+          }
+        ).DEFAULT_FILTER_OPERATOR,
+        ...(this.querier.filterDefaults as RecordObj | undefined),
+      } as RecordObj,
     )
   }
 
@@ -32,8 +47,8 @@ export default class Filterer extends BaseOrchestrator {
     }
 
     this.parser.validate()
-    this.querier.adapter.validator.validateFilters(this.parse())
-    this.querier.validator.validateFilters(this.parse())
+    this.querier.adapter.validator?.validateFilters(this.parse())
+    this.querier.validator?.validateFilters(this.parse())
 
     return true
   }
@@ -47,11 +62,17 @@ export default class Filterer extends BaseOrchestrator {
       return this.querier
     }
 
-    let key
-    let filter
+    let key: string
+    let filter: Filter | undefined
 
     for (const filterSchema of this.schema.values()) {
-      key = this.parser.buildKey(filterSchema)
+      // FilterParser.buildKey expects an object with `name` and `operator`.
+      key = this.parser.buildKey(
+        filterSchema as {
+          name: string | null
+          operator: FilterOperator | null
+        },
+      )
       filter = filters.get(key)
 
       if (filter) {

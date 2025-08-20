@@ -3,15 +3,40 @@ import cache from '../services/cache_function'
 import NotImplementedError from '../errors/not_implemented'
 import ValidationError from '../errors/validation'
 
+type AnyObject = Record<string, any>
+
+interface Querier<Q = any, B = any, A = any> {
+  query: Q & AnyObject
+  builder: B
+  adapter: A & AnyObject
+  validator?: AnyObject
+  schema?: AnyObject
+  defaultFilter?: any
+  defaultSort?: any
+  defaultPage?: any
+  filterDefaults?: AnyObject
+  sortDefaults?: AnyObject
+  pageDefaults?: AnyObject
+  [key: string]: any
+}
+
+interface Parser<T = any> {
+  parse(): T
+  validate?(): void
+  flatten?(value: any, flag?: boolean): any
+  buildKey?(schema: any): string
+}
+
 export default class BaseOrchestrator<Q = any, S = any, B = any, A = any> {
   querier: Querier<Q, B, A>
-  parser: { parse: () => any }
+  parser: Parser<any>
 
   constructor(querier: Querier<Q, B, A>) {
     this.querier = querier
     this.parser = this.buildParser()
-    this.validate = cache(this.validate, this)
-    this.parse = cache(this.parse, this)
+    // cache returns a no-arg function; cast to any to match the instance method
+    this.validate = cache(this.validate, this) as any
+    this.parse = cache(this.parse, this) as any
   }
 
   get queryKey(): string {

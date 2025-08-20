@@ -1,5 +1,5 @@
 import * as adapters from './adapters'
-import Config from './config'
+import Config, { ConfigValues } from './config'
 import * as errors from './errors'
 import Filterer from './orchestrators/filterer'
 import NotImplementedError from './errors/not_implemented'
@@ -8,60 +8,74 @@ import Schema from './schema'
 import Sorter from './orchestrators/sorter'
 import * as validators from './validators/querier'
 
-class QueryQL {
-  constructor(query, builder, config = {}) {
+type QueryObj = Record<string, any>
+
+class QueryQL<Q extends QueryObj = QueryObj, B = any> {
+  query: Q
+  builder: B
+  config: ConfigValues & Config
+  adapter: any
+  schema: Schema
+  filterer: Filterer
+  sorter: Sorter
+  pager: Pager
+  validator: any
+
+  constructor(query: Q, builder: B, config: any = {}) {
     this.query = query
     this.builder = builder
 
     this.config = new Config(config)
 
-    this.adapter = new (this.config.get('adapter'))()
+    const AdapterCtor = this.config.get('adapter') as new () => any
+    this.adapter = new AdapterCtor()
 
     this.schema = new Schema()
     this.defineSchema(this.schema)
 
-    this.filterer = new Filterer(this)
-    this.sorter = new Sorter(this)
-    this.pager = new Pager(this)
+    this.filterer = new Filterer(this as any)
+    this.sorter = new Sorter(this as any)
+    this.pager = new Pager(this as any)
 
-    this.validator = new (this.config.get('validator'))(
-      this.defineValidation.bind(this),
-    )
+    const ValidatorCtor = this.config.get('validator') as new (
+      ...args: any[]
+    ) => any
+    this.validator = new ValidatorCtor(this.defineValidation.bind(this))
   }
 
-  defineSchema(/* schema */) {
+  defineSchema(schema: Schema): void {
     throw new NotImplementedError()
   }
 
-  defineValidation(/* ...args */) {
+  defineValidation(...args: any[]): any {
     return undefined
   }
 
-  get defaultFilter() {
+  get defaultFilter(): any {
     return undefined
   }
 
-  get defaultSort() {
+  get defaultSort(): any {
     return undefined
   }
 
-  get defaultPage() {
+  get defaultPage(): any {
     return undefined
   }
 
-  get filterDefaults() {
+  get filterDefaults(): Record<string, any> | undefined {
     return undefined
   }
 
-  get sortDefaults() {
+  get sortDefaults(): Record<string, any> | undefined {
     return undefined
   }
 
-  get pageDefaults() {
+  get pageDefaults(): Record<string, any> | undefined {
     return undefined
   }
 
-  validate() {
+  validate(): boolean {
     return (
       this.filterer.validate() &&
       this.sorter.validate() &&
@@ -69,7 +83,7 @@ class QueryQL {
     )
   }
 
-  run() {
+  run(): B {
     this.validate()
 
     this.filterer.run()
@@ -79,6 +93,19 @@ class QueryQL {
     return this.builder
   }
 }
+
+// Attach helpers as static properties to match existing runtime API/tests
+namespace QueryQL {
+  export let adapters: any
+  export let Config: any
+  export let errors: any
+  export let validators: any
+}
+
+QueryQL.adapters = adapters
+QueryQL.Config = Config
+QueryQL.errors = errors
+QueryQL.validators = validators
 
 export default QueryQL
 export { adapters, Config, errors, validators }

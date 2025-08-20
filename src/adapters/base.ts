@@ -5,10 +5,12 @@ import NotImplementedError from '../errors/not_implemented'
 
 type Builder = any
 
+import type { FilterOperator } from '../types/filter_operator'
+
 export type Filter = {
   name?: string
   field?: string
-  operator: string
+  operator: FilterOperator
   value?: any
 }
 
@@ -25,6 +27,7 @@ export type Page = {
 }
 
 export default class BaseAdapter {
+  [key: string]: any
   public validator: AdapterValidator
 
   constructor() {
@@ -39,7 +42,7 @@ export default class BaseAdapter {
     throw new NotImplementedError()
   }
 
-  'filter:*'(builder: Builder, { name, field, operator, value }: Filter): any {
+  'filter:*'(builder?: Builder, filter?: Filter): any {
     throw new NotImplementedError()
   }
 
@@ -53,7 +56,9 @@ export default class BaseAdapter {
 
   // defineValidation is expected to accept the Joi module and return
   // an object mapping keys to Joi schemas or undefined.
-  defineValidation(schema: typeof Joi): Record<string, Joi.Schema> | undefined {
+  defineValidation(
+    schema?: typeof Joi,
+  ): Record<string, Joi.Schema> | undefined {
     return undefined
   }
 

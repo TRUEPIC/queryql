@@ -11,6 +11,7 @@ class BaseOrchestrator {
     constructor(querier) {
         this.querier = querier;
         this.parser = this.buildParser();
+        // cache returns a no-arg function; cast to any to match the instance method
         this.validate = (0, cache_function_1.default)(this.validate, this);
         this.parse = (0, cache_function_1.default)(this.parse, this);
     }

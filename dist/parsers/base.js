@@ -28,7 +28,7 @@ class BaseParser {
     parse() {
         throw new not_implemented_1.default();
     }
-    defineValidation(schema) {
+    defineValidation(joi) {
         return undefined;
     }
     static get DEFAULTS() {

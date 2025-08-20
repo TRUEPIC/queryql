@@ -50,7 +50,7 @@ describe('filter', () => {
 
     schema.filter('test', '=', options)
 
-    expect(schema.filters.get('test[=]').options).toEqual(options)
+    expect(schema.filters.get('test[=]')!.options).toEqual(options)
   })
 
   test('returns itself for chaining', () => {
@@ -78,7 +78,7 @@ describe('sort', () => {
 
     schema.sort('test', options)
 
-    expect(schema.sorts.get('test').options).toEqual(options)
+    expect(schema.sorts.get('test')!.options).toEqual(options)
   })
 
   test('returns itself for chaining', () => {

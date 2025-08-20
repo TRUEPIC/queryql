@@ -1,7 +1,8 @@
 import Joi from 'joi'
 import joiValidationErrorConverter from '../services/joi_validation_error_converter'
+import type { FilterOperator } from '../types/filter_operator'
 
-type FilterValue = { operator: string; value: any }
+type FilterValue = { operator: FilterOperator; value: any }
 type SortValue = { order: any }
 type PageValue = { field: string; value: any }
 

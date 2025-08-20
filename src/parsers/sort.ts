@@ -8,7 +8,7 @@ interface SortOptions {
   field?: string
 }
 
-interface SortResult {
+export interface SortResult {
   name: string
   field: string
   order: 'asc' | 'desc'

@@ -16,7 +16,9 @@ class Filterer extends base_1.default {
         return this.schema.size >= 1;
     }
     buildParser() {
-        return new filter_1.default(this.queryKey, this.query || this.querier.defaultFilter, this.querier.schema, {
+        return new filter_1.default(this.queryKey, this.query || this.querier.defaultFilter, 
+        // `querier.schema` is provided at runtime by the querier implementation
+        this.querier.schema, {
             operator: this.querier.adapter.constructor.DEFAULT_FILTER_OPERATOR,
             ...this.querier.filterDefaults,
         });
@@ -26,8 +28,8 @@ class Filterer extends base_1.default {
             return true;
         }
         this.parser.validate();
-        this.querier.adapter.validator.validateFilters(this.parse());
-        this.querier.validator.validateFilters(this.parse());
+        this.querier.adapter.validator?.validateFilters(this.parse());
+        this.querier.validator?.validateFilters(this.parse());
         return true;
     }
     run() {
@@ -39,6 +41,7 @@ class Filterer extends base_1.default {
         let key;
         let filter;
         for (const filterSchema of this.schema.values()) {
+            // FilterParser.buildKey expects an object with `name` and `operator`.
             key = this.parser.buildKey(filterSchema);
             filter = filters.get(key);
             if (filter) {

@@ -1,6 +1,7 @@
 import cache from '../services/cache_function'
 import NotImplementedError from '../errors/not_implemented'
 import ParserValidator from '../validators/parser'
+import Joi from 'joi'
 
 export default class BaseParser<Q = any, S = any, D = Record<string, any>> {
   queryKey: string
@@ -40,7 +41,7 @@ export default class BaseParser<Q = any, S = any, D = Record<string, any>> {
     throw new NotImplementedError()
   }
 
-  defineValidation(schema?: S): any {
+  defineValidation(joi?: typeof Joi): Joi.Schema | undefined {
     return undefined
   }
 
