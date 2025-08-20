@@ -8,7 +8,11 @@ export default function cacheFunction<T>(
 
   return () => {
     if (cache === undefined) {
-      cache = func.call(bind)
+      // If no bind is provided, call with globalThis so unbound functions
+      // that access `this` behave consistently (return undefined instead
+      // of throwing in strict mode).
+      const ctx = bind === undefined ? (globalThis as any) : bind
+      cache = func.call(ctx)
     }
 
     return cache

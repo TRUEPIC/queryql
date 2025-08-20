@@ -58,6 +58,8 @@
     "knex": "^3.1.0",
     "prettier": "3.6.2",
     "release-it": "^19.0.3",
+    "sqlite3": "^5.1.7",
+    "ts-jest": "^29.4.1",
     "typescript": "^5.9.2"
   },
   "engines": {

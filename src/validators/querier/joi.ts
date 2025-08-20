@@ -10,8 +10,11 @@ type PageField = { value: unknown }
 export default class JoiValidator extends BaseValidator {
   constructor(defineSchema: (...args: any[]) => Record<string, any>) {
     super(defineSchema)
-    if (this.schema) {
+    // If defineSchema returns an empty object or undefined, treat as no schema
+    if (this.schema && Object.keys(this.schema).length > 0) {
       this.schema = Joi.object().keys(this.schema)
+    } else {
+      this.schema = undefined
     }
   }
 

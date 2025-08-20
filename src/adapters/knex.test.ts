@@ -7,7 +7,7 @@ const knexInstance = knex({ client: 'pg' })
 describe('filter', () => {
   test('uses `field` for the column, not `name`', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'testing',
         operator: '=',
@@ -20,7 +20,7 @@ describe('filter', () => {
 
   test('supports the `=` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: '=',
@@ -33,7 +33,7 @@ describe('filter', () => {
 
   test('supports the `!=` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: '!=',
@@ -46,7 +46,7 @@ describe('filter', () => {
 
   test('supports the `<>` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: '<>',
@@ -59,7 +59,7 @@ describe('filter', () => {
 
   test('supports the `>` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: '>',
@@ -72,7 +72,7 @@ describe('filter', () => {
 
   test('supports the `>=` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: '>=',
@@ -85,7 +85,7 @@ describe('filter', () => {
 
   test('supports the `<` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: '<',
@@ -98,7 +98,7 @@ describe('filter', () => {
 
   test('supports the `<=` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: '<=',
@@ -111,7 +111,7 @@ describe('filter', () => {
 
   test('supports the `is` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'is',
@@ -124,7 +124,7 @@ describe('filter', () => {
 
   test('supports the `is not` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'is not',
@@ -137,7 +137,7 @@ describe('filter', () => {
 
   test('supports the `in` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'in',
@@ -150,7 +150,7 @@ describe('filter', () => {
 
   test('supports the `not in` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'not in',
@@ -163,7 +163,7 @@ describe('filter', () => {
 
   test('supports the `like` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'like',
@@ -176,7 +176,7 @@ describe('filter', () => {
 
   test('supports the `not like` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'not like',
@@ -189,7 +189,7 @@ describe('filter', () => {
 
   test('supports the `ilike` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'ilike',
@@ -202,7 +202,7 @@ describe('filter', () => {
 
   test('supports the `not ilike` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'not ilike',
@@ -215,7 +215,7 @@ describe('filter', () => {
 
   test('supports the `between` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'between',
@@ -228,7 +228,7 @@ describe('filter', () => {
 
   test('supports the `not between` operator', () => {
     const query = new KnexAdapter()
-      .filter(knex('test'), {
+  .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'not between',
@@ -245,7 +245,7 @@ describe('filter', () => {
 describe('sort', () => {
   test('adds an `order by` clause', () => {
     const query = new KnexAdapter()
-      .sort(knex('test'), { name: 'test', field: 'test', order: 'desc' })
+      .sort(knexInstance('test'), { name: 'test', field: 'test', order: 'desc' })
       .toString()
 
     expect(query).toBe('select * from "test" order by "test" desc')
@@ -253,7 +253,7 @@ describe('sort', () => {
 
   test('uses `field` for the column, not `name`', () => {
     const query = new KnexAdapter()
-      .sort(knex('test'), { name: 'test', field: 'testing', order: 'desc' })
+      .sort(knexInstance('test'), { name: 'test', field: 'testing', order: 'desc' })
       .toString()
 
     expect(query).toBe('select * from "test" order by "testing" desc')
@@ -263,7 +263,7 @@ describe('sort', () => {
 describe('page', () => {
   test('adds a `limit` clause', () => {
     const query = new KnexAdapter()
-      .page(knex('test'), { size: 10, offset: 20 })
+      .page(knexInstance('test'), { size: 10, offset: 20 })
       .toString()
 
     expect(query).toBe('select * from "test" limit 10 offset 20')
