@@ -20,16 +20,17 @@
   "homepage": "https://github.com/TRUEPIC/queryql#readme",
   "bugs": "https://github.com/TRUEPIC/queryql/issues",
   "license": "MIT",
-  "main": "./src/index.js",
+  "main": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TRUEPIC/queryql.git"
   },
   "files": [
-    "src",
-    "!src/**/*.test.js",
+    "dist",
+    "!dist/**/*.test.js",
     "DOCS.md"
   ],
+  "types": "./dist/index.d.ts",
   "scripts": {
     "lint": "npm run lint:format && npm run lint:quality",
     "lint:format": "prettier --check .",
@@ -39,7 +40,10 @@
     "release": "release-it --only-version",
     "test": "vitest run",
     "test:watch": "vitest",
-    "ts": "tsc"
+    "ts": "tsc",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && npm run ts && npm pack --silent",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "is": "^3.3.2",

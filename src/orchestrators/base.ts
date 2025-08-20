@@ -5,7 +5,7 @@ import ValidationError from '../errors/validation'
 
 type AnyObject = Record<string, any>
 
-interface Querier<Q = any, B = any, A = any> {
+export interface Querier<Q = any, B = any, A = any> {
   query: Q & AnyObject
   builder: B
   adapter: A & AnyObject
@@ -20,7 +20,7 @@ interface Querier<Q = any, B = any, A = any> {
   [key: string]: any
 }
 
-interface Parser<T = any> {
+export interface Parser<T = any> {
   parse(): T
   validate?(): void
   flatten?(value: any, flag?: boolean): any

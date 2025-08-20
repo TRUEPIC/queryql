@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
+  "target": "ES2020",
+  "module": "ES2020",
+  "moduleResolution": "node",
+  "declaration": true,
+  "declarationDir": "dist",
   "types": ["vitest/globals", "node"],
-    "rootDir": "src",
+  "rootDir": "src",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,

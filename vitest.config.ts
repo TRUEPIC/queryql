@@ -9,9 +9,8 @@ export default defineConfig({
       reporter: ['text', 'lcov', 'cobertura'],
       all: true,
       include: ['src/**/*.{ts,js}'],
-      exclude: ['test/**', 'dist/**', 'node_modules/**'],
-      dir: './test/coverage',
+      exclude: ['dist/**', 'node_modules/**'],
     },
-    exclude: ['test/**', 'dist/**', 'node_modules/**'],
+    exclude: ['dist/**', 'node_modules/**'],
   },
 })
