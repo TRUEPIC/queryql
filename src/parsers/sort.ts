@@ -27,7 +27,7 @@ class SortParser extends BaseParser {
     return `${this.queryKey}:${name}`
   }
 
-  defineValidation(schema: any): any {
+  defineValidation(schema: typeof import('joi')): any {
     const keys = Array.from(this.schema.sorts.keys())
 
     if (!keys.length) {

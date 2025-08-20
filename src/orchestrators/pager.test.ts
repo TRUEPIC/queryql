@@ -1,8 +1,8 @@
 import knexModule from 'knex'
 const knex = knexModule({ client: 'pg' })
 
-import TestQuerier from '../../test/queriers/test'
-import EmptyQuerier from '../../test/queriers/empty'
+import TestQuerier from '../test/queriers/test'
+import EmptyQuerier from '../test/queriers/empty'
 import Pager from './pager'
 import ValidationError from '../errors/validation'
 

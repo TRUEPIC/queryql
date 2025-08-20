@@ -2,10 +2,10 @@ import knexModule from 'knex'
 const knex = knexModule({ client: 'pg' })
 
 import Config from './config'
-import EmptyQuerier from '../test/queriers/empty'
+import EmptyQuerier from './test/queriers/empty'
 import NotImplementedError from './errors/not_implemented'
 import QueryQL from '.'
-import TestQuerier from '../test/queriers/test'
+import TestQuerier from './test/queriers/test'
 import ValidationError from './errors/validation'
 
 describe('constructor', () => {

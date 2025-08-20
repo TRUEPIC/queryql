@@ -17,7 +17,7 @@ export type Filter = {
 export type Sort = {
   name?: string
   field: string
-  order?: any
+  order?: 'asc' | 'desc' | any
 }
 
 export type Page = {
@@ -34,11 +34,11 @@ export default class BaseAdapter {
     this.validator = new AdapterValidator(this.defineValidation.bind(this))
   }
 
-  static get FILTER_OPERATORS(): string[] {
+  static get FILTER_OPERATORS(): FilterOperator[] {
     throw new NotImplementedError()
   }
 
-  static get DEFAULT_FILTER_OPERATOR(): string {
+  static get DEFAULT_FILTER_OPERATOR(): FilterOperator {
     throw new NotImplementedError()
   }
 

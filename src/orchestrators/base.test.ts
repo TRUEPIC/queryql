@@ -3,7 +3,7 @@ const knex = knexModule({ client: 'pg' })
 
 import BaseOrchestrator from './base'
 import NotImplementedError from '../errors/not_implemented'
-import TestQuerier from '../../test/queriers/test'
+import TestQuerier from '../test/queriers/test'
 import ValidationError from '../errors/validation'
 let buildParser: jest.SpyInstance<any, any[]>
 

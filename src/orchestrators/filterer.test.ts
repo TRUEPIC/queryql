@@ -1,9 +1,9 @@
 import knexModule from 'knex'
 const knex = knexModule({ client: 'pg' })
 
-import EmptyQuerier from '../../test/queriers/empty'
+import EmptyQuerier from '../test/queriers/empty'
 import Filterer from './filterer'
-import TestQuerier from '../../test/queriers/test'
+import TestQuerier from '../test/queriers/test'
 import ValidationError from '../errors/validation'
 
 describe('queryKey', () => {
