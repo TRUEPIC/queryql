@@ -1,14 +1,15 @@
 import knexModule from 'knex'
+import { vi } from 'vitest'
 const knex = knexModule({ client: 'pg' })
 
 import BaseOrchestrator from './base'
 import NotImplementedError from '../errors/not_implemented'
 import TestQuerier from '../test/queriers/test'
 import ValidationError from '../errors/validation'
-let buildParser: jest.SpyInstance<any, any[]>
+let buildParser: ReturnType<typeof vi.spyOn>
 
 beforeEach(() => {
-  buildParser = jest
+  buildParser = vi
     .spyOn(BaseOrchestrator.prototype, 'buildParser')
     .mockReturnValue({ parse: () => {} })
 })
@@ -99,7 +100,7 @@ describe('query', () => {
       new TestQuerier({ test: 123 }, knex('test')) as any,
     )
 
-    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
+    vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
 
     expect(orchestrator.query).toBe(123)
   })
@@ -111,7 +112,7 @@ describe('parse', () => {
       new TestQuerier({}, knex('test')) as any,
     )
 
-    jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
+    vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
 
     orchestrator.parser = { parse: () => 123 }
 
@@ -123,9 +124,9 @@ describe('parse', () => {
       new TestQuerier({}, knex('test')) as any,
     )
 
-    jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
+    vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
 
-    const parse = jest.fn(() => 123)
+    const parse = vi.fn(() => 123)
 
     orchestrator.parser = { parse }
 
@@ -139,8 +140,8 @@ describe('parse', () => {
       new TestQuerier({}, knex('test')) as any,
     )
 
-    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
-    jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false)
+    vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
+    vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false)
 
     expect(orchestrator.parse()).toBeNull()
   })
@@ -150,8 +151,8 @@ describe('parse', () => {
       new TestQuerier({ test: 123 }, knex('test')) as any,
     )
 
-    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
-    jest.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false)
+    vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
+    vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(false)
 
     expect(() => orchestrator.parse()).toThrow(
       new ValidationError(`${orchestrator.queryKey} is disabled`),
@@ -169,8 +170,8 @@ describe('apply', () => {
       order: 'asc',
     }
 
-    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort')
-    querier['sort:test'] = jest.fn((builder: any) => builder)
+    vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort')
+    querier['sort:test'] = vi.fn((builder: any) => builder)
 
     expect(orchestrator.apply(data, 'sort:test')).toBe(querier.builder)
     expect(querier['sort:test']).toHaveBeenCalledWith(querier.builder, data)
@@ -185,8 +186,8 @@ describe('apply', () => {
       order: 'asc',
     }
 
-    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort')
-    jest.spyOn(querier.adapter, 'sort')
+    vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort')
+    vi.spyOn(querier.adapter, 'sort')
 
     expect(orchestrator.apply(data, 'test')).toBe(querier.builder)
     expect(querier.adapter.sort).toHaveBeenCalledWith(querier.builder, data)
@@ -201,8 +202,8 @@ describe('apply', () => {
       offset: 20,
     }
 
-    jest.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('page')
-    jest.spyOn(querier.adapter, 'page')
+    vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('page')
+    vi.spyOn(querier.adapter, 'page')
 
     expect(orchestrator.apply(data)).toBe(querier.builder)
     expect(querier.adapter.page).toHaveBeenCalledWith(querier.builder, data)

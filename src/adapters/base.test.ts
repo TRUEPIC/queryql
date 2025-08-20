@@ -1,12 +1,10 @@
 import BaseAdapter from './base'
+import { vi } from 'vitest'
 import NotImplementedError from '../errors/not_implemented'
 
 describe('constructor', () => {
   test('creates an instance of the validator, calls `defineValidation`', () => {
-    const defineValidation = jest.spyOn(
-      BaseAdapter.prototype,
-      'defineValidation',
-    )
+    const defineValidation = vi.spyOn(BaseAdapter.prototype, 'defineValidation')
 
     expect(new BaseAdapter().validator.constructor.name).toBe(
       'AdapterValidator',
@@ -61,11 +59,11 @@ describe('filter', () => {
     const builder = 'builder'
     const filter = { operator: '=' }
 
-    const FILTER_OPERATORS = jest
+    const FILTER_OPERATORS = vi
       .spyOn(BaseAdapter, 'FILTER_OPERATORS', 'get')
       .mockReturnValue(['='])
 
-    adapter['filter:='] = jest.fn(() => 'test')
+    adapter['filter:='] = vi.fn(() => 'test')
 
     adapter.filter(builder, filter)
 
@@ -80,11 +78,11 @@ describe('filter', () => {
     const builder = 'builder'
     const filter = { operator: '=' }
 
-    const FILTER_OPERATORS = jest
+    const FILTER_OPERATORS = vi
       .spyOn(BaseAdapter, 'FILTER_OPERATORS', 'get')
       .mockReturnValue(['='])
 
-    adapter['filter:*'] = jest.fn(() => 'test')
+    adapter['filter:*'] = vi.fn(() => 'test')
 
     adapter.filter(builder, filter)
 
@@ -95,7 +93,7 @@ describe('filter', () => {
   })
 
   test('throws `NotImplementedError` if operator is not supported', () => {
-    const FILTER_OPERATORS = jest
+    const FILTER_OPERATORS = vi
       .spyOn(BaseAdapter, 'FILTER_OPERATORS', 'get')
       .mockReturnValue(['='])
 

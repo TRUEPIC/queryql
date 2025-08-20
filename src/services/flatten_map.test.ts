@@ -1,4 +1,5 @@
 import flattenMap from './flatten_map'
+import { vi } from 'vitest'
 
 test('uses the map key/value as the object key/value by default', () => {
   const map = new Map([

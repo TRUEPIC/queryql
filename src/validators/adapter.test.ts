@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import { vi } from 'vitest'
 import AdapterValidator from './adapter'
 import FilterParser from '../parsers/filter'
 import PageParser from '../parsers/page'
@@ -10,7 +11,7 @@ describe('constructor', () => {
   test('accepts/calls `defineSchema` and sets the returned value', () => {
     const schema: Record<string, Joi.Schema> = { 'filter:=': Joi.string() }
     const defineSchema: (schema: typeof Joi) => Record<string, Joi.Schema> =
-      jest.fn(() => schema)
+      vi.fn(() => schema)
 
     const validator = new AdapterValidator(defineSchema)
 

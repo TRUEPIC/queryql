@@ -6,6 +6,7 @@ import EmptyQuerier from './test/queriers/empty'
 import NotImplementedError from './errors/not_implemented'
 import QueryQL from '.'
 import TestQuerier from './test/queriers/test'
+import { vi } from 'vitest'
 import ValidationError from './errors/validation'
 
 describe('constructor', () => {
@@ -31,7 +32,7 @@ describe('constructor', () => {
   })
 
   test('calls `defineSchema` with a schema instance', () => {
-    const defineSchema = jest.spyOn(TestQuerier.prototype, 'defineSchema')
+    const defineSchema = vi.spyOn(TestQuerier.prototype, 'defineSchema')
 
     const querier = new TestQuerier({}, knex('test'))
 
@@ -41,7 +42,7 @@ describe('constructor', () => {
   })
 
   test('creates an instance of the configured adapter', () => {
-    const adapter = jest.fn()
+    const adapter = vi.fn()
 
     new TestQuerier({}, knex('test'), { adapter })
 
@@ -49,7 +50,7 @@ describe('constructor', () => {
   })
 
   test('creates an instance of the configured validator', () => {
-    const validator = jest.fn()
+    const validator = vi.fn()
 
     new TestQuerier({}, knex('test'), { validator })
 

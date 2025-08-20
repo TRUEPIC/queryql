@@ -3,6 +3,7 @@ const knex = knexModule({ client: 'pg' })
 
 import EmptyQuerier from '../test/queriers/empty'
 import Sorter from './sorter'
+import { vi } from 'vitest'
 import TestQuerier from '../test/queriers/test'
 import ValidationError from '../errors/validation'
 
@@ -53,7 +54,7 @@ describe('parse', () => {
   test('calls/uses `querier.defaultSort` if no query', () => {
     const querier = new TestQuerier({}, knex('test'))
 
-    const defaultSort = jest
+    const defaultSort = vi
       .spyOn(querier, 'defaultSort', 'get')
       .mockReturnValue('test')
 
@@ -78,7 +79,7 @@ describe('validate', () => {
   test('returns `true` if disabled', () => {
     const sorter = new Sorter(new TestQuerier({}, knex('test')))
 
-    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
+    vi.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
 
     expect(sorter.validate()).toBe(true)
   })
@@ -105,7 +106,7 @@ describe('run', () => {
       ),
     )
 
-    sorter.apply = jest.fn()
+    sorter.apply = vi.fn()
 
     sorter.run()
 
@@ -133,8 +134,8 @@ describe('run', () => {
   test('does not apply sorting if disabled', () => {
     const sorter = new Sorter(new TestQuerier({}, knex('test')))
 
-    jest.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
-    sorter.apply = jest.fn()
+    vi.spyOn(sorter, 'isEnabled', 'get').mockReturnValue(false)
+    sorter.apply = vi.fn()
 
     sorter.run()
 

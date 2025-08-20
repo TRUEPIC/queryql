@@ -1,4 +1,5 @@
 import Config from './config'
+import { vi } from 'vitest'
 
 describe('constructor', () => {
   test('accepts an object of values to set', () => {

@@ -1,6 +1,6 @@
 const js = require('@eslint/js')
 const prettier = require('eslint-config-prettier')
-const jest = require('eslint-plugin-jest')
+const vitest = require('eslint-plugin-vitest')
 const node = require('eslint-plugin-n')
 const globals = require('globals')
 
@@ -15,11 +15,10 @@ module.exports = [
   node.configs['flat/recommended'],
   prettier,
   {
-    files: ['src/**/*.test.js'],
-    ...jest.configs['flat/recommended'],
-    ...jest.configs['flat/style'],
+    files: ['src/**/*.test.ts'],
+    ...vitest.configs['recommended'],
     languageOptions: {
-      globals: { ...jest.environments.globals.globals },
+      globals: { ...vitest.globals },
     },
   },
 ]

@@ -1,4 +1,5 @@
 import knex from 'knex'
+import { vi } from 'vitest'
 import KnexAdapter from './knex'
 import ValidationError from '../errors/validation'
 
@@ -228,7 +229,7 @@ describe('filter', () => {
 
   test('supports the `not between` operator', () => {
     const query = new KnexAdapter()
-  .filter(knexInstance('test'), {
+      .filter(knexInstance('test'), {
         name: 'test',
         field: 'test',
         operator: 'not between',
@@ -245,7 +246,11 @@ describe('filter', () => {
 describe('sort', () => {
   test('adds an `order by` clause', () => {
     const query = new KnexAdapter()
-      .sort(knexInstance('test'), { name: 'test', field: 'test', order: 'desc' })
+      .sort(knexInstance('test'), {
+        name: 'test',
+        field: 'test',
+        order: 'desc',
+      })
       .toString()
 
     expect(query).toBe('select * from "test" order by "test" desc')
@@ -253,7 +258,11 @@ describe('sort', () => {
 
   test('uses `field` for the column, not `name`', () => {
     const query = new KnexAdapter()
-      .sort(knexInstance('test'), { name: 'test', field: 'testing', order: 'desc' })
+      .sort(knexInstance('test'), {
+        name: 'test',
+        field: 'testing',
+        order: 'desc',
+      })
       .toString()
 
     expect(query).toBe('select * from "test" order by "testing" desc')

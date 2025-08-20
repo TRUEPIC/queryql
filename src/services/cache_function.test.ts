@@ -1,8 +1,9 @@
 import cacheFunction from './cache_function'
+import { vi } from 'vitest'
 
 test('accepts/calls `func` and returns the value', () => {
   const value = 'test123'
-  const func = jest.fn(() => value)
+  const func = vi.fn(() => value)
 
   expect(cacheFunction(func)()).toEqual(value)
   expect(func).toHaveBeenCalled()
@@ -32,7 +33,7 @@ test('sets `this` to `undefined` for `func` if `bind` not set', () => {
 
 test('returns the cached value on subsequent calls', () => {
   const value = 'test123'
-  const func = jest.fn(() => value)
+  const func = vi.fn(() => value)
   const cachedFunc = cacheFunction(func)
 
   expect(cachedFunc()).toEqual(value)
@@ -42,7 +43,7 @@ test('returns the cached value on subsequent calls', () => {
 
 test('does not cache the value if `undefined`', () => {
   const value = undefined
-  const func = jest.fn(() => value)
+  const func = vi.fn(() => value)
   const cachedFunc = cacheFunction(func)
 
   expect(cachedFunc()).toEqual(value)
@@ -52,7 +53,7 @@ test('does not cache the value if `undefined`', () => {
 
 test('does not cache the value if an error is thrown', () => {
   const error = new Error('test123')
-  const func = jest.fn(() => {
+  const func = vi.fn(() => {
     throw error
   })
   const cachedFunc = cacheFunction(func)

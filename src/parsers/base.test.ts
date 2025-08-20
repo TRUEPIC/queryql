@@ -3,6 +3,7 @@ import NotImplementedError from '../errors/not_implemented'
 import Schema from '../schema'
 import ValidationError from '../errors/validation'
 import Joi from 'joi'
+import { vi } from 'vitest'
 
 describe('constructor', () => {
   test('accepts a query key to set', () => {
@@ -98,7 +99,7 @@ describe('defaults', () => {
 
 describe('validate', () => {
   test('returns the validated query if valid', () => {
-    const defineValidation = jest
+    const defineValidation = vi
       .spyOn(BaseParser.prototype, 'defineValidation')
       .mockImplementation((schema?: typeof Joi) =>
         schema!.object().keys({
@@ -114,7 +115,7 @@ describe('validate', () => {
   })
 
   test('returns the cached validated query on subsequent calls', () => {
-    const defineValidation = jest
+    const defineValidation = vi
       .spyOn(BaseParser.prototype, 'defineValidation')
       .mockImplementation((schema?: typeof Joi) =>
         schema!.object().keys({
@@ -124,7 +125,7 @@ describe('validate', () => {
 
     const parser = new BaseParser('test', { test: 123 }, new Schema())
 
-    const validate = jest.spyOn(parser.validator, 'validate')
+    const validate = vi.spyOn(parser.validator, 'validate')
 
     expect(parser.validate()).toEqual({ test: 123 })
     expect(parser.validate()).toEqual({ test: 123 })
@@ -134,7 +135,7 @@ describe('validate', () => {
   })
 
   test('throws `ValidationError` if invalid', () => {
-    const defineValidation = jest
+    const defineValidation = vi
       .spyOn(BaseParser.prototype, 'defineValidation')
       .mockImplementation((schema?: typeof Joi) =>
         schema!.object().keys({

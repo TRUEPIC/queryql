@@ -5,6 +5,7 @@ import TestQuerier from '../test/queriers/test'
 import EmptyQuerier from '../test/queriers/empty'
 import Pager from './pager'
 import ValidationError from '../errors/validation'
+import { vi } from 'vitest'
 
 describe('queryKey', () => {
   test('returns the key for pagination in the query', () => {
@@ -53,7 +54,7 @@ describe('parse', () => {
   test('calls/uses `querier.defaultPage` if no query', () => {
     const querier = new TestQuerier({}, knex('test'))
 
-    const defaultPage = jest
+    const defaultPage = vi
       .spyOn(querier, 'defaultPage', 'get')
       .mockReturnValue(2)
 
@@ -77,8 +78,7 @@ describe('validate', () => {
 
   test('returns `true` if disabled', () => {
     const pager = new Pager(new TestQuerier({}, knex('test')))
-
-    jest.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false)
+    vi.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false)
 
     expect(pager.validate()).toBe(true)
   })
@@ -103,7 +103,7 @@ describe('run', () => {
       ),
     )
 
-    pager.apply = jest.fn()
+    pager.apply = vi.fn()
 
     pager.run()
 
@@ -117,8 +117,8 @@ describe('run', () => {
   test('does not apply pagination if disabled', () => {
     const pager = new Pager(new TestQuerier({}, knex('test')))
 
-    jest.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false)
-    pager.apply = jest.fn()
+    vi.spyOn(pager, 'isEnabled', 'get').mockReturnValue(false)
+    pager.apply = vi.fn()
 
     pager.run()
 
@@ -129,7 +129,7 @@ describe('run', () => {
     const querier = new TestQuerier({}, knex('test'))
     const pager = new Pager(querier)
 
-    pager.apply = jest.fn()
+    pager.apply = vi.fn()
 
     expect(pager.run()).toBe(querier)
   })

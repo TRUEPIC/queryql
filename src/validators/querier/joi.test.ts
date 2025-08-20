@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import { vi } from 'vitest'
 
 import FilterParser from '../../parsers/filter'
 import JoiValidator from './joi'
@@ -9,7 +10,7 @@ import ValidationError from '../../errors/validation'
 
 describe('constructor', () => {
   test('accepts/calls `defineSchema(Joi)` and sets the returned value', () => {
-    const defineSchema = jest.fn((schema) => ({
+    const defineSchema = vi.fn((schema) => ({
       'filter:test[=]': schema.number(),
     }))
     const validator = new JoiValidator(defineSchema)

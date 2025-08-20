@@ -3,6 +3,7 @@ const knex = knexModule({ client: 'pg' })
 
 import EmptyQuerier from '../test/queriers/empty'
 import Filterer from './filterer'
+import { vi } from 'vitest'
 import TestQuerier from '../test/queriers/test'
 import ValidationError from '../errors/validation'
 
@@ -53,7 +54,7 @@ describe('parse', () => {
   test('calls/uses `querier.defaultFilter` if no query', () => {
     const querier = new TestQuerier({}, knex('test'))
 
-    const defaultFilter = jest
+    const defaultFilter = vi
       .spyOn(querier, 'defaultFilter', 'get')
       .mockReturnValue({ test: 123 })
 
@@ -80,7 +81,7 @@ describe('validate', () => {
   test('returns `true` if disabled', () => {
     const filterer = new Filterer(new TestQuerier({}, knex('test')))
 
-    jest.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
+    vi.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
 
     expect(filterer.validate()).toBe(true)
   })
@@ -110,7 +111,7 @@ describe('run', () => {
       ),
     )
 
-    filterer.apply = jest.fn()
+    filterer.apply = vi.fn()
 
     filterer.run()
 
@@ -140,8 +141,8 @@ describe('run', () => {
   test('does not apply filtering if disabled', () => {
     const filterer = new Filterer(new TestQuerier({}, knex('test')))
 
-    jest.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
-    filterer.apply = jest.fn()
+    vi.spyOn(filterer, 'isEnabled', 'get').mockReturnValue(false)
+    filterer.apply = vi.fn()
 
     filterer.run()
 

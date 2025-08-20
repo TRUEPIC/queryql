@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import { vi } from 'vitest'
 
 import ParserValidator from './parser'
 import ValidationError from '../errors/validation'
@@ -6,7 +7,7 @@ import ValidationError from '../errors/validation'
 describe('constructor', () => {
   test('accepts/calls `defineSchema` and sets the returned value', () => {
     const schema = Joi.number()
-    const defineSchema = jest.fn(() => schema)
+    const defineSchema = vi.fn(() => schema)
     const validator = new ParserValidator(defineSchema, 'test', 123)
 
     expect(defineSchema).toHaveBeenCalledWith(Joi)
