@@ -6,19 +6,19 @@ export type DefineSchemaFn = (joi: typeof Joi) => Joi.Schema | undefined
 export default class ParserValidator {
   schema?: Joi.Schema
   queryKey: string
-  query: any
+  query: unknown
 
-  constructor(defineSchema: DefineSchemaFn, queryKey: string, query: any) {
+  constructor(defineSchema: DefineSchemaFn, queryKey: string, query: unknown) {
     this.schema = defineSchema(Joi)
     this.queryKey = queryKey
     this.query = query
   }
 
-  buildError(error: Joi.ValidationError): any {
+  buildError(error: Joi.ValidationError) {
     return joiValidationErrorConverter(error, this.queryKey)
   }
 
-  validate(): any {
+  validate() {
     if (!this.schema) {
       return this.query
     }

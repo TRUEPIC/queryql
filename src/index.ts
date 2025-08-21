@@ -7,42 +7,49 @@ import Pager from './orchestrators/pager'
 import Schema from './schema'
 import Sorter from './orchestrators/sorter'
 import * as validators from './validators/querier'
+import { BaseValidator } from './validators/querier/base'
+import { BaseAdapter } from './adapters/base'
+import { ParsedQs } from 'qs'
+import { Knex } from 'knex'
 
-type QueryObj = Record<string, any>
-
-class QueryQL<Q extends QueryObj = QueryObj, B = any> {
-  query: Q
-  builder: B
-  config: ConfigValues & Config
-  adapter: any
+class QueryQL {
+  query: ParsedQs | Record<string, unknown>
+  builder: Knex.QueryBuilder
+  config: Config
+  adapter: BaseAdapter<Knex.QueryBuilder>
   schema: Schema
   filterer: Filterer
   sorter: Sorter
   pager: Pager
-  validator: any
+  validator: BaseValidator
 
-  constructor(query: Q, builder: B, config: any = {}) {
+  constructor(
+    query: ParsedQs | Record<string, unknown> = {},
+    builder: Knex.QueryBuilder,
+    config?: ConfigValues,
+  ) {
     this.query = query
     this.builder = builder
 
     this.config = new Config(config)
 
-    const AdapterCtor = this.config.get('adapter') as new () => any
+    const AdapterCtor = this.config.get('adapter')
+    if (!AdapterCtor) throw new Error('adapter not configured')
     this.adapter = new AdapterCtor()
 
     this.schema = new Schema()
     this.defineSchema(this.schema)
 
-    this.filterer = new Filterer(this as any)
-    this.sorter = new Sorter(this as any)
-    this.pager = new Pager(this as any)
+    this.filterer = new Filterer(this)
+    this.sorter = new Sorter(this)
+    this.pager = new Pager(this)
 
-    const ValidatorCtor = this.config.get('validator') as new (
-      ...args: any[]
-    ) => any
+    const ValidatorCtor = this.config.get('validator')
+    if (!ValidatorCtor) throw new Error('validator not configured')
     this.validator = new ValidatorCtor(this.defineValidation.bind(this))
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   defineSchema(schema: Schema): void {
     throw new NotImplementedError()
   }
@@ -51,7 +58,7 @@ class QueryQL<Q extends QueryObj = QueryObj, B = any> {
     return undefined
   }
 
-  get defaultFilter(): any {
+  get defaultFilter(): Filter | undefined {
     return undefined
   }
 
@@ -83,7 +90,7 @@ class QueryQL<Q extends QueryObj = QueryObj, B = any> {
     )
   }
 
-  run(): B {
+  run(): Knex.QueryBuilder {
     this.validate()
 
     this.filterer.run()

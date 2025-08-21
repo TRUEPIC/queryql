@@ -3,32 +3,30 @@ import Joi from 'joi'
 import AdapterValidator from '../validators/adapter'
 import NotImplementedError from '../errors/not_implemented'
 
-type Builder = any
-
 import type { FilterOperator } from '../types/filter_operator'
 
 export type Filter = {
-  name?: string
-  field?: string
+  field: string
   operator: FilterOperator
-  value?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any
 }
 
 export type Sort = {
   name?: string
   field: string
-  order?: 'asc' | 'desc' | any
+  order: 'asc' | 'desc'
 }
 
 export type Page = {
-  size?: number
+  size: number
   number?: number
-  offset?: number
+  offset: number
 }
 
-export default class BaseAdapter {
-  [key: string]: any
-  public validator: AdapterValidator
+export class BaseAdapter<Builder> {
+  public validator: AdapterValidator;
+  [key: string]: unknown
 
   constructor() {
     this.validator = new AdapterValidator(this.defineValidation.bind(this))
@@ -42,27 +40,31 @@ export default class BaseAdapter {
     throw new NotImplementedError()
   }
 
-  'filter:*'(builder?: Builder, filter?: Filter): any {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  'filter:*'(builder?: Builder, filter?: Filter): Builder {
     throw new NotImplementedError()
   }
 
-  sort(builder?: Builder, sort?: Sort): any {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  sort(builder?: Builder, sort?: Sort): Builder {
     throw new NotImplementedError()
   }
 
-  page(builder?: Builder, page?: Page): any {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  page(builder?: Builder, page?: Page): Builder {
     throw new NotImplementedError()
   }
 
   // defineValidation is expected to accept the Joi module and return
   // an object mapping keys to Joi schemas or undefined.
   defineValidation(
-    schema?: typeof Joi,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    schema?: Joi.Schema,
   ): Record<string, Joi.Schema> | undefined {
     return undefined
   }
 
-  filter(builder: Builder, filter: Filter): any {
+  filter(builder: Builder, filter: Filter): unknown {
     const { operator } = filter
 
     const ctor = this.constructor as typeof BaseAdapter
@@ -73,10 +75,15 @@ export default class BaseAdapter {
 
     const operatorMethod = `filter:${operator}`
 
-    if (is.fn((this as any)[operatorMethod])) {
-      return (this as any)[operatorMethod](builder, filter)
+    if (is.fn(this[operatorMethod])) {
+      const fn = this[operatorMethod] as unknown as (
+        builder?: Builder,
+        filter?: Filter,
+      ) => Builder
+
+      return fn(builder, filter)
     }
 
-    return (this as any)['filter:*'](builder, filter)
+    return this['filter:*'](builder, filter)
   }
 }

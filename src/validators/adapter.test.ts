@@ -45,7 +45,7 @@ describe('validateValue', () => {
 
   test('returns the value if no schema key is defined', () => {
     const validator = new AdapterValidator((schema: typeof Joi) => ({
-      'filter:=': schema.number(),
+      'filter:=': schema?.number(),
     }))
 
     expect(

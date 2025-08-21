@@ -1,5 +1,4 @@
-import SortParser from './sort'
-import { vi } from 'vitest'
+import { SortParser } from './sort'
 import Schema from '../schema'
 import ValidationError from '../errors/validation'
 

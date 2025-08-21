@@ -1,6 +1,4 @@
-import is from 'is'
-
-type Options = Record<string, any>
+type Options = Record<string, unknown>
 
 interface FilterDefinition {
   name: string
@@ -13,9 +11,9 @@ interface SortDefinition {
   options: Options
 }
 
-type PageOptions = { isEnabled?: boolean } & Record<string, any>
+type PageOptions = { isEnabled?: boolean } & Record<string, unknown>
 
-class Schema {
+export default class Schema {
   filters: Map<string, FilterDefinition>
   sorts: Map<string, SortDefinition>
   pageOptions: PageOptions = { isEnabled: false }
@@ -85,5 +83,3 @@ class Schema {
     }, {})
   }
 }
-
-export default Schema

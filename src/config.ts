@@ -1,10 +1,12 @@
-import JoiValidator from './validators/querier/joi'
-import KnexAdapter from './adapters/knex'
+import { BaseValidator } from './validators/querier/base'
+import { JoiValidator } from './validators/querier/joi'
+import { BaseAdapter } from './adapters/base'
+import { KnexAdapter } from './adapters/knex'
 
 export interface ConfigValues {
-  adapter?: typeof KnexAdapter
-  validator?: typeof JoiValidator
-  [key: string]: any
+  adapter?: typeof BaseAdapter
+  validator?: typeof BaseValidator
+  [key: string]: unknown
 }
 
 export default class Config {
@@ -44,7 +46,7 @@ export default class Config {
 
   get(): ConfigValues
   get<K extends keyof ConfigValues>(key: K): ConfigValues[K]
-  get(key?: keyof ConfigValues | null): any {
+  get(key?: keyof ConfigValues | null) {
     if (key) {
       return this._config[key]
     } else {

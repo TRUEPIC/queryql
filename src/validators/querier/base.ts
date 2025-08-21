@@ -1,28 +1,31 @@
 import NotImplementedError from '../../errors/not_implemented'
 import ValidationError from '../../errors/validation'
 
-type DefineSchemaFn = (...args: any[]) => any
+type DefineSchemaFn = (...args: unknown[]) => unknown
 
-class BaseValidator {
-  schema: any
+export class BaseValidator {
+  // Schema shape is specific to concrete validators (Joi, etc.)
+  schema: unknown
 
   constructor(defineSchema: DefineSchemaFn) {
     this.schema = defineSchema(...this.defineSchemaArgs)
   }
 
-  validateFilters(filters?: any): void {
+  validateFilters(): unknown {
     throw new NotImplementedError()
   }
 
-  validateSorts(sorts?: any): void {
+  validateSorts(): unknown {
     throw new NotImplementedError()
   }
 
-  validatePage(page?: any): void {
+  // @ignore-next-line @typescript-eslint/no-unused-vars
+  validatePage(page: Iterable<[string, PageField]>): unknown {
     throw new NotImplementedError()
+    return page
   }
 
-  get defineSchemaArgs(): any[] {
+  get defineSchemaArgs(): unknown[] {
     return []
   }
 
@@ -34,5 +37,3 @@ class BaseValidator {
     return new ValidationError(message)
   }
 }
-
-export default BaseValidator

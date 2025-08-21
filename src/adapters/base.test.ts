@@ -57,7 +57,7 @@ describe('filter', () => {
   test('calls/returns `filter:{operator}` if defined', () => {
     const adapter = new BaseAdapter()
     const builder = 'builder'
-    const filter = { operator: '=' }
+    const filter = { field: 'test', operator: '=', value: 'value' }
 
     const FILTER_OPERATORS = vi
       .spyOn(BaseAdapter, 'FILTER_OPERATORS', 'get')
@@ -76,7 +76,7 @@ describe('filter', () => {
   test('calls/returns `filter:*` if operator method is not defined', () => {
     const adapter = new BaseAdapter()
     const builder = 'builder'
-    const filter = { operator: '=' }
+    const filter = { field: 'test', operator: '=', value: 'value' }
 
     const FILTER_OPERATORS = vi
       .spyOn(BaseAdapter, 'FILTER_OPERATORS', 'get')
@@ -98,7 +98,11 @@ describe('filter', () => {
       .mockReturnValue(['='])
 
     expect(() =>
-      new BaseAdapter().filter('builder', { operator: 'invalid' }),
+      new BaseAdapter().filter('builder', {
+        field: 'test',
+        operator: 'invalid',
+        value: 'value',
+      }),
     ).toThrow(NotImplementedError)
 
     FILTER_OPERATORS.mockRestore()

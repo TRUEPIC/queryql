@@ -1,4 +1,4 @@
-import BaseParser from './base'
+import { BaseParser } from './base'
 import NotImplementedError from '../errors/not_implemented'
 import Schema from '../schema'
 import ValidationError from '../errors/validation'

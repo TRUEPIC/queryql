@@ -2,12 +2,12 @@ import Joi from 'joi'
 import joiValidationErrorConverter from '../services/joi_validation_error_converter'
 import type { FilterOperator } from '../types/filter_operator'
 
-type FilterValue = { operator: FilterOperator; value: any }
-type SortValue = { order: any }
-type PageValue = { field: string; value: any }
+type FilterValue = { operator: FilterOperator; value: unknown }
+type SortValue = { order: unknown }
+type PageValue = { field: string; value: unknown }
 
-class AdapterValidator {
-  public schema?: Joi.ObjectSchema<any>
+export default class AdapterValidator {
+  public schema?: Joi.ObjectSchema<unknown>
 
   constructor(
     defineSchema: (
@@ -24,7 +24,7 @@ class AdapterValidator {
     return joiValidationErrorConverter(error, key)
   }
 
-  validateValue(schemaKey: string, key: string, value: any): any {
+  validateValue(schemaKey: string, key: string, value: unknown): unknown {
     let keySchema: Joi.Schema | undefined
     try {
       keySchema = this.schema && this.schema.extract(schemaKey)
@@ -79,5 +79,3 @@ class AdapterValidator {
     return page
   }
 }
-
-export default AdapterValidator

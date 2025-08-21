@@ -1,11 +1,14 @@
 import Joi from 'joi'
-import BaseAdapter, { Filter, Sort, Page } from './base'
+import { BaseAdapter, Filter, Sort, Page } from './base'
 import {
   FILTER_OPERATORS as KNEX_FILTER_OPERATORS,
   DEFAULT_FILTER_OPERATOR as KNEX_DEFAULT_FILTER_OPERATOR,
 } from '../types/filter_operator'
+import { Knex, QueryBuilder } from 'knex'
 
-export default class KnexAdapter extends BaseAdapter {
+type ComparisonOperator = '=' | '>' | '>=' | '<' | '<=' | '<>'
+
+export class KnexAdapter extends BaseAdapter<QueryBuilder> {
   static get FILTER_OPERATORS(): string[] {
     return KNEX_FILTER_OPERATORS as unknown as string[]
   }
@@ -52,21 +55,21 @@ export default class KnexAdapter extends BaseAdapter {
     }
   }
 
-  'filter:*'(builder: any, filter: Filter): any {
+  'filter:*'(builder: Knex, filter: Filter) {
     const { field, operator, value } = filter
 
-    return (builder as any).where(field, operator, value)
+    return builder.where<string>(field, operator as ComparisonOperator, value)
   }
 
-  sort(builder: any, sort: Sort): any {
+  sort(builder: Knex, sort: Sort) {
     const { field, order } = sort
 
-    return (builder as any).orderBy(field, order)
+    return builder.orderBy(field, order)
   }
 
-  page(builder: any, page: Page): any {
+  page(builder: Knex, page: Page) {
     const { size, offset } = page
 
-    return (builder as any).limit(size).offset(offset)
+    return builder.limit(size).offset(offset)
   }
 }

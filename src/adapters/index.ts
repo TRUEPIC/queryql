@@ -1,4 +1,4 @@
-import BaseAdapter from './base'
-import KnexAdapter from './knex'
+import { BaseAdapter } from './base'
+import { KnexAdapter } from './knex'
 
-export { BaseAdapter, KnexAdapter }
+export default { BaseAdapter, KnexAdapter }

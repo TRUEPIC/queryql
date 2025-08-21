@@ -1,4 +1,4 @@
-import BaseValidator from './base'
+import { BaseValidator } from './base'
 import { vi } from 'vitest'
 import NotImplementedError from '../../errors/not_implemented'
 import ValidationError from '../../errors/validation'

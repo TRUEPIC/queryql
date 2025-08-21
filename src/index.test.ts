@@ -8,10 +8,13 @@ import QueryQL from '.'
 import TestQuerier from './test/queriers/test'
 import { vi } from 'vitest'
 import ValidationError from './errors/validation'
+import qs from 'qs'
+import { BaseValidator } from './validators/querier/base'
+import { BaseAdapter } from './adapters/base'
 
 describe('constructor', () => {
   test('accepts a query to set', () => {
-    const query = { page: 2 }
+    const query = qs.parse('page=2')
     const querier = new TestQuerier(query, knex('test'))
 
     expect(querier.query).toEqual(query)
@@ -44,7 +47,9 @@ describe('constructor', () => {
   test('creates an instance of the configured adapter', () => {
     const adapter = vi.fn()
 
-    new TestQuerier({}, knex('test'), { adapter })
+    new TestQuerier({}, knex('test'), {
+      adapter: adapter as unknown as typeof BaseAdapter,
+    })
 
     expect(adapter.mock.instances).toHaveLength(1)
   })
@@ -52,7 +57,9 @@ describe('constructor', () => {
   test('creates an instance of the configured validator', () => {
     const validator = vi.fn()
 
-    new TestQuerier({}, knex('test'), { validator })
+    new TestQuerier({}, knex('test'), {
+      validator: validator as unknown as typeof BaseValidator,
+    })
 
     expect(validator.mock.instances).toHaveLength(1)
   })
@@ -123,11 +130,7 @@ describe('pageDefaults', () => {
 describe('validate', () => {
   test('returns `true` if valid', () => {
     const querier = new TestQuerier(
-      {
-        filter: { test: 123 },
-        sort: 'test',
-        page: 2,
-      },
+      qs.parse('filter[test]=123&sort=test&page=2'),
       knex('test'),
     )
 
@@ -135,7 +138,9 @@ describe('validate', () => {
   })
 
   test('throws `ValidationError` if a filter is invalid', () => {
-    const querier = new TestQuerier({ filter: { invalid: 123 } }, knex('test'))
+    const query = qs.parse('filter[invalid]=123')
+
+    const querier = new TestQuerier(query, knex('test'))
 
     expect(() => querier.validate()).toThrow(
       new ValidationError('filter:invalid is not allowed'),
@@ -161,14 +166,9 @@ describe('validate', () => {
 
 describe('run', () => {
   test('returns the builder with filters, sorts, pagination applied', () => {
-    const querier = new TestQuerier(
-      {
-        filter: { test: 123 },
-        sort: 'test',
-        page: 2,
-      },
-      knex('test'),
-    )
+    const query = qs.parse('filter[test]=123&sort=test&page=2')
+
+    const querier = new TestQuerier(query, knex('test'))
 
     expect(querier.run().toString()).toBe(
       'select * ' +

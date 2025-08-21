@@ -1,19 +1,24 @@
 import Joi from 'joi'
 import ValidationError from '../../errors/validation'
-import BaseValidator from './base'
+import { BaseValidator } from './base'
 import joiValidationErrorConverter from '../../services/joi_validation_error_converter'
 
 type Filter = { value: unknown }
 type Sort = { order: unknown }
 type PageField = { value: unknown }
 
-export default class JoiValidator extends BaseValidator {
-  constructor(defineSchema: (...args: any[]) => Record<string, any>) {
+export class JoiValidator extends BaseValidator {
+  schema: Joi.Schema | undefined
+
+  constructor(
+    defineSchema: (
+      ...args: unknown[]
+    ) => Joi.Schema | Record<string, unknown> | undefined,
+  ) {
     super(defineSchema)
+
     // If defineSchema returns an empty object or undefined, treat as no schema
-    if (this.schema && Object.keys(this.schema).length > 0) {
-      this.schema = Joi.object().keys(this.schema)
-    } else {
+    if (!this.schema || Object.keys(this.schema).length === 0) {
       this.schema = undefined
     }
   }
@@ -22,14 +27,16 @@ export default class JoiValidator extends BaseValidator {
     return [Joi]
   }
 
-  buildError(error: any, key?: string): ValidationError {
+  buildError(error: unknown, key?: string): ValidationError {
     return joiValidationErrorConverter(error, key)
   }
 
   validateValue(key: string, value: unknown): unknown {
     let keySchema: Joi.Schema | undefined
     try {
-      keySchema = this.schema && this.schema.extract(key)
+      // schema.extract may throw if schema isn't a Joi object schema
+      // Use optional chaining and cast where necessary
+      keySchema = this.schema?.extract?.(key)
     } catch {
       // Don't throw error if key doesn't exist.
     }

@@ -1,5 +1,5 @@
 import is from 'is'
-import BaseParser from './base'
+import { BaseParser } from './base'
 import flattenMap from '../services/flatten_map'
 
 import Joi from 'joi'
@@ -13,7 +13,7 @@ export interface Filter {
   value: unknown
 }
 
-export default class FilterParser extends BaseParser {
+export class FilterParser extends BaseParser {
   static get DEFAULTS(): Filter {
     return {
       name: null,
@@ -36,7 +36,7 @@ export default class FilterParser extends BaseParser {
   defineValidation(schema: typeof Joi): Joi.ObjectSchema {
     const defaultOperator = this.defaults.operator
     const mapNamesToOperators = Object.entries(
-      this.schema.mapFilterNamesToOperators() as Record<string, string[]>,
+      this.schema.mapFilterNamesToOperators(),
     ) as [string, string[]][]
 
     const values = [

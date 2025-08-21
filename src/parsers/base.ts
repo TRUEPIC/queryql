@@ -2,15 +2,22 @@ import cache from '../services/cache_function'
 import NotImplementedError from '../errors/not_implemented'
 import ParserValidator from '../validators/parser'
 import Joi from 'joi'
+import Schema from '../schema'
+import { ParsedQs } from 'qs'
 
-export default class BaseParser<Q = any, S = any, D = Record<string, any>> {
+export class BaseParser<D = Record<string, unknown>> {
   queryKey: string
-  query: Q
-  schema: S
+  query: ParsedQs | Record<string, unknown>
+  schema: Schema
   _defaults: D
   validator: ParserValidator
 
-  constructor(queryKey: string, query: Q, schema: S, defaults: D = {} as D) {
+  constructor(
+    queryKey: string,
+    query: ParsedQs | Record<string, unknown>,
+    schema: Schema,
+    defaults: D = {} as D,
+  ) {
     this.queryKey = queryKey
     this.query = query
     this.schema = schema
@@ -29,10 +36,12 @@ export default class BaseParser<Q = any, S = any, D = Record<string, any>> {
     this.validate = cache(this.validate.bind(this), this)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   buildKey(parsed?: any): string {
     throw new NotImplementedError()
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   flatten(map?: any): any {
     throw new NotImplementedError()
   }
@@ -41,11 +50,14 @@ export default class BaseParser<Q = any, S = any, D = Record<string, any>> {
     throw new NotImplementedError()
   }
 
-  defineValidation(joi?: typeof Joi): Joi.Schema | undefined {
+  defineValidation(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    schema?: Joi.Root,
+  ): Joi.Schema | undefined {
     return undefined
   }
 
-  static get DEFAULTS(): Record<string, any> {
+  static get DEFAULTS(): Record<string, Joi.Schema> {
     return {}
   }
 

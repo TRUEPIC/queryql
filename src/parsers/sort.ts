@@ -1,8 +1,7 @@
 import is from 'is'
-import BaseParser from './base'
+import { BaseParser } from './base'
 import flattenMap from '../services/flatten_map'
-
-import type Schema from '../schema'
+import Joi from 'joi'
 
 interface SortOptions {
   field?: string
@@ -14,7 +13,7 @@ export interface SortResult {
   order: 'asc' | 'desc'
 }
 
-class SortParser extends BaseParser {
+export class SortParser extends BaseParser {
   static get DEFAULTS(): { name: null; field: null; order: 'asc' } {
     return {
       name: null,
@@ -27,7 +26,7 @@ class SortParser extends BaseParser {
     return `${this.queryKey}:${name}`
   }
 
-  defineValidation(schema: typeof import('joi')): any {
+  defineValidation(schema: Joi.Root) {
     const keys = Array.from(this.schema.sorts.keys())
 
     if (!keys.length) {
@@ -111,5 +110,3 @@ class SortParser extends BaseParser {
     return new Map(sorts.map((sort) => [this.buildKey(sort), sort]))
   }
 }
-
-export default SortParser

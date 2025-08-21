@@ -1,4 +1,4 @@
-import FilterParser from './filter'
+import { FilterParser } from './filter'
 import Schema from '../schema'
 import ValidationError from '../errors/validation'
 

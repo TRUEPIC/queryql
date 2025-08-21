@@ -1,6 +1,6 @@
 import is from 'is'
 
-import BaseParser from './base'
+import { BaseParser } from './base'
 import flattenMap from '../services/flatten_map'
 
 type PageObject = {

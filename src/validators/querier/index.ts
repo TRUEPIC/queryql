@@ -1,7 +1,7 @@
-import BaseValidator from './base'
-import JoiValidator from './joi'
+import { BaseValidator } from './base'
+import { JoiValidator } from './joi'
 
-module.exports = {
+export default {
   BaseValidator,
   JoiValidator,
 }
