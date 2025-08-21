@@ -1,24 +1,24 @@
-const js = require('@eslint/js')
-const prettier = require('eslint-config-prettier')
-const vitest = require('eslint-plugin-vitest')
-const node = require('eslint-plugin-n')
-const globals = require('globals')
+import js from '@eslint/js'
+import vitest from '@vitest/eslint-plugin'
+import ts from 'typescript-eslint'
 
-module.exports = [
-  {
-    languageOptions: {
-      globals: { ...globals.node },
-      sourceType: 'commonjs',
-    },
-  },
+export default ts.config(
+  // JS recommended rules (keeps JS files covered)
   js.configs.recommended,
-  node.configs['flat/recommended'],
-  prettier,
+  ts.configs.recommended,
+
+  // Vitest for test files
   {
-    files: ['src/**/*.test.ts'],
-    ...vitest.configs['recommended'],
-    languageOptions: {
-      globals: { ...vitest.globals },
+    files: [
+      'src/**/*.test.ts',
+      'src/**/*.test.tsx',
+      'src/**/__tests__/**/*.ts',
+    ],
+    plugins: {
+      vitest,
+    },
+    rules: {
+      ...vitest.configs.recommended.rules,
     },
   },
-]
+)
