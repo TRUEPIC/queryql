@@ -4,27 +4,18 @@ import ParserValidator from '../validators/parser'
 import Joi from 'joi'
 import Schema from '../schema'
 
-export type QueryProperties = Record<
-  string,
-  | Record<string, number | string | boolean | unknown>
-  | number
-  | string
-  | boolean
-  | unknown
->
-
-export class BaseParser {
+export class BaseParser<TQuery = unknown> {
   queryKey: string
-  query: QueryProperties
+  query: TQuery
   schema: Schema
-  _defaults: Partial<QueryProperties> = {}
+  _defaults: Partial<Record<string, unknown>> = {}
   validator: ParserValidator
 
   constructor(
     queryKey: string,
-    query: QueryProperties,
+    query: TQuery,
     schema: Schema,
-    defaults: Partial<QueryProperties> = {},
+    defaults: Partial<Record<string, unknown>> = {},
   ) {
     this.queryKey = queryKey
     this.query = query
@@ -57,7 +48,7 @@ export class BaseParser {
 
   defineValidation(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    schema?: Joi.Root,
+    schema?: typeof Joi,
   ): Joi.Schema | undefined {
     return undefined
   }
@@ -66,15 +57,16 @@ export class BaseParser {
     return {}
   }
 
-  set defaults(defaults: Partial<QueryProperties>) {
+  set defaults(defaults: Partial<Record<string, unknown>>) {
     this._defaults = {
-      ...((this.constructor as typeof BaseParser)
-        .DEFAULTS as Partial<QueryProperties>),
+      ...((this.constructor as typeof BaseParser).DEFAULTS as Partial<
+        Record<string, unknown>
+      >),
       ...defaults,
     }
   }
 
-  get defaults(): Partial<QueryProperties> {
+  get defaults(): Partial<Record<string, unknown>> {
     return this._defaults
   }
 

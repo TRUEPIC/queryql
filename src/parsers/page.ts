@@ -11,7 +11,7 @@ type PageObject = {
 
 type PageMapValue = { field: string; value: number }
 
-export default class PageParser extends BaseParser<PageObject> {
+export default class PageParser extends BaseParser<unknown> {
   static get DEFAULTS(): PageObject {
     return {
       size: 20,
@@ -30,8 +30,8 @@ export default class PageParser extends BaseParser<PageObject> {
     return key
   }
 
-  defineValidation(schema: any): any {
-    return schema.alternatives().try(
+  defineValidation(schema: typeof import('joi')): import('joi').Schema {
+    return (schema as import('joi').Root).alternatives().try(
       schema.number().integer().positive(),
       schema.object().keys({
         size: schema.number().integer().positive(),
@@ -43,7 +43,7 @@ export default class PageParser extends BaseParser<PageObject> {
   flatten(
     map: Map<string, PageMapValue>,
     includeQueryKey: boolean = true,
-  ): Record<string, any> {
+  ): Record<string, unknown> {
     return flattenMap({
       map,
       key: (_key, value) => this.buildKey(value, includeQueryKey),
@@ -53,8 +53,9 @@ export default class PageParser extends BaseParser<PageObject> {
 
   parseNumber(): PageObject {
     return {
-      ...this.defaults,
+      ...((this.defaults as Partial<PageObject>) || {}),
       number: Number(this.query),
+      size: (this.defaults as Partial<PageObject>).size as number,
     }
   }
 
@@ -64,8 +65,10 @@ export default class PageParser extends BaseParser<PageObject> {
       queryObj.size = Number(queryObj.size)
     }
     return {
-      ...this.defaults,
-      ...queryObj,
+      ...(this.defaults as Partial<PageObject>),
+      size: (queryObj.size as number) || (this.defaults as PageObject).size,
+      number:
+        (queryObj.number as number) || (this.defaults as PageObject).number,
     }
   }
 
@@ -73,7 +76,7 @@ export default class PageParser extends BaseParser<PageObject> {
     this.validate()
     let page: PageObject
     if (!this.query) {
-      page = this.defaults
+      page = this.defaults as PageObject
     } else if (is.number(this.query) || is.string(this.query)) {
       page = this.parseNumber()
     } else {

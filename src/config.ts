@@ -4,8 +4,8 @@ import { BaseAdapter } from './adapters/base'
 import { KnexAdapter } from './adapters/knex'
 
 export interface ConfigValues {
-  adapter?: typeof BaseAdapter
-  validator?: typeof BaseValidator
+  adapter?: new (...args: unknown[]) => BaseAdapter<unknown>
+  validator?: new (...args: unknown[]) => BaseValidator
   [key: string]: unknown
 }
 
@@ -55,4 +55,5 @@ export default class Config {
   }
 }
 
-Config.defaults = Config.DEFAULTS
+// Cast defaults to satisfy TypeScript constructors in runtime defaults
+Config.defaults = Config.DEFAULTS as unknown as ConfigValues

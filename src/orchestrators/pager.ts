@@ -1,7 +1,11 @@
 import BaseOrchestrator from './base'
 import PageParser from '../parsers/page'
 
-export default class Pager extends BaseOrchestrator {
+export default class Pager extends BaseOrchestrator<
+  unknown,
+  import('../schema').default['pageOptions'],
+  Map<string, { field: string; value: unknown }>
+> {
   get queryKey() {
     return 'page'
   }
@@ -11,15 +15,15 @@ export default class Pager extends BaseOrchestrator {
   }
 
   get isEnabled() {
-    return this.schema.isEnabled
+    return !!this.schema.isEnabled
   }
 
   buildParser() {
     return new PageParser(
       this.queryKey,
-      this.query || this.querier.defaultPage,
-      this.querier.schema!,
-      this.querier.pageDefaults as any,
+      this.query || (this.querier.defaultPage as unknown),
+      this.querier.schema as unknown as import('../schema').default,
+      this.querier.pageDefaults as Record<string, unknown> | undefined,
     )
   }
 
@@ -29,8 +33,12 @@ export default class Pager extends BaseOrchestrator {
     }
 
     this.parser.validate?.()
-    this.querier.adapter.validator.validatePage(this.parse())
-    this.querier.validator?.validatePage(this.parse())
+    this.querier.adapter.validator.validatePage(
+      this.parse() as unknown as Map<string, { field: string; value: unknown }>,
+    )
+    this.querier.validator?.validatePage(
+      this.parse() as unknown as Iterable<[string, { value: unknown }]>,
+    )
 
     return true
   }
@@ -42,7 +50,14 @@ export default class Pager extends BaseOrchestrator {
 
     if (page) {
       // parser.flatten may be optional on the parser type
-      this.apply((this.parser.flatten as any)(page, false))
+      this.apply(
+        (
+          this.parser.flatten as unknown as (
+            v: Map<string, unknown>,
+            f?: boolean,
+          ) => Record<string, unknown>
+        )(page, false),
+      )
     }
 
     return this.querier

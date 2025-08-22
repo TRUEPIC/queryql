@@ -5,6 +5,7 @@ const knex = knexModule({ client: 'pg' })
 import BaseOrchestrator from './base'
 import NotImplementedError from '../errors/not_implemented'
 import TestQuerier from '../test/queriers/test'
+import type { Knex } from 'knex'
 import ValidationError from '../errors/validation'
 let buildParser: ReturnType<typeof vi.spyOn>
 
@@ -20,7 +21,7 @@ afterEach(() => {
 
 describe('constructor', () => {
   test('accepts a querier to set', () => {
-    const querier: any = new TestQuerier({}, knex('test'))
+    const querier: TestQuerier = new TestQuerier({}, knex('test'))
     const filterer = new BaseOrchestrator(querier)
 
     expect(filterer.querier).toBe(querier)
@@ -28,7 +29,7 @@ describe('constructor', () => {
 
   test('calls `buildParser` and sets the returned value', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({}, knex('test')) as any,
+      new TestQuerier({}, knex('test')) as TestQuerier,
     )
 
     expect(buildParser).toHaveBeenCalled()
@@ -39,7 +40,7 @@ describe('constructor', () => {
 describe('queryKey', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({}, knex('test')) as any,
+      new TestQuerier({}, knex('test')) as TestQuerier,
     )
 
     expect(() => orchestrator.queryKey).toThrow(NotImplementedError)
@@ -49,7 +50,7 @@ describe('queryKey', () => {
 describe('schema', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({}, knex('test')) as any,
+      new TestQuerier({}, knex('test')) as TestQuerier,
     )
 
     expect(() => orchestrator.schema).toThrow(NotImplementedError)
@@ -59,7 +60,7 @@ describe('schema', () => {
 describe('isEnabled', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({}, knex('test')) as any,
+      new TestQuerier({}, knex('test')) as TestQuerier,
     )
 
     expect(() => orchestrator.isEnabled).toThrow(NotImplementedError)
@@ -69,7 +70,7 @@ describe('isEnabled', () => {
 describe('buildParser', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({}, knex('test')) as any,
+      new TestQuerier({}, knex('test')) as TestQuerier,
     )
 
     buildParser.mockRestore()
@@ -97,7 +98,7 @@ describe('run', () => {
 describe('query', () => {
   test('returns the query value specified by the query key', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({ test: 123 }, knex('test')) as any,
+      new TestQuerier({ test: 123 }, knex('test')) as TestQuerier,
     )
 
     vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
@@ -109,7 +110,7 @@ describe('query', () => {
 describe('parse', () => {
   test('parses/returns the query', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({}, knex('test')) as any,
+      new TestQuerier({}, knex('test')) as TestQuerier,
     )
 
     vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
@@ -121,7 +122,7 @@ describe('parse', () => {
 
   test('returns the cached parsed query on subsequent calls', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({}, knex('test')) as any,
+      new TestQuerier({}, knex('test')) as TestQuerier,
     )
 
     vi.spyOn(orchestrator, 'isEnabled', 'get').mockReturnValue(true)
@@ -137,7 +138,7 @@ describe('parse', () => {
 
   test('returns `null` if disabled, no query', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({}, knex('test')) as any,
+      new TestQuerier({}, knex('test')) as TestQuerier,
     )
 
     vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
@@ -148,7 +149,7 @@ describe('parse', () => {
 
   test('throws `ValidationError` if disabled, with query', () => {
     const orchestrator = new BaseOrchestrator(
-      new TestQuerier({ test: 123 }, knex('test')) as any,
+      new TestQuerier({ test: 123 }, knex('test')) as TestQuerier,
     )
 
     vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('test')
@@ -162,7 +163,7 @@ describe('parse', () => {
 
 describe('apply', () => {
   test('calls/returns method on querier if method defined', () => {
-    const querier: any = new TestQuerier({}, knex('test'))
+    const querier: TestQuerier = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
     const data = {
       name: 'test',
@@ -171,14 +172,14 @@ describe('apply', () => {
     }
 
     vi.spyOn(orchestrator, 'queryKey', 'get').mockReturnValue('sort')
-    querier['sort:test'] = vi.fn((builder: any) => builder)
+    querier['sort:test'] = vi.fn((builder: Knex.QueryBuilder) => builder)
 
     expect(orchestrator.apply(data, 'sort:test')).toBe(querier.builder)
     expect(querier['sort:test']).toHaveBeenCalledWith(querier.builder, data)
   })
 
   test('calls/returns method on adapter if querier method not defined', () => {
-    const querier: any = new TestQuerier({}, knex('test'))
+    const querier: TestQuerier = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
     const data = {
       name: 'test',
@@ -194,7 +195,7 @@ describe('apply', () => {
   })
 
   test('calls/returns method on adapter if no querier method specified', () => {
-    const querier: any = new TestQuerier({}, knex('test'))
+    const querier: TestQuerier = new TestQuerier({}, knex('test'))
     const orchestrator = new BaseOrchestrator(querier)
     const data = {
       size: 20,

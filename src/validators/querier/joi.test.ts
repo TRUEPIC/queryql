@@ -1,11 +1,11 @@
 import Joi from 'joi'
 import { vi } from 'vitest'
 
-import FilterParser from '../../parsers/filter'
-import JoiValidator from './joi'
+import { FilterParser } from '../../parsers/filter'
+import { JoiValidator } from './joi'
 import PageParser from '../../parsers/page'
 import Schema from '../../schema'
-import SortParser from '../../parsers/sort'
+import { SortParser } from '../../parsers/sort'
 import ValidationError from '../../errors/validation'
 
 describe('constructor', () => {
@@ -56,7 +56,11 @@ describe('validateValue', () => {
       'filter:test[=]': schema.number(),
     }))
 
-    expect(() => validator.schema.extract('filter:text[!=]')).toThrow()
+    expect(() =>
+      (
+        validator.schema as unknown as { extract: (k: string) => unknown }
+      ).extract('filter:text[!=]'),
+    ).toThrow()
     expect(validator.validateValue('filter:test[!=]', 123)).toBe(123)
   })
 

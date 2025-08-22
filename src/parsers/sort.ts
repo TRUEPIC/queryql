@@ -15,7 +15,7 @@ export interface SortResult {
   order: SortOrder
 }
 
-export class SortParser extends BaseParser {
+export class SortParser extends BaseParser<unknown> {
   static get DEFAULTS(): { name: null; field: null; order: 'asc' } {
     return {
       name: null,
@@ -32,7 +32,7 @@ export class SortParser extends BaseParser {
     const keys = Array.from(this.schema.sorts.keys())
 
     if (!keys.length) {
-      return schema.any().forbidden()
+      return (schema as Joi.Root).any().forbidden()
     }
 
     return schema.alternatives().try(
@@ -58,23 +58,25 @@ export class SortParser extends BaseParser {
   }
 
   parseString(name: string): SortResult {
-    const { options }: { options: SortOptions } = this.schema.sorts.get(name)
+    const def = this.schema.sorts.get(name)
+    const options = def ? def.options : ({} as SortOptions)
 
     return {
       ...this.defaults,
       name,
-      field: options.field || name,
+      field: String(options.field || name),
       order: 'asc',
     }
   }
 
   parseArray(names: string[]): SortResult[] {
     return names.map((name) => {
-      const { options }: { options: SortOptions } = this.schema.sorts.get(name)
+      const def = this.schema.sorts.get(name)
+      const options = def ? def.options : ({} as SortOptions)
       return {
         ...this.defaults,
         name,
-        field: options.field || name,
+        field: String(options.field || name),
         order: 'asc',
       }
     })
@@ -82,11 +84,12 @@ export class SortParser extends BaseParser {
 
   parseObject(query: Record<string, string>): SortResult[] {
     return Object.entries(query).map(([name, order]) => {
-      const { options }: { options: SortOptions } = this.schema.sorts.get(name)
+      const def = this.schema.sorts.get(name)
+      const options = def ? def.options : ({} as SortOptions)
       return {
         ...this.defaults,
         name,
-        field: options.field || name,
+        field: (options.field as string) || name,
         order: order as 'asc' | 'desc',
       }
     })
@@ -102,11 +105,11 @@ export class SortParser extends BaseParser {
     const sorts: SortResult[] = []
 
     if (is.string(this.query)) {
-      sorts.push(this.parseString(this.query))
+      sorts.push(this.parseString(this.query as string))
     } else if (is.array(this.query)) {
-      sorts.push(...this.parseArray(this.query))
+      sorts.push(...this.parseArray(this.query as string[]))
     } else {
-      sorts.push(...this.parseObject(this.query))
+      sorts.push(...this.parseObject(this.query as Record<string, string>))
     }
 
     return new Map(sorts.map((sort) => [this.buildKey(sort), sort]))

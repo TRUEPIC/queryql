@@ -13,6 +13,7 @@ import { ParsedQs } from 'qs'
 import { Knex } from 'knex'
 
 class QueryQL {
+  [key: string]: unknown
   query: ParsedQs | Record<string, unknown>
   builder: Knex.QueryBuilder
   config: Config
@@ -22,6 +23,10 @@ class QueryQL {
   sorter: Sorter
   pager: Pager
   validator: BaseValidator
+  static adapters: unknown = adapters
+  static Config: unknown = Config
+  static errors: unknown = errors
+  static validators: unknown = validators
 
   constructor(
     query: ParsedQs | Record<string, unknown> = {},
@@ -33,9 +38,11 @@ class QueryQL {
 
     this.config = new Config(config)
 
-    const AdapterCtor = this.config.get('adapter')
+    const AdapterCtor = this.config.get('adapter') as unknown
     if (!AdapterCtor) throw new Error('adapter not configured')
-    this.adapter = new AdapterCtor()
+    this.adapter = new (AdapterCtor as unknown as {
+      new (): BaseAdapter<Knex.QueryBuilder>
+    })()
 
     this.schema = new Schema()
     this.defineSchema(this.schema)
@@ -53,32 +60,31 @@ class QueryQL {
   defineSchema(schema: Schema): void {
     throw new NotImplementedError()
   }
-
-  defineValidation(...args: any[]): any {
+  defineValidation(): unknown {
     return undefined
   }
 
-  get defaultFilter(): Filter | undefined {
+  get defaultFilter(): Record<string, unknown> | undefined {
     return undefined
   }
 
-  get defaultSort(): any {
+  get defaultSort(): unknown {
     return undefined
   }
 
-  get defaultPage(): any {
+  get defaultPage(): unknown {
     return undefined
   }
 
-  get filterDefaults(): Record<string, any> | undefined {
+  get filterDefaults(): Record<string, unknown> | undefined {
     return undefined
   }
 
-  get sortDefaults(): Record<string, any> | undefined {
+  get sortDefaults(): Record<string, unknown> | undefined {
     return undefined
   }
 
-  get pageDefaults(): Record<string, any> | undefined {
+  get pageDefaults(): Record<string, unknown> | undefined {
     return undefined
   }
 
@@ -102,17 +108,20 @@ class QueryQL {
 }
 
 // Attach helpers as static properties to match existing runtime API/tests
-namespace QueryQL {
-  export let adapters: any
-  export let Config: any
-  export let errors: any
-  export let validators: any
-}
+// expose helpers for compatibility with the previous runtime API/tests
+export const adaptersExport: unknown = adapters
+export const ConfigExport: unknown = Config
+export const errorsExport: unknown = errors
+export const validatorsExport: unknown = validators
 
-QueryQL.adapters = adapters
-QueryQL.Config = Config
-QueryQL.errors = errors
-QueryQL.validators = validators
+// Ensure static objects expose named keys used by tests (BaseAdapter/BaseValidator)
+;(QueryQL.adapters as any).BaseAdapter = (adapters as any).BaseAdapter
+;(QueryQL.adapters as any).KnexAdapter = (adapters as any).KnexAdapter
+;(QueryQL.validators as any).BaseValidator = (validators as any).BaseValidator
+;(QueryQL.validators as any).JoiValidator = (validators as any).JoiValidator
 
 export default QueryQL
 export { adapters, Config, errors, validators }
+
+// Backwards-compatible static properties used in tests
+// backwards-compatible exports available via static properties on QueryQL

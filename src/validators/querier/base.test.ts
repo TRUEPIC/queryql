@@ -33,7 +33,7 @@ describe('validatePage', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const validator = new BaseValidator(() => {})
 
-    expect(() => validator.validatePage()).toThrow(NotImplementedError)
+    expect(() => validator.validatePage({})).toThrow(NotImplementedError)
   })
 })
 

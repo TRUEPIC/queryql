@@ -5,24 +5,11 @@ import NotImplementedError from '../errors/not_implemented'
 
 import type { FilterOperator } from '../types/filter_operator'
 
-export type Filter = {
-  field: string
-  operator: FilterOperator
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: any
-}
+export type Filter = Record<string, unknown>
 
-export type Sort = {
-  name?: string
-  field: string
-  order: 'asc' | 'desc'
-}
+export type Sort = Record<string, unknown>
 
-export type Page = {
-  size: number
-  number?: number
-  offset: number
-}
+export type Page = Record<string, unknown>
 
 export class BaseAdapter<Builder> {
   public validator: AdapterValidator;
@@ -41,17 +28,17 @@ export class BaseAdapter<Builder> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  'filter:*'(builder?: Builder, filter?: Filter): Builder {
+  'filter:*'(_builder?: Builder, _filter?: Filter): Builder {
     throw new NotImplementedError()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  sort(builder?: Builder, sort?: Sort): Builder {
+  sort(_builder?: Builder, _sort?: Sort): Builder {
     throw new NotImplementedError()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  page(builder?: Builder, page?: Page): Builder {
+  page(_builder?: Builder, _page?: Page): Builder {
     throw new NotImplementedError()
   }
 
@@ -59,21 +46,23 @@ export class BaseAdapter<Builder> {
   // an object mapping keys to Joi schemas or undefined.
   defineValidation(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    schema?: Joi.Schema,
+    schema?: typeof Joi,
   ): Record<string, Joi.Schema> | undefined {
     return undefined
   }
 
-  filter(builder: Builder, filter: Filter): unknown {
-    const { operator } = filter
+  filter(builder: Builder, filter: Filter): Builder {
+    const { operator } = filter as { operator?: unknown }
 
     const ctor = this.constructor as typeof BaseAdapter
 
-    if (!ctor.FILTER_OPERATORS.includes(operator)) {
+    const operatorStr = String(operator)
+
+    if (!ctor.FILTER_OPERATORS.includes(operatorStr)) {
       throw new NotImplementedError()
     }
 
-    const operatorMethod = `filter:${operator}`
+    const operatorMethod = `filter:${operatorStr}`
 
     if (is.fn(this[operatorMethod])) {
       const fn = this[operatorMethod] as unknown as (
@@ -83,7 +72,8 @@ export class BaseAdapter<Builder> {
 
       return fn(builder, filter)
     }
-
     return this['filter:*'](builder, filter)
   }
 }
+
+export default BaseAdapter

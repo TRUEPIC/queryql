@@ -1,10 +1,10 @@
 import Joi from 'joi'
 import { vi } from 'vitest'
 import AdapterValidator from './adapter'
-import FilterParser from '../parsers/filter'
+import { FilterParser } from '../parsers/filter'
 import PageParser from '../parsers/page'
 import Schema from '../schema'
-import SortParser from '../parsers/sort'
+import { SortParser } from '../parsers/sort'
 import ValidationError from '../errors/validation'
 
 describe('constructor', () => {

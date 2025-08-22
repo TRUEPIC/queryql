@@ -4,11 +4,11 @@ import {
   FILTER_OPERATORS as KNEX_FILTER_OPERATORS,
   DEFAULT_FILTER_OPERATOR as KNEX_DEFAULT_FILTER_OPERATOR,
 } from '../types/filter_operator'
-import { Knex, QueryBuilder } from 'knex'
+import { Knex } from 'knex'
 
 type ComparisonOperator = '=' | '>' | '>=' | '<' | '<=' | '<>'
 
-export class KnexAdapter extends BaseAdapter<QueryBuilder> {
+export class KnexAdapter extends BaseAdapter<Knex.QueryBuilder> {
   static get FILTER_OPERATORS(): string[] {
     return KNEX_FILTER_OPERATORS as unknown as string[]
   }
@@ -21,13 +21,15 @@ export class KnexAdapter extends BaseAdapter<QueryBuilder> {
     return {
       'filter:=': schema
         .alternatives()
-        .try(schema.string(), schema.number(), schema.boolean()),
+        // prefer number/boolean before string so Joi will coerce numeric strings
+        // to numbers instead of matching the string schema first
+        .try(schema.number(), schema.boolean(), schema.string()),
       'filter:!=': schema
         .alternatives()
-        .try(schema.string(), schema.number(), schema.boolean()),
+        .try(schema.number(), schema.boolean(), schema.string()),
       'filter:<>': schema
         .alternatives()
-        .try(schema.string(), schema.number(), schema.boolean()),
+        .try(schema.number(), schema.boolean(), schema.string()),
       'filter:>': schema.alternatives().try(schema.string(), schema.number()),
       'filter:>=': schema.alternatives().try(schema.string(), schema.number()),
       'filter:<': schema.alternatives().try(schema.string(), schema.number()),
@@ -38,8 +40,8 @@ export class KnexAdapter extends BaseAdapter<QueryBuilder> {
         .valid(null)
         .empty(['null', ''])
         .default(null),
-      'filter:in': schema.array().items(schema.string(), schema.number()),
-      'filter:not in': schema.array().items(schema.string(), schema.number()),
+      'filter:in': schema.array().items(schema.number(), schema.string()),
+      'filter:not in': schema.array().items(schema.number(), schema.string()),
       'filter:like': schema.string(),
       'filter:not like': schema.string(),
       'filter:ilike': schema.string(),
@@ -47,29 +49,54 @@ export class KnexAdapter extends BaseAdapter<QueryBuilder> {
       'filter:between': schema
         .array()
         .length(2)
-        .items(schema.string(), schema.number()),
+        .items(schema.number(), schema.string()),
       'filter:not between': schema
         .array()
         .length(2)
-        .items(schema.string(), schema.number()),
+        .items(schema.number(), schema.string()),
     }
   }
 
-  'filter:*'(builder: Knex, filter: Filter) {
-    const { field, operator, value } = filter
+  'filter:*'(builder: Knex.QueryBuilder, filter: Filter) {
+    const { field, operator, value } = filter as {
+      field?: string
+      operator?: ComparisonOperator | string
+      value?: unknown
+    }
 
-    return builder.where<string>(field, operator as ComparisonOperator, value)
+    return (
+      builder as unknown as {
+        where: (
+          field: string,
+          op: ComparisonOperator,
+          val: unknown,
+        ) => Knex.QueryBuilder
+      }
+    ).where(field as string, operator as ComparisonOperator, value)
   }
 
-  sort(builder: Knex, sort: Sort) {
-    const { field, order } = sort
+  sort(builder: Knex.QueryBuilder, sort: Sort) {
+    const { field, order } = sort as { field?: string; order?: 'asc' | 'desc' }
 
-    return builder.orderBy(field, order)
+    return (
+      builder as unknown as {
+        orderBy: (field: string, order: 'asc' | 'desc') => Knex.QueryBuilder
+      }
+    ).orderBy(field as string, order as 'asc' | 'desc')
   }
 
-  page(builder: Knex, page: Page) {
-    const { size, offset } = page
+  page(builder: Knex.QueryBuilder, page: Page) {
+    const { size, offset } = page as { size?: number; offset?: number }
 
-    return builder.limit(size).offset(offset)
+    return (
+      builder as unknown as {
+        limit: (n: number) => Knex.QueryBuilder
+        offset: (n: number) => Knex.QueryBuilder
+      }
+    )
+      .limit(size as number)
+      .offset(offset as number)
   }
 }
+
+export default KnexAdapter

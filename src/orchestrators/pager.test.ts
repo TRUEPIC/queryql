@@ -48,7 +48,7 @@ describe('parse', () => {
       ),
     )
 
-    expect(pager.parse().get('page:number').value).toBe(2)
+    expect(pager.parse()!.get('page:number')!.value).toBe(2)
   })
 
   test('calls/uses `querier.defaultPage` if no query', () => {
@@ -63,7 +63,7 @@ describe('parse', () => {
 
     expect(pager.query).toBeFalsy()
     expect(defaultPage).toHaveBeenCalled()
-    expect(parsed.get('page:number').value).toBe(2)
+    expect(parsed!.get('page:number')!.value).toBe(2)
 
     defaultPage.mockRestore()
   })

@@ -7,22 +7,29 @@ export class BaseValidator {
   // Schema shape is specific to concrete validators (Joi, etc.)
   schema: unknown
 
-  constructor(defineSchema: DefineSchemaFn) {
-    this.schema = defineSchema(...this.defineSchemaArgs)
+  constructor(...args: unknown[]) {
+    const defineSchema = args[0] as DefineSchemaFn | undefined
+    if (typeof defineSchema === 'function') {
+      this.schema = defineSchema(...this.defineSchemaArgs)
+    } else {
+      this.schema = undefined
+    }
   }
 
-  validateFilters(): unknown {
+  validateFilters(_filters?: unknown): Iterable<[string, { value: unknown }]> {
+    void _filters
     throw new NotImplementedError()
   }
 
-  validateSorts(): unknown {
+  validateSorts(_sorts?: unknown): Iterable<[string, { order: unknown }]> {
+    void _sorts
     throw new NotImplementedError()
   }
 
   // @ignore-next-line @typescript-eslint/no-unused-vars
-  validatePage(page: Iterable<[string, PageField]>): unknown {
+  validatePage(_page?: unknown): Iterable<[string, { value: unknown }]> {
+    void _page
     throw new NotImplementedError()
-    return page
   }
 
   get defineSchemaArgs(): unknown[] {

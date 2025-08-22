@@ -10,7 +10,7 @@ export interface Filter {
   name: string | null
   field: string | null
   operator: FilterOperator | null
-  value: string | null
+  value: unknown
   [key: string]: unknown
 }
 
@@ -35,7 +35,7 @@ export class FilterParser extends BaseParser {
   }
 
   defineValidation(schema: typeof Joi): Joi.ObjectSchema {
-    const defaultOperator = this.defaults.operator
+    const defaultOperator = (this.defaults as Partial<Filter>).operator
     const mapNamesToOperators = Object.entries(
       this.schema.mapFilterNamesToOperators(),
     ) as [string, string[]][]
@@ -79,12 +79,13 @@ export class FilterParser extends BaseParser {
 
   parseObject(name: string, value: Record<string, unknown>): Filter[] {
     return Object.keys(value).map((operator) => {
-      const { options } = this.schema.filters.get(`${name}[${operator}]`)
+      const def = this.schema.filters.get(`${name}[${operator}]`)
+      const options = def ? def.options : ({} as Record<string, unknown>)
 
       return {
         ...this.defaults,
         name,
-        field: options.field || name,
+        field: (options.field as string) || name,
         operator: operator as FilterOperator,
         value: value[operator],
       }
@@ -92,15 +93,16 @@ export class FilterParser extends BaseParser {
   }
 
   parseNonObject(name: string, value: string): Filter {
-    const { options } = this.schema.filters.get(
-      `${name}[${this.defaults.operator}]`,
+    const def = this.schema.filters.get(
+      `${name}[${(this.defaults as Partial<Filter>).operator}]`,
     )
+    const options = def ? def.options : ({} as Record<string, unknown>)
 
     return {
       ...this.defaults,
       name,
-      field: options.field || name,
-      operator: this.defaults.operator,
+      field: (options.field as string) || name,
+      operator: (this.defaults as Partial<Filter>).operator ?? null,
       value,
     }
   }

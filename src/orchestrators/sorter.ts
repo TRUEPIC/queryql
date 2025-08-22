@@ -1,8 +1,12 @@
 import BaseOrchestrator from './base'
-import SortParser, { SortResult } from '../parsers/sort'
+import { SortParser, SortResult } from '../parsers/sort'
 import type Schema from '../schema'
 
-export default class Sorter extends BaseOrchestrator {
+export default class Sorter extends BaseOrchestrator<
+  unknown,
+  Map<string, { name: string | null; options?: Record<string, unknown> }>,
+  Map<string, SortResult>
+> {
   parser!: SortParser
 
   get queryKey() {
@@ -12,7 +16,7 @@ export default class Sorter extends BaseOrchestrator {
   get schema() {
     return this.querier.schema!.sorts as Map<
       string,
-      { name: string | null; options?: Record<string, any> }
+      { name: string | null; options?: Record<string, unknown> }
     >
   }
 
@@ -23,9 +27,9 @@ export default class Sorter extends BaseOrchestrator {
   buildParser() {
     return new SortParser(
       this.queryKey,
-      this.query || this.querier.defaultSort,
-      this.querier.schema!,
-      this.querier.sortDefaults,
+      this.query || (this.querier.defaultSort as unknown),
+      this.querier.schema as unknown as import('../schema').default,
+      this.querier.sortDefaults as Record<string, unknown> | undefined,
     )
   }
 
@@ -35,8 +39,12 @@ export default class Sorter extends BaseOrchestrator {
     }
 
     this.parser.validate()
-    this.querier.adapter.validator?.validateSorts(this.parse())
-    this.querier.validator?.validateSorts(this.parse())
+    this.querier.adapter.validator?.validateSorts(
+      this.parse() as unknown as Map<string, { order: unknown }>,
+    )
+    this.querier.validator?.validateSorts(
+      this.parse() as unknown as Iterable<[string, { order: unknown }]>,
+    )
 
     return true
   }

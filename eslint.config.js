@@ -21,4 +21,8 @@ export default ts.config(
       ...vitest.configs.recommended.rules,
     },
   },
+
+  {
+    ignores: ['dist/**', 'node_modules/**', 'coverage/**'],
+  },
 )
