@@ -3,28 +3,33 @@ import NotImplementedError from '../errors/not_implemented'
 import ParserValidator from '../validators/parser'
 import Joi from 'joi'
 import Schema from '../schema'
-import { ParsedQs } from 'qs'
 
-export class BaseParser<D = Record<string, unknown>> {
+export type QueryProperties = Record<
+  string,
+  | Record<string, number | string | boolean | unknown>
+  | number
+  | string
+  | boolean
+  | unknown
+>
+
+export class BaseParser {
   queryKey: string
-  query: ParsedQs | Record<string, unknown>
+  query: QueryProperties
   schema: Schema
-  _defaults: D
+  _defaults: Partial<QueryProperties> = {}
   validator: ParserValidator
 
   constructor(
     queryKey: string,
-    query: ParsedQs | Record<string, unknown>,
+    query: QueryProperties,
     schema: Schema,
-    defaults: D = {} as D,
+    defaults: Partial<QueryProperties> = {},
   ) {
     this.queryKey = queryKey
     this.query = query
     this.schema = schema
-    this._defaults = {
-      ...(this.constructor as typeof BaseParser).DEFAULTS,
-      ...defaults,
-    }
+    this.defaults = defaults
 
     this.validator = new ParserValidator(
       this.defineValidation.bind(this),
@@ -37,16 +42,16 @@ export class BaseParser<D = Record<string, unknown>> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  buildKey(parsed?: any): string {
+  buildKey(parsed: unknown): string {
     throw new NotImplementedError()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  flatten(map?: any): any {
+  flatten(map: Map<string, unknown>): Record<string, unknown> {
     throw new NotImplementedError()
   }
 
-  parse(): any {
+  parse(): unknown {
     throw new NotImplementedError()
   }
 
@@ -57,23 +62,23 @@ export class BaseParser<D = Record<string, unknown>> {
     return undefined
   }
 
-  static get DEFAULTS(): Record<string, Joi.Schema> {
+  static get DEFAULTS(): Record<string, unknown> {
     return {}
   }
 
-  set defaults(defaults: D) {
+  set defaults(defaults: Partial<QueryProperties>) {
     this._defaults = {
-      ...(this.constructor as typeof BaseParser).DEFAULTS,
+      ...((this.constructor as typeof BaseParser)
+        .DEFAULTS as Partial<QueryProperties>),
       ...defaults,
     }
   }
 
-  get defaults(): D {
+  get defaults(): Partial<QueryProperties> {
     return this._defaults
   }
 
-  validate(): Q | undefined {
-    this.query = this.validator.validate()
-    return this.query
+  validate(): unknown {
+    return this.validator.validate()
   }
 }

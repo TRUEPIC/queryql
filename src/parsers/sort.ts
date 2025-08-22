@@ -7,10 +7,12 @@ interface SortOptions {
   field?: string
 }
 
+type SortOrder = 'asc' | 'desc'
+
 export interface SortResult {
   name: string
   field: string
-  order: 'asc' | 'desc'
+  order: SortOrder
 }
 
 export class SortParser extends BaseParser {
@@ -48,7 +50,7 @@ export class SortParser extends BaseParser {
     )
   }
 
-  flatten(map: Map<string, SortResult>): Record<string, 'asc' | 'desc'> {
+  flatten(map: Map<string, SortResult>): Record<string, SortOrder> {
     return flattenMap({
       map,
       value: (value: SortResult) => value.order,

@@ -9,10 +9,9 @@ type PageObject = {
   offset?: number
 }
 
-type PageQuery = number | string | Partial<PageObject>
 type PageMapValue = { field: string; value: number }
 
-export default class PageParser extends BaseParser<PageQuery, any, PageObject> {
+export default class PageParser extends BaseParser<PageObject> {
   static get DEFAULTS(): PageObject {
     return {
       size: 20,

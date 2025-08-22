@@ -10,7 +10,8 @@ export interface Filter {
   name: string | null
   field: string | null
   operator: FilterOperator | null
-  value: unknown
+  value: string | null
+  [key: string]: unknown
 }
 
 export class FilterParser extends BaseParser {
@@ -48,7 +49,7 @@ export class FilterParser extends BaseParser {
     ]
 
     return schema.object().keys(
-      mapNamesToOperators.reduce(
+      mapNamesToOperators.reduce<Record<string, Joi.Schema>>(
         (accumulator, [field, operators]) => {
           const operatorObject = schema
             .object()
@@ -60,11 +61,11 @@ export class FilterParser extends BaseParser {
           return {
             ...accumulator,
             [field]: operators.includes(defaultOperator ?? '')
-              ? [...values, operatorObject]
+              ? schema.alternatives().try(...values, operatorObject)
               : operatorObject,
           }
         },
-        {} as Record<string, any>,
+        {} as Record<string, Joi.Schema>,
       ),
     )
   }
@@ -90,7 +91,7 @@ export class FilterParser extends BaseParser {
     })
   }
 
-  parseNonObject(name: string, value: unknown): Filter {
+  parseNonObject(name: string, value: string): Filter {
     const { options } = this.schema.filters.get(
       `${name}[${this.defaults.operator}]`,
     )
@@ -120,7 +121,7 @@ export class FilterParser extends BaseParser {
           ...this.parseObject(name, value as Record<string, unknown>),
         )
       } else {
-        filters.push(this.parseNonObject(name, value))
+        filters.push(this.parseNonObject(name, value as string))
       }
     }
 

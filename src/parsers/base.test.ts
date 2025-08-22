@@ -39,7 +39,7 @@ describe('buildKey', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const parser = new BaseParser('test', {}, new Schema())
 
-    expect(() => parser.buildKey()).toThrow(NotImplementedError)
+    expect(() => parser.buildKey({})).toThrow(NotImplementedError)
   })
 })
 
@@ -47,7 +47,7 @@ describe('flatten', () => {
   test('throws `NotImplementedError` when not extended', () => {
     const parser = new BaseParser('test', {}, new Schema())
 
-    expect(() => parser.flatten()).toThrow(NotImplementedError)
+    expect(() => parser.flatten(new Map())).toThrow(NotImplementedError)
   })
 })
 

@@ -1,4 +1,4 @@
-import { FilterParser } from './filter'
+import { Filter, FilterParser } from './filter'
 import Schema from '../schema'
 import ValidationError from '../errors/validation'
 
@@ -22,7 +22,7 @@ describe('DEFAULTS', () => {
 
 describe('buildKey', () => {
   test('builds/returns a string to use as a key', () => {
-    const parser = new FilterParser('filter', {}, new Schema())
+    const parser = new FilterParser('filter', {} as Filter, new Schema())
     const key = parser.buildKey({
       name: 'test',
       operator: '=',
@@ -34,7 +34,11 @@ describe('buildKey', () => {
 
 describe('validation', () => {
   test('throws if the filter is not whitelisted in the schema', () => {
-    const parser = new FilterParser('filter', { invalid: 123 }, new Schema())
+    const parser = new FilterParser(
+      'filter',
+      { invalid: 123 } as unknown as Filter,
+      new Schema(),
+    )
 
     expect(() => parser.validate()).toThrow(
       new ValidationError('filter:invalid is not allowed'),
@@ -44,7 +48,7 @@ describe('validation', () => {
   test('throws if the operator is not whitelisted in the schema', () => {
     const parser = new FilterParser(
       'filter',
-      { invalid: { '!=': 123 } },
+      { invalid: { '!=': 123 } } as unknown as Filter,
       new Schema().filter('invalid', '='),
     )
 
@@ -56,7 +60,7 @@ describe('validation', () => {
   test('throws if no operator or default operator is specified', () => {
     const parser = new FilterParser(
       'filter',
-      { invalid: 123 },
+      { invalid: 123 } as unknown as Filter,
       new Schema().filter('invalid', '='),
     )
 
@@ -68,7 +72,7 @@ describe('validation', () => {
   test('permits an array value', () => {
     const parser = new FilterParser(
       'filter',
-      { valid: { in: [1, 2, 3] } },
+      { valid: { in: [1, 2, 3] } } as unknown as Filter,
       new Schema().filter('valid', 'in'),
     )
 
@@ -78,7 +82,7 @@ describe('validation', () => {
   test('permits a boolean value', () => {
     const parser = new FilterParser(
       'filter',
-      { valid: { '=': true } },
+      { valid: { '=': true } } as unknown as Filter,
       new Schema().filter('valid', '='),
     )
 
@@ -88,7 +92,7 @@ describe('validation', () => {
   test('permits a number value', () => {
     const parser = new FilterParser(
       'filter',
-      { valid: { '=': 123 } },
+      { valid: { '=': 123 } } as unknown as Filter,
       new Schema().filter('valid', '='),
     )
 
@@ -98,7 +102,7 @@ describe('validation', () => {
   test('permits an object value if an operator is specified', () => {
     const parser = new FilterParser(
       'filter',
-      { valid: { '=': { test: 123 } } },
+      { valid: { '=': { test: 123 } } } as unknown as Filter,
       new Schema().filter('valid', '='),
     )
 
@@ -120,7 +124,7 @@ describe('validation', () => {
   test('permits a string value', () => {
     const parser = new FilterParser(
       'filter',
-      { valid: { '=': 'string' } },
+      { valid: { '=': 'string' } } as unknown as Filter,
       new Schema().filter('valid', '='),
     )
 
