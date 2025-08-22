@@ -13,7 +13,7 @@ interface SortDefinition {
 
 type PageOptions = { isEnabled?: boolean } & Record<string, unknown>
 
-export default class Schema {
+export class Schema {
   filters: Map<string, FilterDefinition>
   sorts: Map<string, SortDefinition>
   pageOptions: PageOptions = { isEnabled: false }
@@ -83,3 +83,5 @@ export default class Schema {
     }, {})
   }
 }
+
+export default Schema

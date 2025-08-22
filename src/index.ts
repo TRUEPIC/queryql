@@ -11,8 +11,9 @@ import { BaseValidator } from './validators/querier/base'
 import { BaseAdapter } from './adapters/base'
 import { ParsedQs } from 'qs'
 import { Knex } from 'knex'
+import Joi from 'joi'
 
-class QueryQL {
+class QueryQL<V = typeof Joi> {
   [key: string]: unknown
   query: ParsedQs | Record<string, unknown>
   builder: Knex.QueryBuilder
@@ -60,7 +61,13 @@ class QueryQL {
   defineSchema(schema: Schema): void {
     throw new NotImplementedError()
   }
-  defineValidation(): unknown {
+  // Allow defineValidation to accept the validator's schema builder (Joi
+  // by default). The generic parameter `V` controls the type of the
+  // schema passed to defineValidation; it defaults to the runtime Joi
+  // module so consumers get a sensible default without having to add
+  // explicit generics.
+  defineValidation(schema?: V): unknown {
+    void schema
     return undefined
   }
 
@@ -131,6 +138,11 @@ export const validatorsExport: unknown = validators
 
 export default QueryQL
 export { adapters, Config, errors, validators }
+export type { Schema } from './schema'
+// A typed factory that receives the validator's schema builder (Joi, etc.)
+// and returns a concrete schema. Consumers can import this and supply the
+// validator's root type: `DefineValidation<typeof Joi>`.
+export type DefineValidation<T = typeof Joi> = (schema?: T) => unknown
 
 // Backwards-compatible static properties used in tests
 // backwards-compatible exports available via static properties on QueryQL

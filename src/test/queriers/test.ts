@@ -1,5 +1,5 @@
 import QueryQL from '../..'
-import type Schema from '../../schema'
+import type { Schema } from '../../schema'
 
 export default class TestQuerier extends QueryQL {
   defineSchema(schema: Schema) {

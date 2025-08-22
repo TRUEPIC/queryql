@@ -33,6 +33,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "lint": "npm run lint:format && npm run lint:quality",
+    "lint:fix": "npm run lint:format:fix && npm run lint:quality:fix",
     "lint:format": "prettier --check .",
     "lint:format:fix": "prettier --write .",
     "lint:quality": "eslint src",
@@ -42,8 +43,7 @@
     "test:watch": "vitest",
     "ts": "tsc",
     "clean": "rm -rf dist",
-    "build": "npm run clean && npm run ts && npm pack --silent",
-    "prepublishOnly": "npm run build"
+    "build": "npm run lint && npm run test && npm run clean && npm run ts"
   },
   "dependencies": {
     "is": "^3.3.2",
@@ -70,7 +70,7 @@
   "engines": {
     "node": ">=20"
   },
-  "type": "module",
+  "type": "commonjs",
   "publishConfig": {
     "access": "public"
   }
