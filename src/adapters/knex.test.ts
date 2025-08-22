@@ -1,5 +1,4 @@
 import knex from 'knex'
-import { vi } from 'vitest'
 import KnexAdapter from './knex'
 import ValidationError from '../errors/validation'
 

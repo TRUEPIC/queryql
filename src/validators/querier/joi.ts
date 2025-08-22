@@ -9,14 +9,16 @@ type PageField = { value: unknown }
 
 export class JoiValidator extends BaseValidator {
   // Keep the concrete `schema` typed, but expose a test-friendly accessor
-  // that returns `any` because Joi's dynamic API (extract) is hard to type
-  // precisely in this project. Tests rely on calling `.extract` directly.
+  // that returns `unknown` because Joi's dynamic API (extract) is hard to type
+  // precisely in this project. Tests can still call `.extract` but will need
+  // to narrow the type when they do so.
   schema: Joi.Schema | Record<string, unknown> | undefined
 
   // Test-friendly accessor used by existing tests to exercise `.extract`.
-  // This is intentionally `any` to avoid adding brittle, broad typings for Joi internals.
-  get schemaAny(): any {
-    return this.schema as any
+  // Return `unknown` instead of `any` and use type guards when calling
+  // dynamic Joi methods.
+  get schemaAny(): unknown {
+    return this.schema as unknown
   }
 
   // Accept a typed defineSchema as the first argument so callers like
@@ -69,18 +71,27 @@ export class JoiValidator extends BaseValidator {
   validateValue(key: string, value: unknown): unknown {
     let keySchema: Joi.Schema | undefined
     try {
-      // schema.extract may throw if schema isn't a Joi object schema
-      // Use optional chaining and cast where necessary
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      keySchema = (this.schema as any)?.extract?.(key)
+      // schema.extract may throw if schema isn't a Joi object schema.
+      // Use a type-guard style check to safely call `.extract` when
+      // available on the runtime object.
+      const s = this.schema as unknown
+      if (
+        s &&
+        typeof s === 'object' &&
+        'extract' in s &&
+        typeof (s as { extract?: unknown }).extract === 'function'
+      ) {
+        keySchema = (s as { extract: (k: string) => Joi.Schema }).extract(key)
+      }
     } catch {
-      // Don't throw error if key doesn't exist.
+      // Don't throw error if key doesn't exist or extraction fails.
     }
+
     if (!keySchema) {
       return value
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { value: valueValidated, error } = (keySchema as any).validate(value)
+
+    const { value: valueValidated, error } = keySchema.validate(value)
     if (error) {
       throw this.buildError(error, key)
     }

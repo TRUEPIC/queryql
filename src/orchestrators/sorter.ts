@@ -1,6 +1,6 @@
+import type Schema from '../schema'
 import BaseOrchestrator from './base'
 import { SortParser, SortResult } from '../parsers/sort'
-import type Schema from '../schema'
 
 export default class Sorter extends BaseOrchestrator<
   unknown,
@@ -28,7 +28,7 @@ export default class Sorter extends BaseOrchestrator<
     return new SortParser(
       this.queryKey,
       this.query || (this.querier.defaultSort as unknown),
-      this.querier.schema as unknown as import('../schema').default,
+      this.querier.schema as unknown as Schema,
       this.querier.sortDefaults as Record<string, unknown> | undefined,
     )
   }

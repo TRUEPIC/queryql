@@ -115,10 +115,19 @@ export const errorsExport: unknown = errors
 export const validatorsExport: unknown = validators
 
 // Ensure static objects expose named keys used by tests (BaseAdapter/BaseValidator)
-;(QueryQL.adapters as any).BaseAdapter = (adapters as any).BaseAdapter
-;(QueryQL.adapters as any).KnexAdapter = (adapters as any).KnexAdapter
-;(QueryQL.validators as any).BaseValidator = (validators as any).BaseValidator
-;(QueryQL.validators as any).JoiValidator = (validators as any).JoiValidator
+// Use Record<string, unknown> and narrow casts instead of `any`.
+;(QueryQL.adapters as unknown as Record<string, unknown>).BaseAdapter = (
+  adapters as unknown as Record<string, unknown>
+).BaseAdapter
+;(QueryQL.adapters as unknown as Record<string, unknown>).KnexAdapter = (
+  adapters as unknown as Record<string, unknown>
+).KnexAdapter
+;(QueryQL.validators as unknown as Record<string, unknown>).BaseValidator = (
+  validators as unknown as Record<string, unknown>
+).BaseValidator
+;(QueryQL.validators as unknown as Record<string, unknown>).JoiValidator = (
+  validators as unknown as Record<string, unknown>
+).JoiValidator
 
 export default QueryQL
 export { adapters, Config, errors, validators }
