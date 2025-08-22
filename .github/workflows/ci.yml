@@ -24,14 +24,16 @@ jobs:
       - name: Run lint
         run: npm run lint
       - name: Run tests
-        run: npm test -- --ci --coverage --runInBand
+        run:
+          npm run test -- --coverage --reporter=junit
+          --outputFile='./junit-report.xml'
       - name: Upload test reports
         uses: actions/upload-artifact@v4
         with:
           name: test-reports-${{ matrix.node-version }}
-          path: test/reports
+          path: ./junit-report.xml
       - name: Upload test coverage
         uses: actions/upload-artifact@v4
         with:
           name: test-coverage-${{ matrix.node-version }}
-          path: test/coverage
+          path: coverage

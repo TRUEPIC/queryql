@@ -11,6 +11,7 @@ export default defineConfig({
       include: ['src/**/*.{ts,js}'],
       exclude: ['dist/**', 'node_modules/**'],
     },
+    reporters: ['default', ['junit', { outputFile: 'test/reports/junit.xml' }]],
     exclude: ['dist/**', 'node_modules/**'],
   },
 })
