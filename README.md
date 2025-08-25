@@ -65,7 +65,7 @@ allowed through what we call a _querier_. Here's how one might look for the
 `/images` endpoint:
 
 ```js
-const QueryQL = require('@truepic/queryql')
+import QueryQL from '@truepic/queryql'
 
 class ImageQuerier extends QueryQL {
   defineSchema(schema) {

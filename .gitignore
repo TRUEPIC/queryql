@@ -1,6 +1,9 @@
 # npm
 /node_modules
 
-# Jest
-/test/coverage
-/test/reports
+# Vitest
+/coverage
+test/reports/junit.xml
+
+# Build output
+/dist

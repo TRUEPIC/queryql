@@ -25,7 +25,7 @@ anyone can build their own adapter.
 To define a querier, simply extend `QueryQL` with your own class:
 
 ```js
-const QueryQL = require('@truepic/queryql')
+import QueryQL from '@truepic/queryql'
 
 class UserQuerier extends QueryQL {
   defineSchema(schema) {
@@ -115,9 +115,9 @@ These defaults, however, can easily be changed for all querier instances. For
 example, to use a different adapter:
 
 ```js
-const { Config } = require('@truepic/queryql')
+import { Config } from '@truepic/queryql'
 
-const MyAdapter = require('./my_adapter')
+import MyAdapter from './my_adapter'
 
 Config.defaults = {
   adapter: MyAdapter,
@@ -133,7 +133,7 @@ A config can also be passed as the third argument when creating an instance of a
 querier:
 
 ```js
-const MyAdapter = require('./my_adapter')
+import MyAdapter from './my_adapter'
 
 const querier = new UserQuerier(query, builder, {
   adapter: MyAdapter,
@@ -544,7 +544,9 @@ include any additional fields or functions.
 `ValidationError` is exported to make it easy to check for an instance of one:
 
 ```js
-const { ValidationError } = require('@truepic/queryql').errors
+import { errors } from '@truepic/queryql'
+
+const { ValidationError } = errors
 
 const querier = new UserQuerier(query, builder)
 let users
