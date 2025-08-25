@@ -92,7 +92,7 @@ export default class BaseOrchestrator<
       if (this.query) {
         throw new ValidationError(`${this.queryKey} is disabled`)
       }
-      return null as unknown as ParseT
+      return null
     }
     return this.parser.parse()
   }

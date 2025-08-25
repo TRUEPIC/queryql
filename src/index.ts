@@ -57,8 +57,8 @@ class QueryQL<V = typeof Joi> {
     this.validator = new ValidatorCtor(this.defineValidation.bind(this))
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   defineSchema(schema: Schema): void {
+    void schema
     throw new NotImplementedError()
   }
   // Allow defineValidation to accept the validator's schema builder (Joi

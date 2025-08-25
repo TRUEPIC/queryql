@@ -41,6 +41,7 @@
     "release": "release-it --only-version",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "ts": "tsc",
     "clean": "rm -rf dist",
     "build": "npm run lint && npm run test && npm run clean && npm run ts"

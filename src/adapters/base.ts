@@ -27,27 +27,30 @@ export class BaseAdapter<Builder> {
     throw new NotImplementedError()
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   'filter:*'(_builder?: Builder, _filter?: Filter): Builder {
+    void _filter
+    void _builder
     throw new NotImplementedError()
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   sort(_builder?: Builder, _sort?: Sort): Builder {
+    void _sort
+    void _builder
     throw new NotImplementedError()
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   page(_builder?: Builder, _page?: Page): Builder {
+    void _page
+    void _builder
     throw new NotImplementedError()
   }
 
   // defineValidation is expected to accept the Joi module and return
   // an object mapping keys to Joi schemas or undefined.
   defineValidation(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     schema?: typeof Joi,
   ): Record<string, Joi.Schema> | undefined {
+    void schema
     return undefined
   }
 

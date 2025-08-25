@@ -32,13 +32,13 @@ export class BaseParser<TQuery = unknown> {
     this.validate = cache(this.validate.bind(this), this)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   buildKey(parsed: unknown): string {
+    void parsed
     throw new NotImplementedError()
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   flatten(map: Map<string, unknown>): Record<string, unknown> {
+    void map
     throw new NotImplementedError()
   }
 
@@ -46,10 +46,8 @@ export class BaseParser<TQuery = unknown> {
     throw new NotImplementedError()
   }
 
-  defineValidation(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    schema?: typeof Joi,
-  ): Joi.Schema | undefined {
+  defineValidation(schema?: typeof Joi): Joi.Schema | undefined {
+    void schema
     return undefined
   }
 

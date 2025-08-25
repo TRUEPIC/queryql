@@ -3,7 +3,7 @@
 
 # Vitest
 /coverage
-junit-report.xml
+test/reports/junit.xml
 
 # Build output
 /dist
