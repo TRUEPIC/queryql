@@ -20,6 +20,12 @@ describe('constructor', () => {
   })
 })
 
+test('schemaAny accessor returns underlying schema', () => {
+  const validator = new JoiValidator(() => ({ a: Joi.number() }))
+
+  expect(validator.schemaAny).toBeDefined()
+})
+
 describe('defineSchemaArgs', () => {
   test('returns `Joi` argument to call `defineSchema` with', () => {
     const validator = new JoiValidator(() => ({}))

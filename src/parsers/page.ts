@@ -52,10 +52,12 @@ export default class PageParser extends BaseParser<unknown> {
   }
 
   parseNumber(): PageObject {
+    const defaults = (this.defaults as Partial<PageObject>) || {}
+
     return {
-      ...((this.defaults as Partial<PageObject>) || {}),
+      ...defaults,
       number: Number(this.query),
-      size: (this.defaults as Partial<PageObject>).size as number,
+      size: defaults.size ?? PageParser.DEFAULTS.size,
     }
   }
 

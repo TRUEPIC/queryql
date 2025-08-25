@@ -263,3 +263,60 @@ describe('parse', () => {
     )
   })
 })
+
+describe('additional branch coverage', () => {
+  test('parseString falls back to name when def missing', () => {
+    const parser = new SortParser('sort', '' as unknown as string, new Schema())
+
+    const res = parser.parseString('beta')
+
+    expect(res.field).toBe('beta')
+  })
+
+  test('parseString uses options.field when def present', () => {
+    const schema = new Schema().sort('beta', { field: 'b_field' })
+    const parser = new SortParser('sort', '' as unknown as string, schema)
+
+    const res = parser.parseString('beta')
+
+    expect(res.field).toBe('b_field')
+  })
+
+  test('parseArray mixes missing and present defs', () => {
+    const schema = new Schema().sort('s1').sort('s2', { field: 's2f' })
+    const parser = new SortParser('sort', [] as string[], schema)
+
+    const res = parser.parseArray(['s1', 's2'])
+
+    expect(res.map((r) => r.field)).toEqual(['s1', 's2f'])
+  })
+
+  test('parseObject mixes missing and present defs', () => {
+    const schema = new Schema().sort('x').sort('y', { field: 'yfield' })
+    const parser = new SortParser('sort', {} as Record<string, string>, schema)
+
+    const res = parser.parseObject({ x: 'asc', y: 'desc' })
+
+    expect(res.find((r) => r.name === 'x')!.field).toBe('x')
+    expect(res.find((r) => r.name === 'y')!.field).toBe('yfield')
+  })
+
+  test('parseArray uses fallback when def missing', () => {
+    const schema = new Schema().sort('present')
+    const parser = new SortParser('sort', [] as string[], schema)
+
+    const res = parser.parseArray(['present', 'missing'])
+
+    expect(res.map((r) => r.field)).toEqual(['present', 'missing'])
+  })
+
+  test('parseObject uses fallback when def missing', () => {
+    const schema = new Schema().sort('p')
+    const parser = new SortParser('sort', {} as Record<string, string>, schema)
+
+    const res = parser.parseObject({ p: 'asc', m: 'desc' })
+
+    expect(res.find((r) => r.name === 'p')!.field).toBe('p')
+    expect(res.find((r) => r.name === 'm')!.field).toBe('m')
+  })
+})

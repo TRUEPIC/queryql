@@ -25,6 +25,10 @@ export default function joiValidationErrorConverter(
     path = path ? `${pathPrefix}:${path}` : pathPrefix
   }
 
+  if (path === null) {
+    path = 'Unknown Field'
+  }
+
   const message = detail.message.replace(/^".*?" /, '')
 
   return new ValidationError(`${path} ${message}`)

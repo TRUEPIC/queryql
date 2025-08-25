@@ -51,4 +51,20 @@ describe('buildError', () => {
 
     expect(validator.buildError('test')).toEqual(new ValidationError('test'))
   })
+
+  test('includes key when provided', () => {
+    const validator = new BaseValidator(() => {})
+
+    expect(validator.buildError('msg', 'key')).toEqual(
+      new ValidationError('key msg'),
+    )
+  })
+})
+
+describe('constructor without defineSchema', () => {
+  test('sets schema to undefined when defineSchema is not a function', () => {
+    const validator = new BaseValidator()
+
+    expect(validator.schema).toBeUndefined()
+  })
 })

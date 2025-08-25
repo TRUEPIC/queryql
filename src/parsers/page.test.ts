@@ -182,6 +182,67 @@ describe('parse', () => {
     })
   })
 
+  test('converts string `size` to number when parsing object', () => {
+    const parser = new PageParser(
+      'page',
+      { size: '10' as unknown as number },
+      new Schema(),
+    )
+
+    const parsed = parser.parse()
+
+    expect(parsed.get('page:size')).toEqual({ field: 'size', value: 10 })
+  })
+
+  test('parseNumber respects provided defaults size', () => {
+    const parser = new PageParser(
+      'page',
+      '3' as unknown as number,
+      new Schema(),
+      { size: 7 },
+    )
+
+    const res = parser.parseNumber()
+
+    expect(res.size).toBe(7)
+    expect(res.number).toBe(3)
+  })
+
+  test('parseNumber falls back when internal defaults are falsy', () => {
+    const parser = new PageParser('page', 4, new Schema())
+
+    // Force internal _defaults to an empty object to exercise code paths
+    parser._defaults = {}
+
+    const res = parser.parseNumber()
+
+    expect(res.number).toBe(4)
+    // size should fall back to DEFAULTS.size when defaults are empty
+    expect(res.size).toBe(PageParser.DEFAULTS.size)
+  })
+
+  test('parseNumber uses empty object for defaults if there are none', () => {
+    const parser = new PageParser('page', 4, new Schema())
+
+    // Force internal _defaults to null to exercise code paths
+    parser._defaults = null as unknown as Record<string, unknown>
+
+    const res = parser.parseNumber()
+
+    expect(res.number).toBe(4)
+    // size should fall back to DEFAULTS.size when defaults are empty
+    expect(res.size).toBe(PageParser.DEFAULTS.size)
+  })
+
+  test('parseObject converts string size and falls back to defaults when missing', () => {
+    const parser = new PageParser('page', { size: '5' }, new Schema())
+
+    const res = parser.parseObject()
+
+    expect(res.size).toBe(5)
+    expect(res.number).toBe(1)
+  })
+
   test('`page[size]=value`', () => {
     const parser = new PageParser('page', { size: 10 }, new Schema())
     const parsed = parser.parse()

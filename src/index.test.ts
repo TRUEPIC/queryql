@@ -209,3 +209,27 @@ describe('exports', () => {
     expect(QueryQL.validators).toHaveProperty('BaseValidator')
   })
 })
+
+describe('constructor errors', () => {
+  test('throws when adapter is not configured', () => {
+    const adapter = undefined as unknown as typeof BaseAdapter
+
+    expect(
+      () =>
+        new TestQuerier({}, knex('test'), {
+          adapter: adapter as unknown as typeof BaseAdapter,
+        }),
+    ).toThrow(new Error('adapter not configured'))
+  })
+
+  test('throws when validator is not configured', () => {
+    const validator = undefined as unknown as typeof BaseValidator
+
+    expect(
+      () =>
+        new TestQuerier({}, knex('test'), {
+          validator: validator as unknown as typeof BaseValidator,
+        }),
+    ).toThrow(new Error('validator not configured'))
+  })
+})

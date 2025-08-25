@@ -35,3 +35,11 @@ test('delineates path segments with []', () => {
     new ValidationError('invalid[not_valid] must be a number'),
   )
 })
+
+test('handles unknown error shape by returning generic message', () => {
+  const error = { message: 'oops' }
+
+  expect(joiValidationErrorConverter(error)).toEqual(
+    new ValidationError('Unknown Field Unknown Error'),
+  )
+})

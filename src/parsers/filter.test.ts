@@ -298,4 +298,55 @@ describe('parse', () => {
       new ValidationError('filter:invalid is not allowed'),
     )
   })
+
+  test('parseObject uses fallback options when def missing', () => {
+    const parser = new FilterParser(
+      'filter',
+      {} as unknown as Record<string, unknown>,
+      new Schema(),
+    )
+
+    const result = parser.parseObject('alpha', { '=': 1 })
+
+    expect(result[0].field).toBe('alpha')
+  })
+
+  test('parseObject uses defined options when def present', () => {
+    const schema = new Schema().filter('alpha', '=', { field: 'a_field' })
+    const parser = new FilterParser(
+      'filter',
+      {} as unknown as Record<string, unknown>,
+      schema,
+    )
+
+    const result = parser.parseObject('alpha', { '=': 1 })
+
+    expect(result[0].field).toBe('a_field')
+  })
+
+  test('parseNonObject returns null operator when defaults missing', () => {
+    const parser = new FilterParser(
+      'filter',
+      {} as unknown as Record<string, unknown>,
+      new Schema(),
+    )
+
+    const res = parser.parseNonObject('alpha', 'v')
+
+    expect(res.operator).toBeNull()
+  })
+
+  test('parseNonObject uses default operator when provided', () => {
+    const schema = new Schema().filter('alpha', '=')
+    const parser = new FilterParser(
+      'filter',
+      {} as unknown as Record<string, unknown>,
+      schema,
+      { operator: '=' },
+    )
+
+    const res = parser.parseNonObject('alpha', 'v')
+
+    expect(res.operator).toBe('=')
+  })
 })
