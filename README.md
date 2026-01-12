@@ -2,7 +2,6 @@
 
 [![npm](https://img.shields.io/npm/v/@truepic/queryql?color=0f4484)](https://www.npmjs.com/package/@truepic/queryql)
 ![GitHub Actions](https://github.com/TRUEPIC/queryql/actions/workflows/ci.yml/badge.svg)
-![piratepx](https://app.piratepx.com/ship?p=e91ddd1b-31ad-4c36-b03e-be4a1e9a7678&i=queryql)
 
 QueryQL makes it easy to add filtering, sorting, and pagination to your Node.js
 REST API through your old friend: the query string!
