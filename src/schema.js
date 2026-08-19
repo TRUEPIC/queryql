@@ -49,9 +49,7 @@ class Schema {
   }
 
   mapFilterNamesToOperators() {
-    const filters = Array.from(this.filters.values())
-
-    return filters.reduce((accumulator, filter) => {
+    return this.filters.values().reduce((accumulator, filter) => {
       if (!accumulator[filter.name]) {
         accumulator[filter.name] = []
       }
