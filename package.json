@@ -40,7 +40,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "is": "^3.3.2",
     "joi": "^18.2.4"
   },
   "devDependencies": {

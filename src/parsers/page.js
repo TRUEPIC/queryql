@@ -1,5 +1,3 @@
-const is = require('is')
-
 const BaseParser = require('./base')
 const flattenMap = require('../services/flatten_map')
 
@@ -60,7 +58,10 @@ class PageParser extends BaseParser {
 
     if (!this.query) {
       page = this.defaults
-    } else if (is.number(this.query) || is.string(this.query)) {
+    } else if (
+      typeof this.query === 'number' ||
+      typeof this.query === 'string'
+    ) {
       page = this.parseNumber()
     } else {
       page = this.parseObject()

@@ -1,5 +1,3 @@
-const is = require('is')
-
 const AdapterValidator = require('../validators/adapter')
 const NotImplementedError = require('../errors/not_implemented')
 
@@ -41,7 +39,7 @@ class BaseAdapter {
 
     const operatorMethod = `filter:${operator}`
 
-    if (is.fn(this[operatorMethod])) {
+    if (typeof this[operatorMethod] === 'function') {
       return this[operatorMethod](builder, filter)
     }
 
