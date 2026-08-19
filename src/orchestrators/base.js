@@ -1,5 +1,3 @@
-const is = require('is')
-
 const cache = require('../services/cache_function')
 const NotImplementedError = require('../errors/not_implemented')
 const ValidationError = require('../errors/validation')
@@ -58,7 +56,7 @@ class BaseOrchestrator {
     const args = [this.querier.builder, values]
 
     this.querier.builder =
-      querierMethod && is.fn(this.querier[querierMethod])
+      querierMethod && typeof this.querier[querierMethod] === 'function'
         ? this.querier[querierMethod](...args)
         : this.querier.adapter[this.queryKey](...args)
 

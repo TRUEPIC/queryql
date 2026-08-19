@@ -1,5 +1,3 @@
-const is = require('is')
-
 class Schema {
   constructor() {
     this.filters = new Map()
@@ -33,7 +31,7 @@ class Schema {
   }
 
   page(isEnabledOrOptions = true) {
-    if (is.bool(isEnabledOrOptions)) {
+    if (typeof isEnabledOrOptions === 'boolean') {
       this.pageOptions = { isEnabled: isEnabledOrOptions }
     } else {
       this.pageOptions = {

@@ -1,5 +1,3 @@
-const is = require('is')
-
 const BaseParser = require('./base')
 const flattenMap = require('../services/flatten_map')
 
@@ -89,9 +87,9 @@ class SortParser extends BaseParser {
 
     const sorts = []
 
-    if (is.string(this.query)) {
+    if (typeof this.query === 'string') {
       sorts.push(this.parseString(this.query))
-    } else if (is.array(this.query)) {
+    } else if (Array.isArray(this.query)) {
       sorts.push(...this.parseArray(this.query))
     } else {
       sorts.push(...this.parseObject(this.query))
