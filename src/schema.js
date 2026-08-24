@@ -1,5 +1,3 @@
-const is = require('is')
-
 class Schema {
   constructor() {
     this.filters = new Map()
@@ -33,7 +31,7 @@ class Schema {
   }
 
   page(isEnabledOrOptions = true) {
-    if (is.bool(isEnabledOrOptions)) {
+    if (typeof isEnabledOrOptions === 'boolean') {
       this.pageOptions = { isEnabled: isEnabledOrOptions }
     } else {
       this.pageOptions = {
@@ -49,9 +47,7 @@ class Schema {
   }
 
   mapFilterNamesToOperators() {
-    const filters = Array.from(this.filters.values())
-
-    return filters.reduce((accumulator, filter) => {
+    return this.filters.values().reduce((accumulator, filter) => {
       if (!accumulator[filter.name]) {
         accumulator[filter.name] = []
       }

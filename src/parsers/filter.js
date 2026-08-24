@@ -1,5 +1,3 @@
-const is = require('is')
-
 const BaseParser = require('./base')
 const flattenMap = require('../services/flatten_map')
 
@@ -95,7 +93,10 @@ class FilterParser extends BaseParser {
     const filters = []
 
     for (const [name, value] of entries) {
-      if (is.object(value)) {
+      // `Object.prototype.toString` is used instead of `typeof` so that arrays,
+      // `null`, and exotic objects (like `Date`) are treated as filter values
+      // rather than operator objects.
+      if (Object.prototype.toString.call(value) === '[object Object]') {
         filters.push(...this.parseObject(name, value))
       } else {
         filters.push(this.parseNonObject(name, value))

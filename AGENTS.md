@@ -20,7 +20,7 @@ code in this repository.
   release).
 
 CI runs `npm run lint` then `npm test -- --ci --coverage --runInBand` against
-Node 20.x, 22.x, and 24.x. The package targets `node >= 20` and is CommonJS
+Node 22.x, 24.x, and 26.x. The package targets `node >= 22` and is CommonJS
 (`require` / `module.exports`).
 
 ## Architecture
