@@ -93,9 +93,8 @@ class FilterParser extends BaseParser {
     const filters = []
 
     for (const [name, value] of entries) {
-      // `Object.prototype.toString` is used instead of `typeof` so that arrays,
-      // `null`, and exotic objects (like `Date`) are treated as filter values
-      // rather than operator objects.
+      // `Object.prototype.toString` is used instead of `typeof` so that arrays
+      // and `null` are treated as filter values rather than operator objects.
       if (Object.prototype.toString.call(value) === '[object Object]') {
         filters.push(...this.parseObject(name, value))
       } else {

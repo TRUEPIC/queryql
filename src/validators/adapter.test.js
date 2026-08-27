@@ -182,6 +182,17 @@ describe('validatePage', () => {
     expect(page.get('page:number').value).toBe(2)
   })
 
+  test('writes the validated value back into the parsed page', () => {
+    const parser = new PageParser('page', '2', new Schema())
+    const validator = new AdapterValidator((schema) => ({
+      'page:size': schema.number().cast('string'),
+    }))
+
+    const page = validator.validatePage(parser.parse())
+
+    expect(page.get('page:size').value).toBe('20')
+  })
+
   test('throws `ValidationError` if page is invalid', () => {
     const parser = new PageParser('page', '2', new Schema())
     const validator = new AdapterValidator((schema) => ({
