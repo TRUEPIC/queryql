@@ -114,7 +114,7 @@ describe('flatten', () => {
 })
 
 describe('parse', () => {
-  test('`page=number` with a string number', () => {
+  test('`page=number` coerces a string number', () => {
     const parser = new PageParser('page', '2', new Schema())
     const parsed = parser.parse()
 

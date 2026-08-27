@@ -58,10 +58,7 @@ class PageParser extends BaseParser {
 
     if (!this.query) {
       page = this.defaults
-    } else if (
-      typeof this.query === 'number' ||
-      typeof this.query === 'string'
-    ) {
+    } else if (typeof this.query === 'number') {
       page = this.parseNumber()
     } else {
       page = this.parseObject()
