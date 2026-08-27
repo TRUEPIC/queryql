@@ -55,7 +55,7 @@ describe('validateValue', () => {
       'filter:test[=]': schema.number(),
     }))
 
-    expect(() => validator.schema.extract('filter:text[!=]')).toThrow()
+    expect(() => validator.schema.extract('filter:test[!=]')).toThrow()
     expect(validator.validateValue('filter:test[!=]', 123)).toBe(123)
   })
 
@@ -91,13 +91,13 @@ describe('validateFilters', () => {
     expect(validator.validateFilters(parser.parse())).toBeInstanceOf(Map)
   })
 
-  test('returns the parsed filters if all filters are valid', () => {
+  test('returns the parsed filters with the validated values', () => {
     const parser = new FilterParser(
       'filter',
       {
         test: {
-          '=': 123,
-          '!=': 456,
+          '=': '123',
+          '!=': '456',
         },
       },
       new Schema().filter('test', '=').filter('test', '!='),
@@ -107,7 +107,10 @@ describe('validateFilters', () => {
       'filter:test[!=]': schema.number(),
     }))
 
-    expect(validator.validateFilters(parser.parse())).toBeInstanceOf(Map)
+    const filters = validator.validateFilters(parser.parse())
+
+    expect(filters.get('filter:test[=]').value).toBe(123)
+    expect(filters.get('filter:test[!=]').value).toBe(456)
   })
 
   test('throws `ValidationError` if a filter is invalid', () => {
@@ -135,17 +138,20 @@ describe('validateSorts', () => {
     expect(validator.validateSorts(parser.parse())).toBeInstanceOf(Map)
   })
 
-  test('returns the parsed sorts if all sorts are valid', () => {
+  test('returns the parsed sorts with the validated orders', () => {
     const parser = new SortParser(
       'sort',
       ['test1', 'test2'],
       new Schema().sort('test1').sort('test2'),
     )
     const validator = new JoiValidator((schema) => ({
-      'sort:test1': schema.string().valid('asc'),
+      'sort:test1': schema.string().uppercase(),
     }))
 
-    expect(validator.validateSorts(parser.parse())).toBeInstanceOf(Map)
+    const sorts = validator.validateSorts(parser.parse())
+
+    expect(sorts.get('sort:test1').order).toBe('ASC')
+    expect(sorts.get('sort:test2').order).toBe('asc')
   })
 
   test('throws `ValidationError` if a sort is invalid', () => {
@@ -169,14 +175,17 @@ describe('validatePage', () => {
     expect(validator.validatePage(parser.parse())).toBeInstanceOf(Map)
   })
 
-  test('returns the parsed page if page is valid', () => {
+  test('returns the parsed page with the validated values', () => {
     const parser = new PageParser('page', '2', new Schema())
     const validator = new JoiValidator((schema) => ({
       'page:size': schema.number().valid(20),
       'page:number': schema.number().valid(2),
     }))
 
-    expect(validator.validatePage(parser.parse())).toBeInstanceOf(Map)
+    const page = validator.validatePage(parser.parse())
+
+    expect(page.get('page:size').value).toBe(20)
+    expect(page.get('page:number').value).toBe(2)
   })
 
   test('throws `ValidationError` if page is invalid', () => {

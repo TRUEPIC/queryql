@@ -67,10 +67,8 @@ describe('filter', () => {
 
     adapter['filter:='] = jest.fn(() => 'test')
 
-    adapter.filter(builder, filter)
-
+    expect(adapter.filter(builder, filter)).toBe('test')
     expect(adapter['filter:=']).toHaveBeenCalledWith(builder, filter)
-    expect(adapter['filter:=']).toHaveReturnedWith('test')
 
     FILTER_OPERATORS.mockRestore()
   })
@@ -86,10 +84,8 @@ describe('filter', () => {
 
     adapter['filter:*'] = jest.fn(() => 'test')
 
-    adapter.filter(builder, filter)
-
+    expect(adapter.filter(builder, filter)).toBe('test')
     expect(adapter['filter:*']).toHaveBeenCalledWith(builder, filter)
-    expect(adapter['filter:*']).toHaveReturnedWith('test')
 
     FILTER_OPERATORS.mockRestore()
   })
