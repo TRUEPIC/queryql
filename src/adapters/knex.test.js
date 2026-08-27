@@ -3,6 +3,36 @@ const knex = require('knex')({ client: 'pg' })
 const KnexAdapter = require('./knex')
 const ValidationError = require('../errors/validation')
 
+describe('FILTER_OPERATORS', () => {
+  test('returns the operators the adapter supports', () => {
+    expect(KnexAdapter.FILTER_OPERATORS).toEqual([
+      '=',
+      '!=',
+      '<>',
+      '>',
+      '>=',
+      '<',
+      '<=',
+      'is',
+      'is not',
+      'in',
+      'not in',
+      'like',
+      'not like',
+      'ilike',
+      'not ilike',
+      'between',
+      'not between',
+    ])
+  })
+})
+
+describe('DEFAULT_FILTER_OPERATOR', () => {
+  test('returns `=` as the default operator', () => {
+    expect(KnexAdapter.DEFAULT_FILTER_OPERATOR).toBe('=')
+  })
+})
+
 describe('filter', () => {
   test('uses `field` for the column, not `name`', () => {
     const query = new KnexAdapter()
@@ -260,7 +290,7 @@ describe('sort', () => {
 })
 
 describe('page', () => {
-  test('adds a `limit` clause', () => {
+  test('adds `limit` and `offset` clauses', () => {
     const query = new KnexAdapter()
       .page(knex('test'), { size: 10, offset: 20 })
       .toString()
@@ -517,6 +547,16 @@ describe('validation', () => {
       ).toEqual([123, 'test'])
     })
 
+    test('throws for a non-permitted value in the array', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:in', 'test', [true]),
+      ).toThrow(
+        new ValidationError('test:0 does not match any of the allowed types'),
+      )
+    })
+
     test('throws for a non-permitted value', () => {
       const validator = new KnexAdapter().validator
 
@@ -533,6 +573,16 @@ describe('validation', () => {
       expect(
         validator.validateValue('filter:not in', 'test', [123, 'test']),
       ).toEqual([123, 'test'])
+    })
+
+    test('throws for a non-permitted value in the array', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:not in', 'test', [true]),
+      ).toThrow(
+        new ValidationError('test:0 does not match any of the allowed types'),
+      )
     })
 
     test('throws for a non-permitted value', () => {
@@ -633,6 +683,22 @@ describe('validation', () => {
       ).toEqual(['test', 'test'])
     })
 
+    test('throws for an array of fewer than two values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:between', 'test', [123]),
+      ).toThrow(new ValidationError('test must contain 2 items'))
+    })
+
+    test('throws for an array of more than two values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:between', 'test', [123, 456, 789]),
+      ).toThrow(new ValidationError('test must contain 2 items'))
+    })
+
     test('throws for a non-permitted value', () => {
       const validator = new KnexAdapter().validator
 
@@ -657,6 +723,22 @@ describe('validation', () => {
       expect(
         validator.validateValue('filter:not between', 'test', ['test', 'test']),
       ).toEqual(['test', 'test'])
+    })
+
+    test('throws for an array of fewer than two values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:not between', 'test', [123]),
+      ).toThrow(new ValidationError('test must contain 2 items'))
+    })
+
+    test('throws for an array of more than two values', () => {
+      const validator = new KnexAdapter().validator
+
+      expect(() =>
+        validator.validateValue('filter:not between', 'test', [123, 456, 789]),
+      ).toThrow(new ValidationError('test must contain 2 items'))
     })
 
     test('throws for a non-permitted value', () => {

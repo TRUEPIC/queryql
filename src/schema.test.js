@@ -136,6 +136,12 @@ describe('page', () => {
       isEnabled: true,
     })
   })
+
+  test('returns itself for chaining', () => {
+    const schema = new Schema()
+
+    expect(schema.page()).toBe(schema)
+  })
 })
 
 describe('mapFilterNamesToOperators', () => {

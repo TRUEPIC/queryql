@@ -63,10 +63,54 @@ describe('defineSchema', () => {
 })
 
 describe('defineValidation', () => {
+  class ValidatedQuerier extends QueryQL {
+    defineSchema(schema) {
+      schema.filter('status', '=')
+      schema.page()
+    }
+
+    defineValidation(schema) {
+      return {
+        'filter:status[=]': schema.string().valid('open', 'closed'),
+        'page:size': schema.number().max(100),
+      }
+    }
+  }
+
   test('is not defined by default', () => {
     const querier = new EmptyQuerier({}, knex('test'))
 
     expect(querier.defineValidation()).toBeUndefined()
+  })
+
+  test('validates values with the returned schema', () => {
+    const querier = new ValidatedQuerier(
+      { filter: { status: 'open' } },
+      knex('test'),
+    )
+
+    expect(querier.run().toString()).toBe(
+      'select * from "test" where "status" = \'open\' limit 20',
+    )
+  })
+
+  test('throws `ValidationError` if a filter value is invalid', () => {
+    const querier = new ValidatedQuerier(
+      { filter: { status: 'invalid' } },
+      knex('test'),
+    )
+
+    expect(() => querier.run()).toThrow(
+      new ValidationError('filter:status[=] must be one of [open, closed]'),
+    )
+  })
+
+  test('throws `ValidationError` if a page value is invalid', () => {
+    const querier = new ValidatedQuerier({ page: { size: 500 } }, knex('test'))
+
+    expect(() => querier.run()).toThrow(
+      new ValidationError('page:size must be less than or equal to 100'),
+    )
   })
 })
 
@@ -175,6 +219,75 @@ describe('run', () => {
         'order by "test" asc ' +
         'limit 20 offset 20',
     )
+  })
+
+  test('applies the value validated by the adapter, not the raw value', () => {
+    class IsQuerier extends QueryQL {
+      defineSchema(schema) {
+        schema.filter('test', 'is')
+      }
+    }
+
+    const querier = new IsQuerier(
+      { filter: { test: { is: 'null' } } },
+      knex('test'),
+    )
+
+    expect(querier.run().toString()).toBe(
+      'select * from "test" where "test" is null',
+    )
+  })
+
+  test('calls a querier function to apply a filter, if defined', () => {
+    class SearchQuerier extends QueryQL {
+      defineSchema(schema) {
+        schema.filter('q', '=')
+      }
+
+      'filter:q[=]'(builder, { value }) {
+        return builder.where('first_name', 'like', `%${value}%`)
+      }
+    }
+
+    const querier = new SearchQuerier({ filter: { q: 'test' } }, knex('test'))
+
+    expect(querier.run().toString()).toBe(
+      'select * from "test" where "first_name" like \'%test%\'',
+    )
+  })
+
+  test('calls a querier function to apply a sort, if defined', () => {
+    class NameQuerier extends QueryQL {
+      defineSchema(schema) {
+        schema.sort('name')
+      }
+
+      'sort:name'(builder, { order }) {
+        return builder.orderBy('last_name', order)
+      }
+    }
+
+    const querier = new NameQuerier({ sort: { name: 'desc' } }, knex('test'))
+
+    expect(querier.run().toString()).toBe(
+      'select * from "test" order by "last_name" desc',
+    )
+  })
+
+  test('applies `pageDefaults` from the querier', () => {
+    class SmallPageQuerier extends QueryQL {
+      defineSchema(schema) {
+        schema.page()
+      }
+
+      get pageDefaults() {
+        return { size: 10 }
+      }
+    }
+
+    const querier = new SmallPageQuerier({}, knex('test'))
+
+    expect(querier.run().toString()).toBe('select * from "test" limit 10')
   })
 
   test('throws `ValidationError` if invalid', () => {

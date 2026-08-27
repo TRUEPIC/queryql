@@ -65,6 +65,22 @@ describe('parse', () => {
 
     defaultPage.mockRestore()
   })
+
+  test('calls/uses `querier.pageDefaults` for every page', () => {
+    const querier = new TestQuerier({}, knex('test'))
+
+    const pageDefaults = jest
+      .spyOn(querier, 'pageDefaults', 'get')
+      .mockReturnValue({ size: 10 })
+
+    const pager = new Pager(querier)
+    const parsed = pager.parse()
+
+    expect(pageDefaults).toHaveBeenCalled()
+    expect(parsed.get('page:size').value).toBe(10)
+
+    pageDefaults.mockRestore()
+  })
 })
 
 describe('validate', () => {

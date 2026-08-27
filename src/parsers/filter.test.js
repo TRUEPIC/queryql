@@ -281,6 +281,38 @@ describe('parse', () => {
     })
   })
 
+  test('`filter[name][]=value` with an array value', () => {
+    const parser = new FilterParser(
+      'filter',
+      { test: [123, 456] },
+      new Schema().filter('test', 'in'),
+      { operator: 'in' },
+    )
+
+    expect(parser.parse().get('filter:test[in]')).toEqual({
+      name: 'test',
+      field: 'test',
+      operator: 'in',
+      value: [123, 456],
+    })
+  })
+
+  test('`filter[name]=value` with a `null` value', () => {
+    const parser = new FilterParser(
+      'filter',
+      { test: null },
+      new Schema().filter('test', '='),
+      { operator: '=' },
+    )
+
+    expect(parser.parse().get('filter:test[=]')).toEqual({
+      name: 'test',
+      field: 'test',
+      operator: '=',
+      value: null,
+    })
+  })
+
   test('returns an empty `Map` if no query', () => {
     const parser = new FilterParser('filter', undefined, new Schema())
 

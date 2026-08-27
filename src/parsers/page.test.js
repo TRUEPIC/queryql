@@ -89,6 +89,16 @@ describe('validation', () => {
       )
     })
   })
+
+  describe('`page[field]=value`', () => {
+    test('throws if the field is not `size` or `number`', () => {
+      const parser = new PageParser('page', { invalid: '1' }, new Schema())
+
+      expect(() => parser.validate()).toThrow(
+        new ValidationError('page:invalid is not allowed'),
+      )
+    })
+  })
 })
 
 describe('flatten', () => {

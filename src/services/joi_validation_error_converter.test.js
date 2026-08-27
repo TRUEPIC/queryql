@@ -23,6 +23,20 @@ test('uses optional path prefix as path if no path exists', () => {
   )
 })
 
+test('uses the first error when there are multiple', () => {
+  const { error } = Joi.object()
+    .keys({
+      first: Joi.number(),
+      second: Joi.number(),
+    })
+    .validate({ first: 'invalid', second: 'invalid' }, { abortEarly: false })
+
+  expect(error.details).toHaveLength(2)
+  expect(joiValidationErrorConverter(error, 'test')).toEqual(
+    new ValidationError('test:first must be a number'),
+  )
+})
+
 test('delineates path segments with []', () => {
   const { error } = Joi.object()
     .keys({

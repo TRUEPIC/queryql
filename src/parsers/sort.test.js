@@ -224,6 +224,20 @@ describe('parse', () => {
     })
   })
 
+  test('`sort[name]=order` coerces the order to lowercase', () => {
+    const parser = new SortParser(
+      'sort',
+      { test: 'DESC' },
+      new Schema().sort('test'),
+    )
+
+    expect(parser.parse().get('sort:test')).toEqual({
+      name: 'test',
+      field: 'test',
+      order: 'desc',
+    })
+  })
+
   test('`sort[name]=order` with multiple names', () => {
     const parser = new SortParser(
       'sort',

@@ -65,6 +65,22 @@ describe('parse', () => {
 
     defaultFilter.mockRestore()
   })
+
+  test('calls/uses `querier.filterDefaults` for every filter', () => {
+    const querier = new TestQuerier({ filter: { testing: 456 } }, knex('test'))
+
+    const filterDefaults = jest
+      .spyOn(querier, 'filterDefaults', 'get')
+      .mockReturnValue({ operator: '!=' })
+
+    const filterer = new Filterer(querier)
+    const parsed = filterer.parse()
+
+    expect(filterDefaults).toHaveBeenCalled()
+    expect(parsed.get('filter:testing[!=]').operator).toBe('!=')
+
+    filterDefaults.mockRestore()
+  })
 })
 
 describe('validate', () => {

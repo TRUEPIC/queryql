@@ -65,6 +65,22 @@ describe('parse', () => {
 
     defaultSort.mockRestore()
   })
+
+  test('calls/uses `querier.sortDefaults` for every sort', () => {
+    const querier = new TestQuerier({ sort: 'test' }, knex('test'))
+
+    const sortDefaults = jest
+      .spyOn(querier, 'sortDefaults', 'get')
+      .mockReturnValue({ order: 'desc' })
+
+    const sorter = new Sorter(querier)
+    const parsed = sorter.parse()
+
+    expect(sortDefaults).toHaveBeenCalled()
+    expect(parsed.get('sort:test').order).toBe('desc')
+
+    sortDefaults.mockRestore()
+  })
 })
 
 describe('validate', () => {
