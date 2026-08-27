@@ -127,6 +127,16 @@ describe('validation', () => {
     expect(() => parser.validate()).not.toThrow()
   })
 
+  test('permits an empty string value', () => {
+    const parser = new FilterParser(
+      'filter',
+      { valid: { is: '' } },
+      new Schema().filter('valid', 'is'),
+    )
+
+    expect(() => parser.validate()).not.toThrow()
+  })
+
   test('permits a null value', () => {
     const parser = new FilterParser(
       'filter',

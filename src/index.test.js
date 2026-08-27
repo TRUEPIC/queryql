@@ -238,6 +238,26 @@ describe('run', () => {
     )
   })
 
+  test('coerces an empty `is` value to `null`', () => {
+    class IsQuerier extends QueryQL {
+      defineSchema(schema) {
+        schema.filter('test', ['is', 'is not'])
+      }
+    }
+
+    expect(
+      new IsQuerier({ filter: { test: { is: '' } } }, knex('test'))
+        .run()
+        .toString(),
+    ).toBe('select * from "test" where "test" is null')
+
+    expect(
+      new IsQuerier({ filter: { test: { 'is not': '' } } }, knex('test'))
+        .run()
+        .toString(),
+    ).toBe('select * from "test" where "test" is not null')
+  })
+
   test('calls a querier function to apply a filter, if defined', () => {
     class SearchQuerier extends QueryQL {
       defineSchema(schema) {
