@@ -21,9 +21,11 @@ class FilterParser extends BaseParser {
       this.schema.mapFilterNamesToOperators(),
     )
 
+    // An empty string is left to the adapter, which coerces it to `null` for
+    // `is` / `is not` and rejects it for the operators where it's invalid.
     const values = [
       schema.array(),
-      schema.string(),
+      schema.string().allow(''),
       schema.number(),
       schema.boolean(),
       schema.valid(null),
