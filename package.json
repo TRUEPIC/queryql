@@ -60,5 +60,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "allowScripts": {
+    "unrs-resolver@1.12.2": true,
+    "@parcel/watcher": false
   }
 }

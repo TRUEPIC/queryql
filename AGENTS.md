@@ -23,6 +23,19 @@ CI runs `npm run lint` then `npm test -- --ci --coverage --runInBand` against
 Node 22.x, 24.x, and 26.x. The package targets `node >= 22` and is CommonJS
 (`require` / `module.exports`).
 
+Dependency install scripts are allowlisted in `package.json`'s `allowScripts`,
+and `.npmrc` sets `strict-allow-scripts`, so an install fails on any dependency
+with an install script that hasn't been reviewed. Entries are pinned to the
+reviewed version, so a dependency update that bumps unrs-resolver fails
+`npm install` until it's re-approved with `npm approve-scripts unrs-resolver`. A
+new dependency with an install script needs the same, or
+`npm deny-scripts <pkg>` when the script isn't needed (as with
+`@parcel/watcher`, which ships prebuilt binaries and only builds from source on
+request). Read what the script does before approving it — never reach for
+`npm approve-scripts --all` or `--dangerously-allow-all-scripts` to get an
+install passing. It's enforced by npm 11.19+ (Node 24 and later); Node 22's npm
+10 ignores it with an "Unknown project config" warning.
+
 ## Architecture
 
 QueryQL turns a parsed query-string object (e.g. Express's `req.query`) into the
