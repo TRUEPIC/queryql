@@ -39,8 +39,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Install npm dependencies
-        id: install
         run: npm ci
+      - name: Run lint
+        if: matrix.is-primary
+        run: npm run lint
       - name: Run tests
         if: ${{ !matrix.is-primary }}
         run: npm test -- --ci --runInBand
@@ -83,8 +85,3 @@ jobs:
           name: test-coverage-${{ github.run_attempt }}
           path: test/coverage
           retention-days: 14
-      - name: Run lint
-        if:
-          ${{ !cancelled() && matrix.is-primary && steps.install.outcome ==
-          'success' }}
-        run: npm run lint
