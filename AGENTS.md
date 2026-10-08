@@ -19,9 +19,10 @@ code in this repository.
   release, merge `development` into `main` (which always reflects the latest
   release).
 
-CI runs `npm run lint` then `npm test -- --ci --coverage --runInBand` against
-Node 22.x, 24.x, and 26.x. The package targets `node >= 22` and is CommonJS
-(`require` / `module.exports`).
+CI tests Node 22.x, 24.x, and 26.x with `npm test -- --ci --runInBand`. The
+primary Node 26 run also runs lint and collects coverage, posting a summary and
+uploading coverage. Every matrix run uploads its test report, even on failure.
+The package targets `node >= 22` and is CommonJS (`require` / `module.exports`).
 
 Dependency install scripts are allowlisted in `package.json`'s `allowScripts`,
 and `.npmrc` sets `strict-allow-scripts`, so an install fails on any dependency
