@@ -52,8 +52,8 @@
     "jest": "^30.5.2",
     "jest-junit": "^17.0.0",
     "knex": "^3.3.0",
-    "prettier": "3.9.9",
-    "release-it": "^21.1.0"
+    "prettier": "3.9.10",
+    "release-it": "^21.1.1"
   },
   "engines": {
     "node": ">=22"
